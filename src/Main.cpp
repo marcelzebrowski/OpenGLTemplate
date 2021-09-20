@@ -12,6 +12,7 @@
 #include "Utils.h"
 #include "Torus.h"
 #include "helpers/RootDir.h"
+#include "AudioManager.h"
 using namespace std;
 
 #define numVAOs 1
@@ -41,6 +42,10 @@ float lightPosition[3];
 
 ImportedModel myModel(GET_MODEL_PATH("rundeecken.obj"));
 
+AudioManager sound;
+const std::string music = GET_SOUND_PATH("CHROMAG - Switchback.mod");
+const std::string beep = GET_SOUND_PATH("Air-conditioner-beep.mp3");
+
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
 
 // light
@@ -55,6 +60,16 @@ float* materialAmbient = Utils::silverAmbient();
 float* materialDiffuse = Utils::silverDiffuse();
 float* materialSpecular = Utils::silverSpecular();
 float materialShininess = Utils::silverShininess();
+
+void setupSound() {
+	sound.LoadSong(music);
+	sound.LoadSFX(beep);
+}
+
+void stopSound() {
+	sound.StopSFXs();
+	sound.StopSongs();
+}
 
 void setupLight(glm::mat4 vMatrix) {
 	transformed = glm::vec3(vMatrix * glm::vec4(currentLightPosition, 1.0));
@@ -134,6 +149,9 @@ void setupVertices(void) {
 }
 
 void init(GLFWwindow* window) {
+
+	setupSound();
+
 	renderingProgram = Utils::createShaderProgram(GET_SHADER_PATH("phong_vertShader.glsl"), GET_SHADER_PATH("phong_fragShader.glsl"));
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
 	objLocX = 0.0f; objLocY = 0.0f; objLocZ = 0.0f;
@@ -228,6 +246,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+		sound.PlaySFX(beep, 1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -271,13 +293,17 @@ int main(void) {
 
 	init(window);
 
+	sound.PlaySong(music);
 	while (!glfwWindowShouldClose(window) && !escapePressed) {
 		display(window, glfwGetTime());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		sound.Update(glfwGetTime());
 	}
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
+
+	stopSound();
 	exit(EXIT_SUCCESS);
 }

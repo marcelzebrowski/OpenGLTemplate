@@ -2,3 +2,4 @@
 #define GET_SHADER_PATH(shadername) "@CMAKE_SOURCE_DIR@/res/shader/"##shadername
 #define GET_MODEL_PATH(modelname) "@CMAKE_SOURCE_DIR@/res/model/"##modelname
 #define GET_TEXTUR_PATH(texturname) "@CMAKE_SOURCE_DIR@/res/textur/"##texturname
+#define GET_SOUND_PATH(soundname) "@CMAKE_SOURCE_DIR@/res/sound/"##soundname

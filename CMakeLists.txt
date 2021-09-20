@@ -40,7 +40,7 @@ find_package(OpenGL REQUIRED)
 #message(STATUS "ASSIMP included at ${ASSIMP_INCLUDE_DIR}")
 
 # Put all libraries into a variable
-set(LIBS glfw3 glew32 soil2 OpenGL::GL)
+set(LIBS glfw3 glew32 soil2 OpenGL::GL fmod_vc)
 
 # Define the include DIRs
 include_directories(
