@@ -16,12 +16,12 @@
 using namespace std;
 
 #define numVAOs 1
-#define numVBOs 3
+#define numVBOs 4
 
 bool escapePressed = false;
 float cameraX, cameraY, cameraZ;
 float objLocX, objLocY, objLocZ;
-GLuint renderingProgram;
+GLuint renderingProgram, plasmaProgram;
 GLuint vao[numVAOs];
 GLuint vbo[numVBOs];
 GLuint buntTexture;
@@ -33,6 +33,10 @@ GLuint mvLoc, projLoc, nLoc;
 
 // variable allocation for material and light
 GLuint globalAmbientLoc, lightAmbientLoc, materialAmbientLoc, materialDiffuseLoc, lightPositionLoc, lightDiffuseLoc, materialShininessLoc, lightSpecularLoc, materialSpecularLoc;
+
+// Plasma allocation
+GLuint timeLoc, scaleFactorLoc;
+
 
 int width, height;
 float aspect;
@@ -53,6 +57,10 @@ float globalAmbient[4] = { 0.7f,0.7f,0.7f,1.0f };
 float lightAmbient[4] = { 0.0f,0.0f,0.0f,1.0f };
 float lightDiffuse[4] = { 1.0f,1.0f,1.0f,1.0f };
 float lightSpecurlar[4] = { 1.0f,1.0f,1.0f,1.0f };
+
+
+//plasma
+float scaleFactor[2] = { 25.0f,25.0f };
 
 
 // material
@@ -146,6 +154,15 @@ void setupVertices(void) {
 	}
 
 
+	// plasma
+	float vertexPositions[18] = {
+		-1.0f,  1.0f, 1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f,
+		1.0f, -1.0f, 1.0f, 1.0f,  1.0f, 1.0f, -1.0f,  1.0f, 1.0f
+	};
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW);
+
 }
 
 void init(GLFWwindow* window) {
@@ -153,6 +170,7 @@ void init(GLFWwindow* window) {
 	setupSound();
 
 	renderingProgram = Utils::createShaderProgram(GET_SHADER_PATH("phong_vertShader.glsl"), GET_SHADER_PATH("phong_fragShader.glsl"));
+	plasmaProgram = Utils::createShaderProgram(GET_SHADER_PATH("plasma_vertShader.glsl"), GET_SHADER_PATH("plasma_fragShader.glsl"));
 	cameraX = 0.0f; cameraY = 0.0f; cameraZ = 5.0f;
 	objLocX = 0.0f; objLocY = 0.0f; objLocZ = 0.0f;
 
@@ -166,10 +184,26 @@ void init(GLFWwindow* window) {
 
 }
 
+void displayPlasma(GLFWwindow* window, double currentTime) {
+	glUseProgram(plasmaProgram);
 
+	timeLoc = glGetUniformLocation(plasmaProgram, "u_time");
+	scaleFactorLoc = glGetUniformLocation(plasmaProgram, "u_k");
+
+	glUniform1f(timeLoc, (float)currentTime * 2);
+
+	glProgramUniform2fv(plasmaProgram, scaleFactorLoc, 1, scaleFactor);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+	glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+	glEnableVertexAttribArray(0);
+
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
 
 void displayCube(GLFWwindow* window, double currentTime) {
-
+	glEnable(GL_CULL_FACE);
 	glUseProgram(renderingProgram);
 
 	mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix");
@@ -215,7 +249,8 @@ void displayCube(GLFWwindow* window, double currentTime) {
 	glBindTexture(GL_TEXTURE_2D, buntTexture);
 
 
-
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 
 	glDrawArrays(GL_TRIANGLES, 0, myModel.getNumVertices());
 }
@@ -225,12 +260,9 @@ void display(GLFWwindow* window, double currentTime) {
 	glClearColor(1.0, 0.5, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-
+	displayPlasma(window, currentTime);
 	displayCube(window, currentTime);
+
 }
 
 void window_size_callback(GLFWwindow* win, int newWidth, int newHeight) {
