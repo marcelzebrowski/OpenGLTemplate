@@ -31,7 +31,7 @@ find_package(OpenGL REQUIRED)
 #find_package(GLM REQUIRED)
 #message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 
-#GLFW - window management
+#GLFW - window management test
 #find_package(GLFW3 REQUIRED)
 #message(STATUS "GLFW included at ${GLFW3_INCLUDE_DIR}")
 
