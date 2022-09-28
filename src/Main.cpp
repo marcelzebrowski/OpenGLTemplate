@@ -54,7 +54,6 @@ float lightAmbient[4] = { 0.0f,0.0f,0.0f,1.0f };
 float lightDiffuse[4] = { 1.0f,1.0f,1.0f,1.0f };
 float lightSpecurlar[4] = { 1.0f,1.0f,1.0f,1.0f };
 
-
 // material
 float* materialAmbient = Utils::silverAmbient();
 float* materialDiffuse = Utils::silverDiffuse();
@@ -78,7 +77,6 @@ void setupLight(glm::mat4 vMatrix) {
 	lightPosition[1] = transformed.y;
 	lightPosition[2] = transformed.z;
 
-
 	// get locations of the light and material fields in the shader
 	globalAmbientLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
 	materialAmbientLoc = glGetUniformLocation(renderingProgram, "material.ambient");
@@ -101,7 +99,6 @@ void setupLight(glm::mat4 vMatrix) {
 	glProgramUniform4fv(renderingProgram, materialSpecularLoc, 1, materialSpecular);
 	glProgramUniform1f(renderingProgram, materialShininessLoc, materialShininess);
 }
-
 
 void setupVertices(void) {
 
@@ -213,9 +210,6 @@ void displayCube(GLFWwindow* window, double currentTime) {
 	// Textur
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, buntTexture);
-
-
-
 
 	glDrawArrays(GL_TRIANGLES, 0, myModel.getNumVertices());
 }
