@@ -9,13 +9,13 @@ out vec4 color;
 
 void main(void){
     float v = 0.0;
-    vec2 c = varyingVertPos.xy * u_k - u_k/2.0;
+    vec2 c = varyingVertPos.xy * u_k - u_k/21.0;
     v += sin((c.x+u_time));
     v += sin((c.y+u_time)/2.0);
     v += sin((c.x+c.y+u_time)/2.0);
     c += u_k/2.0 * vec2(sin(u_time/3.0), cos(u_time/2.0));
     v += sin(sqrt(c.x*c.x+c.y*c.y+1.0)+u_time);
-    v = v/2.0;
-    vec3 col = vec3(1, sin(PI*v), cos(PI*v));
-    color = vec4(col*.5 + .5, 1);
+    v = v/3.0;
+    vec3 col = vec3(1, cos(PI*v), tan(PI*v));
+    color = vec4(col*.5 + col*.5, col*5);
 }
