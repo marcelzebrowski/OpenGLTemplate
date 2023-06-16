@@ -187,7 +187,6 @@ void displayCube(GLFWwindow* window, double currentTime) {
 
 	invTrMat = glm::transpose(glm::inverse(mvMat));
 
-
 	// set values to shader
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(pMat));
