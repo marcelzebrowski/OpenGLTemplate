@@ -178,8 +178,8 @@ void displayCube(GLFWwindow* window, double currentTime) {
 	// Object translating and rotating
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(objLocX, objLocY, objLocZ));
 	mMat = glm::rotate(mMat, 0.0f, glm::vec3(15.0f, 20.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(currentTime * 100), glm::vec3(0.0f, 1.0f, 1.0f));
-	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(-1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(0.0f, 1.0f, 1.0f));
+	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(-1.0f, -1.0f, 0.0f));
 
 	setupLight(vMat);
 
