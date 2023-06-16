@@ -44,7 +44,7 @@ ImportedModel myModel(GET_MODEL_PATH("rundeecken.obj"));
 
 AudioManager sound;
 const std::string music = GET_SOUND_PATH("CHROMAG - Switchback.mod");
-const std::string beep = GET_SOUND_PATH("Air-conditioner-beep.mp3");
+//const std::string beep = GET_SOUND_PATH("Air-conditioner-beep.mp3");
 
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
 
@@ -62,7 +62,7 @@ float materialShininess = Utils::silverShininess();
 
 void setupSound() {
 	sound.LoadSong(music);
-	sound.LoadSFX(beep);
+	//sound.LoadSFX(beep);
 }
 
 void stopSound() {
@@ -136,12 +136,10 @@ void setupVertices(void) {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
 
-
 	if (myModel.isTextured()) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 		glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
 	}
-
 
 }
 
@@ -240,9 +238,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+	/*if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		sound.PlaySFX(beep, 1.0f, 1.0f, 1.0f, 1.0f);
-	}
+	}*/
 
 }
 
