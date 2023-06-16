@@ -177,8 +177,8 @@ void displayCube(GLFWwindow* window, double currentTime) {
 
 	// Object translating and rotating
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(objLocX, objLocY, objLocZ));
-	mMat = glm::rotate(mMat, 0.0f, glm::vec3(15.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(currentTime * 50), glm::vec3(0.0f, 1.0f, 1.0f));
+	mMat = glm::rotate(mMat, 0.0f, glm::vec3(15.0f, 20.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(currentTime * 100), glm::vec3(0.0f, 1.0f, 1.0f));
 	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(-1.0f, 0.0f, 0.0f));
 
 	setupLight(vMat);
@@ -241,7 +241,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	/*if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		sound.PlaySFX(beep, 1.0f, 1.0f, 1.0f, 1.0f);
 	}*/
-
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
