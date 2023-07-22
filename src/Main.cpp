@@ -263,7 +263,7 @@ int main(void) {
 	int count = 0;
 	GLFWmonitor** myMonitors = glfwGetMonitors(&count);
 
-	myMonitor = myMonitors[1]; // 0 wenn Main Monitor
+	myMonitor = myMonitors[0]; // 0 wenn Main Monitor
 
 	const GLFWvidmode* mode = glfwGetVideoMode(myMonitor);
 
