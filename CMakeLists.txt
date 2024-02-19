@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(TestProject VERSION 1.0)
 
 # Add source files
+file(GLOB_RECURSE IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/include/imgui/*.cpp)
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
@@ -16,7 +17,7 @@ configure_file(src/helpers/RootDir.h.in src/helpers/RootDir.h)
 include_directories(${CMAKE_BINARY_DIR}/src)
 
 # define the executeable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES})
 
 # Cmake Dir with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
@@ -27,17 +28,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 #OpenGL
 find_package(OpenGL REQUIRED)
 
-#GLM - math library
-#find_package(GLM REQUIRED)
-#message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
 
-#GLFW - window management
-#find_package(GLFW3 REQUIRED)
-#message(STATUS "GLFW included at ${GLFW3_INCLUDE_DIR}")
-
-#ASSIMP - api for 3d models
-#find_package(ASSIMP REQUIRED)
-#message(STATUS "ASSIMP included at ${ASSIMP_INCLUDE_DIR}")
 
 # Put all libraries into a variable
 set(LIBS glfw3 glew32 soil2 OpenGL::GL fmod_vc)

@@ -1,3 +1,5 @@
+
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <SOIL2/soil2.h>
@@ -13,6 +15,11 @@
 #include "Torus.h"
 #include "helpers/RootDir.h"
 #include "AudioManager.h"
+
+
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 using namespace std;
 
 #define numVAOs 1
@@ -246,14 +253,17 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
-
+	/*
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 		escapePressed = true;
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
+	}*/
 }
 
 int main(void) {
+	
+
+
 	if (!glfwInit()) { exit(EXIT_FAILURE); }
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -269,13 +279,27 @@ int main(void) {
 
 	GLFWwindow* window = glfwCreateWindow(mode->width, mode->height, "Template", myMonitor, NULL);
 
-
 	glfwMakeContextCurrent(window);
 	if (glewInit() != GLEW_OK) { exit(EXIT_FAILURE); }
 	glfwSwapInterval(1);
 
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
+
+	// imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+	// Enable Docking
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+	// Load Fonts
+    io.Fonts->AddFontDefault();
+    ImGui::GetStyle().ScaleAllSizes(1.2);
+	// --
+
+	//glfwSetMouseButtonCallback(window, mouse_button_callback);
+	//glfwSetCursorPosCallback(window, cursor_position_callback);
 	glfwSetWindowSizeCallback(window, window_size_callback);
 	glfwSetKeyCallback(window, key_callback);
 
@@ -285,11 +309,34 @@ int main(void) {
 
 	sound.PlaySong(music);
 	while (!glfwWindowShouldClose(window) && !escapePressed) {
-		display(window, glfwGetTime());
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+		// Start ImGui frame
+		
+
+        ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();        
+        ImGui::NewFrame();
+        
+		
+
+
+		
+		ImGui::Render();
+
+		display(window, glfwGetTime());
+
+		
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		glfwSwapBuffers(window);
+		
 		sound.Update(glfwGetTime());
 	}
+
+	// Cleanup
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
