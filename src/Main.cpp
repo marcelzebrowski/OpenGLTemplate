@@ -1,6 +1,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <SOIL2/soil2.h>
+//#include <SOIL2/soil2.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -48,7 +48,7 @@ ImportedModel myModel(GET_MODEL_PATH("rundeecken.obj"));
 
 AudioManager sound;
 const std::string music = GET_SOUND_PATH("CHROMAG - Switchback.mod");
-const std::string beep = GET_SOUND_PATH("Air-conditioner-beep.mp3");
+//const std::string beep = GET_SOUND_PATH("Air-conditioner-beep.mp3");
 
 float toRadians(float degrees) { return (degrees * 2.0f * 3.14159f) / 360.0f; }
 
@@ -58,10 +58,8 @@ float lightAmbient[4] = { 0.0f,0.0f,0.0f,1.0f };
 float lightDiffuse[4] = { 1.0f,1.0f,1.0f,1.0f };
 float lightSpecurlar[4] = { 1.0f,1.0f,1.0f,1.0f };
 
-
 //plasma
 float scaleFactor[2] = { 25.0f,25.0f };
-
 
 // material
 float* materialAmbient = Utils::silverAmbient();
@@ -71,7 +69,7 @@ float materialShininess = Utils::silverShininess();
 
 void setupSound() {
 	sound.LoadSong(music);
-	sound.LoadSFX(beep);
+	//sound.LoadSFX(beep);
 }
 
 void stopSound() {
@@ -85,7 +83,6 @@ void setupLight(glm::mat4 vMatrix) {
 	lightPosition[0] = transformed.x;
 	lightPosition[1] = transformed.y;
 	lightPosition[2] = transformed.z;
-
 
 	// get locations of the light and material fields in the shader
 	globalAmbientLoc = glGetUniformLocation(renderingProgram, "globalAmbient");
@@ -109,7 +106,6 @@ void setupLight(glm::mat4 vMatrix) {
 	glProgramUniform4fv(renderingProgram, materialSpecularLoc, 1, materialSpecular);
 	glProgramUniform1f(renderingProgram, materialShininessLoc, materialShininess);
 }
-
 
 void setupVertices(void) {
 
@@ -146,7 +142,6 @@ void setupVertices(void) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
-
 
 	if (myModel.isTextured()) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
@@ -216,16 +211,15 @@ void displayCube(GLFWwindow* window, double currentTime) {
 
 	// Object translating and rotating
 	mMat = glm::translate(glm::mat4(1.0f), glm::vec3(objLocX, objLocY, objLocZ));
-	mMat = glm::rotate(mMat, 0.0f, glm::vec3(15.0f, 0.0f, 0.0f));
-	mMat = glm::rotate(mMat, toRadians(currentTime * 50), glm::vec3(0.0f, 1.0f, 1.0f));
-	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(-1.0f, 0.0f, 0.0f));
+	mMat = glm::rotate(mMat, 0.0f, glm::vec3(15.0f, 20.0f, 0.0f));
+	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(0.0f, 1.0f, 1.0f));
+	mMat = glm::rotate(mMat, toRadians(currentTime * 80), glm::vec3(-1.0f, -1.0f, 0.0f));
 
 	setupLight(vMat);
 
 	mvMat = vMat * mMat;
 
 	invTrMat = glm::transpose(glm::inverse(mvMat));
-
 
 	// set values to shader
 	glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat));
@@ -247,7 +241,6 @@ void displayCube(GLFWwindow* window, double currentTime) {
 	// Textur
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, buntTexture);
-
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
@@ -278,10 +271,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+	/*if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		sound.PlaySFX(beep, 1.0f, 1.0f, 1.0f, 1.0f);
-	}
-
+	}*/
 }
 
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
@@ -305,7 +297,7 @@ int main(void) {
 	int count = 0;
 	GLFWmonitor** myMonitors = glfwGetMonitors(&count);
 
-	myMonitor = myMonitors[1]; // 0 wenn Main Monitor
+	myMonitor = myMonitors[0]; // 0 wenn Main Monitor
 
 	const GLFWvidmode* mode = glfwGetVideoMode(myMonitor);
 
