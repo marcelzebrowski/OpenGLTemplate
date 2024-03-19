@@ -1,6 +1,71 @@
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
+#include <sstream>
+
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GlCall(x) {\
+    GlClearError();\
+    x;\
+    ASSERT(GlLogCall(#x, __FILE__, __LINE__))\
+}
+
+struct ShaderProgramSource{
+    std::string VertexSource;
+    std::string FragmentSource;
+};
+
+static void GlClearError(){
+    while (glGetError() != GL_NO_ERROR)
+    {
+        /* code */
+    }
+}
+
+static GLboolean GlLogCall(const char* function, const char* file, int line){
+    while (GLenum error = glGetError())
+    {
+        /* code */
+        std::cout << "[OpenGL Error] (" << error << ")" 
+        << " file: " << file
+        << " function " << function << " line " 
+        << line << std::endl;
+        return GL_FALSE;
+    }
+    return GL_TRUE;
+    
+}
+
+static ShaderProgramSource ParseShader(const std::string file){
+    
+    enum class ShaderType{
+        NONE = -1, VERTEX = 0, FRAGMENT = 1
+    };
+
+    std::ifstream stream(file);
+    
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+
+    while(getline(stream,line)){
+        if(line.find("#shader") != std::string::npos){
+            if(line.find("vertex") != std::string::npos){
+                type = ShaderType::VERTEX;
+            }else if (line.find("fragment") != std::string::npos){
+                type = ShaderType::FRAGMENT;
+            }
+        }else{
+            ss[(int) type] << line << '\n';
+        }
+    }
+
+    return {ss[0].str(), ss[1].str()};
+}
+
 
 void printSize(){
     std::cout << "Size of GLfloat:" << sizeof(GLfloat) << std::endl; 
@@ -36,7 +101,7 @@ static GLuint CreateShader(const std::string& vertexShader, const std::string& f
     GLuint vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
     GLuint fs = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);
 
-    glAttachShader(program, vs);
+    GlCall( glAttachShader(program, vs)) ;
     glAttachShader(program, fs);
     glLinkProgram(program);
     glValidateProgram(program);
@@ -76,38 +141,37 @@ int main(void)
         std::cout << glGetString(GL_VERSION) << std::endl;
     }
 
-    GLfloat positions[6] = {
-        -0.5f, -0.5f,
-        0.0f, 0.5f,
-        0.5f, -0.5f
+    GLfloat positions[] = {
+        -0.5f, -0.5f, // 0
+         0.5f, -0.5f, // 1
+         0.5f,  0.5f, // 2
+        -0.5f,  0.5f  // 3
     }; 
 
-    // create buffer
+    GLuint index[] = {
+     0,1,2,
+     2,3,0
+    };
+
+    // create vertex buffer
     GLuint buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(GLfloat), positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 6 * 2* sizeof(GLfloat), positions, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2 * sizeof(GLfloat),0);
     glEnableVertexAttribArray(0);
 
+    // create index buffer
+    GLuint ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLuint), index, GL_STATIC_DRAW);
 
-    std::string vertexShader = 
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) in vec4 position;\n"
-        "void main(){\n"
-        " gl_Position = position;\n"
-        "}\n";
-    std::string fragmentShader = 
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) out vec4 color;\n"
-        "void main(){\n"
-        " color = vec4(1.0,0.0,0.0,1.0);\n"
-        "}\n";
 
-    GLuint shader = CreateShader(vertexShader, fragmentShader); 
+    ShaderProgramSource source = ParseShader("shader/basic_Shader.glsl");
+
+    GLuint shader = CreateShader(source.VertexSource, source.FragmentSource); 
     glUseProgram(shader);
 
 
@@ -120,6 +184,7 @@ int main(void)
         glGenBuffers(n, &buffer);
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+        
 
 		/*glBegin(GL_TRIANGLES);
         glColor3f(1.0f,1.0f,0.0f);
@@ -130,8 +195,8 @@ int main(void)
 		glVertex2f(0.5f, -0.5f);
 		glEnd();*/
 
-        glDrawArrays(GL_TRIANGLES,0,3); // affected by glBindBuffers
-
+        //glDrawArrays(GL_TRIANGLES,0,6); // affected by glBindBuffers
+        GlCall(glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, nullptr));
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
