@@ -2,6 +2,7 @@
 
 #include <fmod/fmod.hpp>
 #include <map>
+#include <string>
 
 typedef std::map<std::string, FMOD::Sound*> SoundMap;
 
