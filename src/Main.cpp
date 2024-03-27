@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 
 struct ShaderProgramSource{
@@ -141,20 +142,16 @@ int main(void)
         2,3,0
         };
 
-        // create gl vertex array (Hint: glEnableVertexAttribArray/GLFW_OPENGL_CORE_PROFILE)
-        GLuint vao;
-        GlCall(glGenVertexArrays(1,&vao));
-        GlCall(glBindVertexArray(vao));
 
-        // create vertex buffer
+        VertexArray va;
         VertexBuffer vb(positions, 4 * 2 * sizeof(GLfloat));
 
+        VertexBufferLayout layout;
+        layout.Push<float>(2);
+        va.AddBuffer(vb, layout);
 
-        glEnableVertexAttribArray(0); 
-        glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2 * sizeof(GLfloat),0); // links the buffer with vao
-
-        // create index buffer
         IndexBuffer ib(indeces,6);
+
 
         ShaderProgramSource source = ParseShader("shader/basic_Shader.glsl");
 
@@ -166,8 +163,6 @@ int main(void)
         ASSERT(location != -1);
         glUniform4f(location,0.0f,1.0f,0.0f,1.0f);  
         
-
-        GlCall(glBindVertexArray(0));
         GlCall(glUseProgram(0));
         GlCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
         GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
@@ -192,26 +187,12 @@ int main(void)
             GlCall(glUseProgram(shader));
             GlCall(glUniform4f(location,r,1.0f,0.0f,1.0f));  
             
-            //GlCall(glBindBuffer(GL_ARRAY_BUFFER, buffer));
-            //GlCall(glEnableVertexAttribArray(0));
-            //GlCall(glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,2 * sizeof(GLfloat),0));
-
             // vao and ibo
-            GlCall(glBindVertexArray(vao));
+            va.Bind();
             ib.Bind();
 
             GlCall(glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, nullptr));
 
-            /*glBegin(GL_TRIANGLES);
-            glColor3f(1.0f,1.0f,0.0f);
-            glVertex2f(-0.5f, -0.5f);
-            glColor3f(1.0f,0.0f,0.0f);
-            glVertex2f(0.0f, 0.5f);
-            glColor3f(0.0f,1.0f,1.0f);
-            glVertex2f(0.5f, -0.5f);
-            glEnd();*/
-
-            //glDrawArrays(GL_TRIANGLES,0,6); // affected by glBindBuffers
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
