@@ -7,7 +7,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
-
+#include "Sound.h"
 
 
 void printSize(){
@@ -19,7 +19,8 @@ int main(void)
 {
     printSize();
 
-
+    Sound sound;
+    
     GLFWwindow* window;
 
     /* Initialize the library */
@@ -68,6 +69,8 @@ int main(void)
         2,3,0
         };
 
+
+        sound.play("sound/CHROMAG - Switchback.mod");
 
         
         VertexBuffer vb(positions, 4 * 2 * sizeof(GLfloat));
