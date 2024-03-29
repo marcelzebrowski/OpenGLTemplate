@@ -26,20 +26,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 #OpenGL
 find_package(OpenGL REQUIRED)
 
-#GLM - math library
-#find_package(GLM REQUIRED)
-#message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-#GLFW - window management
-#find_package(GLFW3 REQUIRED)
-#message(STATUS "GLFW included at ${GLFW3_INCLUDE_DIR}")
-
-#ASSIMP - api for 3d models
-#find_package(ASSIMP REQUIRED)
-#message(STATUS "ASSIMP included at ${ASSIMP_INCLUDE_DIR}")
-
 # Put all libraries into a variable
-set(LIBS glfw3 glew32 soil2 OpenGL::GL fmod_vc)
+set(LIBS glfw3 glew32 OpenGL::GL fmod_vc)
 
 # Define the include DIRs
 include_directories(
@@ -49,27 +37,6 @@ include_directories(
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
-
-# Create virtual folders to make it look nicer in VS
-#if(MSVC_IDE)
-#	# Macro to preserve source files hierarchy in the IDE
-#	macro(GroupSources curdir)
-#		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
-#
-#		foreach(child ${children})
-#			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-#				GroupSources(${curdir}/${child})
-#			else()
-#				string(REPLACE "/" "\\" groupname ${curdir})
-#				string(REPLACE "src" "Sources" groupname ${groupname})
-#				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-#			endif()
-#		endforeach()
-#	endmacro()
-#
-#	# Run macro
-#	GroupSources(src)
-#endif()
 
 # Copy dlls
 if(WIN32)

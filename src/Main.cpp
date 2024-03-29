@@ -9,6 +9,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "AudioManager.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -53,10 +54,10 @@ int main(void)
 
     { // for better terminate
         GLfloat positions[] = {
-            -0.5f, -0.5f, // 0
-            0.5f, -0.5f, // 1
-            0.5f,  0.5f, // 2
-            -0.5f,  0.5f  // 3
+            -0.5f, -0.5f, 0.0f, 0.0f, // 0
+            0.5f, -0.5f, 1.0f, 0.0f, // 1
+            0.5f,  0.5f, 1.0f, 1.0f,// 2
+            -0.5f,  0.5f, 0.0f,1.0f  // 3
         }; 
 
         GLuint indeces[] = {
@@ -64,13 +65,14 @@ int main(void)
         2,3,0
         };
 
-        
+        GlCall(glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA));
   
         
-        VertexBuffer vb(positions, 4 * 2 * sizeof(GLfloat));
+        VertexBuffer vb(positions, 4 * 4 * sizeof(GLfloat));
         IndexBuffer ib(indeces,6);
 
         VertexBufferLayout layout;
+        layout.Push<float>(2);
         layout.Push<float>(2);
         
         VertexArray va;
@@ -79,6 +81,10 @@ int main(void)
         Shader shader("shader/basic_Shader.glsl");
         shader.Bind();
         shader.SetUniform4f("u_Color",0.8f, 0.3f, 0.8f, 1.0f);
+
+        Texture texture("textur/palette.png");
+        texture.Bind();
+        shader.SetUniform1i("u_Texture",0);
 
         va.Unbind();
         vb.Unbind();
