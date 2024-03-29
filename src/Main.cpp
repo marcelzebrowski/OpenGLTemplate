@@ -4,6 +4,7 @@
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
@@ -13,7 +14,7 @@ int main(void)
 {
 
     AudioManager audioManager;
-    //audioManager.LoadSong("sound/Icaras.mp3");
+    audioManager.LoadSong("sound/Switchback.mod");
     
     GLFWwindow* window;
 
@@ -84,6 +85,8 @@ int main(void)
         ib.Unbind();
         shader.Unbind();
 
+        Renderer renderer;
+
         float r = 0.0f;
         float inc = 0.05f;
         
@@ -108,17 +111,13 @@ int main(void)
             r +=inc;
 
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.Clear();
             
             shader.Bind();
             shader.SetUniform4f("u_Color",r, 0.3f, 0.8f, 1.0f);
             
-            // vao and ibo
-            va.Bind();
-            ib.Bind();
-
-            GlCall(glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, nullptr));
-
+            renderer.Draw(va,ib,shader);
+            
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 

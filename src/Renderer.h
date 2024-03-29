@@ -2,6 +2,11 @@
 
 #include <GL/glew.h>
 
+#include "VertexArray.h"
+#include "Shader.h"
+#include "IndexBuffer.h"
+
+
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GlCall(x) {\
     GlClearError();\
@@ -20,5 +25,9 @@ private:
 public:
     Renderer(/* args */);
     ~Renderer();
+
+    void Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+
+    void Clear() const;
 };
 

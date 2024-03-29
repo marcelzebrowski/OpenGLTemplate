@@ -1,5 +1,6 @@
 #include "VertexArray.h"
 #include "Renderer.h"
+#include "VertexBufferLayout.h"
 
 VertexArray::VertexArray(/* args */):m_rendererID(0)
 {
