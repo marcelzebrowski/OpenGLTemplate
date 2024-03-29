@@ -80,6 +80,7 @@ void AudioManager::LoadSFX(const std::string& path) {
 
 void AudioManager::LoadSong(const std::string& path) {
 	Load(CATEGORY_SONG, path);
+	PlaySong(path);
 }
 
 void AudioManager::PlaySFX(const std::string& path, float minVolume, float maxVolume, float minPitch, float maxPitch) {
@@ -164,7 +165,9 @@ void AudioManager::Load(Category type, const std::string& path) {
 	}
 
 	FMOD::Sound* sound;
-	system->createSound(path.c_str(), modes[type], 0, &sound);
+
+
+	FMOD_RESULT result = system->createSound(path.c_str(), modes[type], 0, &sound);
 
 	sounds[type].insert(std::make_pair(path, sound));
 }

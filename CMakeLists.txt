@@ -6,13 +6,12 @@ project(TestProject VERSION 1.0)
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/src/*.hpp) 
+file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/src/*.hpp)  
 
 # Add lib files
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 # Configure assets header file
-configure_file(src/helpers/RootDir.h.in src/helpers/RootDir.h)
 include_directories(${CMAKE_BINARY_DIR}/src)
 
 # define the executeable
@@ -52,25 +51,25 @@ include_directories(
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
 # Create virtual folders to make it look nicer in VS
-if(MSVC_IDE)
-	# Macro to preserve source files hierarchy in the IDE
-	macro(GroupSources curdir)
-		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
-
-		foreach(child ${children})
-			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-				GroupSources(${curdir}/${child})
-			else()
-				string(REPLACE "/" "\\" groupname ${curdir})
-				string(REPLACE "src" "Sources" groupname ${groupname})
-				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-			endif()
-		endforeach()
-	endmacro()
-
-	# Run macro
-	GroupSources(src)
-endif()
+#if(MSVC_IDE)
+#	# Macro to preserve source files hierarchy in the IDE
+#	macro(GroupSources curdir)
+#		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
+#
+#		foreach(child ${children})
+#			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+#				GroupSources(${curdir}/${child})
+#			else()
+#				string(REPLACE "/" "\\" groupname ${curdir})
+#				string(REPLACE "src" "Sources" groupname ${groupname})
+#				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+#			endif()
+#		endforeach()
+#	endmacro()
+#
+#	# Run macro
+#	GroupSources(src)
+#endif()
 
 # Copy dlls
 if(WIN32)

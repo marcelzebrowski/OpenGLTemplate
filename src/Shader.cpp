@@ -68,7 +68,7 @@ unsigned int Shader::CompileShader(const std::string& source, unsigned int type)
     if(!result){
         int lenght;
         glGetShaderiv(id, GL_INFO_LOG_LENGTH, &lenght);
-        char* message = (char*)alloca(lenght * sizeof(char));
+        char* message = (char*)_malloca(lenght * sizeof(char));
         glGetShaderInfoLog(id, lenght, &lenght, message);
 
         std::cout << "Failed to compile "<< (type == GL_VERTEX_SHADER ? "vertex":"fragment") << " shader!" << std::endl; 
@@ -82,6 +82,10 @@ unsigned int Shader::CompileShader(const std::string& source, unsigned int type)
 }
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader){
+
+    std::cout << "Vertex: " << vertexShader << std::endl;
+    std::cout << "Fragment: " << fragmentShader << std::endl;
+
     GLuint program = glCreateProgram();
     GLuint vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
     GLuint fs = CompileShader(fragmentShader, GL_FRAGMENT_SHADER);

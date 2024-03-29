@@ -7,19 +7,13 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
-#include "Sound.h"
-
-
-void printSize(){
-    std::cout << "Size of GLfloat:" << sizeof(GLfloat) << std::endl; 
-}
-
+#include "AudioManager.h"
 
 int main(void)
 {
-    printSize();
 
-    Sound sound;
+    AudioManager audioManager;
+    //audioManager.LoadSong("sound/Icaras.mp3");
     
     GLFWwindow* window;
 
@@ -69,9 +63,8 @@ int main(void)
         2,3,0
         };
 
-
-        sound.play("sound/CHROMAG - Switchback.mod");
-
+        
+  
         
         VertexBuffer vb(positions, 4 * 2 * sizeof(GLfloat));
         IndexBuffer ib(indeces,6);
@@ -93,10 +86,19 @@ int main(void)
 
         float r = 0.0f;
         float inc = 0.05f;
+        
+        float fade = 0.0f;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
+            if(fade < 1.0f){
+                fade +=0.0001f;
+            }else{
+                fade = 1.0f;
+            }
 
+            audioManager.Update(fade);
+            
             if(r >= 1.0f){
                 inc = -0.05f;
             }else if(r <0.0f){
@@ -125,6 +127,8 @@ int main(void)
         }
 
     }
+
+    audioManager.StopSongs();
 
     glfwTerminate();
     return 0;
