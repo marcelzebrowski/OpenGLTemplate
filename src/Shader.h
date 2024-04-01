@@ -13,6 +13,8 @@ class Shader
 private:
     /* data */
     std::string m_FilePath;
+    std::string m_VertexShaderPath;
+    std::string m_FragmentShaderPath;
     unsigned int m_RendererID;
 
     // caching for uniforms
@@ -20,6 +22,7 @@ private:
 
 public:
     Shader(const std::string& filepath);
+    Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath);
     ~Shader();
 
     void Bind() const;
@@ -30,6 +33,8 @@ public:
 private:
     int GetUniformLocation(const std::string& name);
     ShaderProgramSource ParseShader(const std::string& filepath);
+    std::string LoadShaderAsString(const std::string& filepath);
+
     unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
     unsigned int CompileShader(const std::string& source, unsigned int type);
 };

@@ -78,7 +78,7 @@ int main(void)
         VertexArray va;
         va.AddBuffer(vb, layout);
 
-        Shader shader("shader/basic_Shader.glsl");
+        Shader shader("shader/basic_Shader.vert","shader/basic_Shader.frag");
         shader.Bind();
         shader.SetUniform4f("u_Color",0.8f, 0.3f, 0.8f, 1.0f);
 

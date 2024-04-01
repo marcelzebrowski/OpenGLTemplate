@@ -10,12 +10,16 @@
 
 
 
-
-
 Shader::Shader(const std::string& filepath):m_FilePath(filepath), m_RendererID(0)
 {
     ShaderProgramSource source = ParseShader(filepath);
     m_RendererID = CreateShader(source.VertexSource, source.FragmentSource); 
+}
+
+Shader::Shader(const std::string& vertexShaderPath, const std::string& fragmentShaderPath):
+    m_RendererID(0), m_VertexShaderPath(vertexShaderPath), m_FragmentShaderPath(fragmentShaderPath)
+{
+    m_RendererID = CreateShader(LoadShaderAsString(vertexShaderPath), LoadShaderAsString(fragmentShaderPath)); 
 }
 
 Shader::~Shader()
@@ -90,8 +94,10 @@ unsigned int Shader::CompileShader(const std::string& source, unsigned int type)
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader){
 
-    std::cout << "Vertex: " << vertexShader << std::endl;
-    std::cout << "Fragment: " << fragmentShader << std::endl;
+    std::cout << vertexShader.c_str() << std::endl;
+
+    std::cout << fragmentShader.c_str() << std::endl;
+
 
     GLuint program = glCreateProgram();
     GLuint vs = CompileShader(vertexShader, GL_VERTEX_SHADER);
@@ -134,4 +140,15 @@ ShaderProgramSource Shader::ParseShader(const std::string& filepath){
     }
 
     return {ss[0].str(), ss[1].str()};
+}
+
+std::string Shader::LoadShaderAsString(const std::string& filepath){
+    std::ifstream stream(filepath);
+    std::stringstream ss;
+    while (stream.good()){
+        std::string line;
+        getline(stream, line);
+        ss << line << '\n';
+    }
+    return ss.str();
 }
