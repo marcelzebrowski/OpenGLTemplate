@@ -1,6 +1,8 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -78,9 +80,13 @@ int main(void)
         VertexArray va;
         va.AddBuffer(vb, layout);
 
+
+        glm::mat4 proj = glm::ortho(-2.0f,2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+
         Shader shader("shader/basic_Shader.vert","shader/basic_Shader.frag");
         shader.Bind();
         shader.SetUniform4f("u_Color",0.8f, 0.3f, 0.8f, 1.0f);
+        shader.SetUniformMat4f("u_MVP", proj);
 
         Texture texture("textur/palette.png");
         texture.Bind();

@@ -19,10 +19,12 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& vb
     const auto& elements = vbl.GetElements();
     unsigned int offset = 0;
 
+    unsigned int stride = vbl.GetStride();
+
     for(unsigned int i = 0; i < elements.size(); i++){
         auto& element = elements[i];
         GlCall(glEnableVertexAttribArray(i)); 
-        GlCall(glVertexAttribPointer(i,element.count,element.type,element.normalized, vbl.GetStride(),(const void*)offset)); // links the buffer with vao
+        GlCall(glVertexAttribPointer(i,element.count,element.type,element.normalized, stride,(const void*)offset)); // links the buffer with vao
         offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
     }
 }
