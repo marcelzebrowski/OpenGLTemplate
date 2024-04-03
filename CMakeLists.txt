@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.10)
 project(TestProject VERSION 1.0)
 
 # Add source files
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/*.cpp) 
+file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/src/*.hpp)  
+file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)  
 
 # Add lib files
-link_directories(${CMAKE_SOURCE_DIR}/lib)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 # Configure assets header file
 include_directories(${CMAKE_BINARY_DIR}/src)
@@ -37,6 +37,14 @@ include_directories(
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
+
+# Default Project
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT TestProject)
+# Setze das Arbeitsverzeichnis für Visual Studio (Debug-Modus)
+set_target_properties(TestProject PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Debug")
+
+# Setze das Arbeitsverzeichnis für Visual Studio (Release-Modus)
+set_target_properties(TestProject PROPERTIES VS_RELEASE_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
 
 # Copy dlls
 if(WIN32)
