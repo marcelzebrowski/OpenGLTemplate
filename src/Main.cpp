@@ -81,13 +81,15 @@ int main(void)
         va.AddBuffer(vb, layout);
 
 
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 rotX = glm::rotate(view,glm::radians(0.0f),glm::vec3(0.0f,0.0f,1.0f));
         glm::mat4 proj = glm::ortho(-2.0f,2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
 
         Shader shader("shader/basic_Shader.vert","shader/basic_Shader.frag");
         shader.Bind();
         shader.SetUniform4f("u_Color",0.8f, 0.3f, 0.8f, 1.0f);
         shader.SetUniformMat4f("u_MVP", proj);
-
+    
         Texture texture("textur/palette.png");
         texture.Bind();
         shader.SetUniform1i("u_Texture",0);
@@ -109,7 +111,7 @@ int main(void)
             if(fade < 1.0f){
                 fade +=0.0001f;
             }else{
-                fade = 1.0f;
+                fade = 0.0f;
             }
 
             audioManager.Update(fade);
@@ -127,6 +129,8 @@ int main(void)
             
             shader.Bind();
             shader.SetUniform4f("u_Color",r, 0.3f, 0.8f, 1.0f);
+            rotX = glm::rotate(view,glm::radians(180.0f * fade * 100),glm::vec3(0.0f,0.0f,1.0f));
+            shader.SetUniformMat4f("u_MVP", proj * rotX);
             
             renderer.Draw(va,ib,shader);
             
