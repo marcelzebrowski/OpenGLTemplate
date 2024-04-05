@@ -145,8 +145,6 @@ int main(void)
             /* Render here */
             renderer.Clear();
 
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
             
             shader.Bind();
