@@ -4,9 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_glfw.h>
-#include <imgui/imgui_impl_opengl3.h>
+
 
 
 #include "Renderer.h"
@@ -18,38 +16,11 @@
 #include "AudioManager.h"
 #include "Texture.h"
 
-
-void imGuiInit(GLFWwindow *window){
-    ImGuiContext* imguiContext = ImGui::CreateContext();
-    if(!imguiContext){
-         std::cerr << "Fehler: ImGui konnte nicht initialisiert werden" << std::endl;
-    }
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-}
-
-void drawImGui(){
-    // Starte ImGui-Frame
-    ImGui::NewFrame();
-    
-    // Hier kannst du ImGui-Benutzeroberfläche erstellen
-    ImGui::Begin("Hello, world!");
-    ImGui::Text("This is some useful text.");
-    ImGui::End();
-    
-    // Rendere ImGui
-    ImGui::Render();
-}
-
-void killImGui(){
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-}
+#include "ImGuiHalloWelt.h"
 
 int main(void)
 {
-
+    ImGuiHalloWelt imGuiHalloWelt;
     AudioManager audioManager;
     audioManager.LoadSong("sound/Switchback.mod");
     
@@ -74,6 +45,9 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+
+    imGuiHalloWelt.imGuiInit(window);
 
     glfwSwapInterval(1);
 
@@ -134,9 +108,7 @@ int main(void)
         shader.Unbind();
 
         Renderer renderer;
-        imGuiInit(window);
-
-
+ 
         float r = 0.0f;
         float inc = 0.05f;
         
@@ -145,7 +117,7 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
 
-            
+               
 
             if(fade < 1.0f){
                 fade +=0.0001f;
@@ -174,6 +146,8 @@ int main(void)
             shader.SetUniformMat4f("u_MVP", mvp);
             
             renderer.Draw(va,ib,shader);
+
+            imGuiHalloWelt.drawImGui();        
       
 
        
@@ -192,7 +166,7 @@ int main(void)
     }
 
 
-    
+    imGuiHalloWelt.killImGui();
 
     audioManager.StopSongs();
     glfwDestroyWindow(window);
