@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <GLFW/glfw3.h>
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -8,6 +9,8 @@ class ImGuiHalloWelt
 {
 private:
     /* data */
+    std::string outputText;
+    bool showText = false;
 public:
     ImGuiHalloWelt(/* args */);
     ~ImGuiHalloWelt();
@@ -49,7 +52,25 @@ void ImGuiHalloWelt::drawImGui(){
     
     // Hier kannst du ImGui-Benutzeroberfläche erstellen
     ImGui::Begin("Hello, world!");
-    ImGui::Text("This is some useful text.");
+    
+
+    if(ImGui::Button("please klick")){
+        
+        if(showText){
+            outputText = "";
+            showText = false;
+        }else{
+            outputText = "Hallo Welt";
+            showText = true;
+        }
+    }
+
+
+    if(showText){
+        ImGui::Text(outputText.c_str());
+
+    }
+
     ImGui::End();
     
     // Rendere ImGui
