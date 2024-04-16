@@ -22,7 +22,7 @@ int main(void)
 {
     ImGuiHalloWelt imGuiHalloWelt;
     AudioManager audioManager;
-    audioManager.LoadSong("sound/Switchback.mod");
+    audioManager.LoadSong("sound/13_Mindriot.mp3");
     
     GLFWwindow* window;
 
@@ -30,13 +30,22 @@ int main(void)
     if (!glfwInit())
         return -1;
 
+    int width = 1920;
+    int height = 1080;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // you have to create a vertex array object!
-    
+    window = glfwCreateWindow(width,height, "Hello World", NULL, NULL);
+    glfwSetWindowSizeLimits(window, width, height, width, height);
+    glfwSetWindowAspectRatio(window, width, height);
+    glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
+    glfwSetWindowAttrib(window, GLFW_MAXIMIZED, GLFW_FALSE);
+
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    
+    
+    
     if (!window)
     {
         glfwTerminate();
@@ -88,7 +97,7 @@ int main(void)
 
 
         
-        glm::mat4 proj = glm::ortho(-2.0f,2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+        glm::mat4 proj = glm::ortho(-1.0f,1.0f, -0.5f, 0.5f, -1.0f, 1.0f);
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 model = glm::rotate(view,glm::radians(0.0f),glm::vec3(0.0f,0.0f,1.0f));
         glm::mat4 mvp = proj * view * model;
@@ -98,7 +107,7 @@ int main(void)
         shader.SetUniform4f("u_Color",0.8f, 0.3f, 0.8f, 1.0f);
         shader.SetUniformMat4f("u_MVP", mvp);
     
-        Texture texture("textur/palette.png");
+        Texture texture("textur/Ina.jpg");
         texture.Bind();
         shader.SetUniform1i("u_Texture",0);
 
@@ -113,14 +122,16 @@ int main(void)
         float inc = 0.05f;
         
         float fade = 0.0f;
+
+        float rotation = 0.0f;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
 
-               
+            rotation += imGuiHalloWelt.getRotationSpeed();               
 
-            if(fade < 1.0f){
-                fade +=0.0001f;
+            if(fade < 100.0f){
+                fade +=0.05f;
             }else{
                 fade = 0.0f;
             }
@@ -138,10 +149,10 @@ int main(void)
             /* Render here */
             renderer.Clear();
 
-           
+        
             shader.Bind();
             shader.SetUniform4f("u_Color",r, 0.3f, 0.8f, 1.0f);
-            model = glm::rotate(view,glm::radians(180.0f * fade * 100),glm::vec3(0.0f,0.0f,1.0f));
+            model = glm::rotate(view,glm::radians(rotation),glm::vec3(0.0f,0.0f,1.0f));
             mvp = proj * view * model;
             shader.SetUniformMat4f("u_MVP", mvp);
             
