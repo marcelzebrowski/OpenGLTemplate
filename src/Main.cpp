@@ -123,12 +123,14 @@ int main(void)
         
         float fade = 0.0f;
 
-        float rotation = 0.0f;
+        float rotation1 = 0.0f;
+        float rotation2 = 0.0f;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
 
-            rotation += imGuiHalloWelt.getRotationSpeed();               
+            rotation1 += imGuiHalloWelt.getRotationSpeed1();               
+            rotation2 += imGuiHalloWelt.getRotationSpeed2();
 
             if(fade < 100.0f){
                 fade +=0.05f;
@@ -152,10 +154,15 @@ int main(void)
         
             shader.Bind();
             shader.SetUniform4f("u_Color",r, 0.3f, 0.8f, 1.0f);
-            model = glm::rotate(view,glm::radians(rotation),glm::vec3(0.0f,0.0f,1.0f));
-            mvp = proj * view * model;
-            shader.SetUniformMat4f("u_MVP", mvp);
-            
+            glm::mat4 model1 = glm::rotate(view,glm::radians(rotation1),glm::vec3(0.0f,0.0f,1.0f));
+            glm::mat4 mvp1 = proj * view * model1;
+            shader.SetUniformMat4f("u_MVP", mvp1);
+            renderer.Draw(va,ib,shader);
+
+            glm::mat4 view2 = glm::translate(glm::mat4(1.0f),glm::vec3(0.5f, -0.5f, 0.0f));
+            glm::mat4 model2 = glm::rotate(view2,glm::radians(-rotation2),glm::vec3(0.0f,0.0f,1.0f));
+            glm::mat4 mvp2 = proj * view * model2;
+            shader.SetUniformMat4f("u_MVP", mvp2);
             renderer.Draw(va,ib,shader);
 
             imGuiHalloWelt.drawImGui();        

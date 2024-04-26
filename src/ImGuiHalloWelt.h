@@ -12,7 +12,8 @@ private:
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-    float m_rotationSpeed;
+    float m_rotationSpeed1;
+    float m_rotationSpeed2;
 
 public:
     ImGuiHalloWelt(/* args */);
@@ -22,13 +23,17 @@ public:
     void drawImGui();
     void killImGui();
 
-    const float& getRotationSpeed() const{
-        return m_rotationSpeed;    
+    const float& getRotationSpeed1() const{
+        return m_rotationSpeed1;    
+    }
+
+    const float& getRotationSpeed2() const{
+        return m_rotationSpeed2;    
     }
 
 };
 
-ImGuiHalloWelt::ImGuiHalloWelt(/* args */):m_rotationSpeed(0.1f)
+ImGuiHalloWelt::ImGuiHalloWelt(/* args */):m_rotationSpeed1(0.1f),m_rotationSpeed2(0.1f)
 {
 }
 
@@ -64,9 +69,12 @@ void ImGuiHalloWelt::drawImGui(){
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     
 
-    ImGui::Text("Rotation Speed");               // Display some text (you can use a format strings too)
+    ImGui::Text("Rotation Speed1");               // Display some text (you can use a format strings too)
     ImGui::SameLine();
-    ImGui::SliderFloat("float", &m_rotationSpeed, 0.1f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::SliderFloat("Rot1", &m_rotationSpeed1, 0.1f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+    ImGui::Text("Rotation Speed2");
+    ImGui::SameLine();
+    ImGui::SliderFloat("Rot2", &m_rotationSpeed2, 0.1f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
   
     
     
