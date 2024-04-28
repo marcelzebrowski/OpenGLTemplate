@@ -4,6 +4,7 @@ project(TestProject VERSION 1.0)
 
 # Add source files
 file(GLOB_RECURSE IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/include/imgui/*.cpp)
+
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
@@ -13,10 +14,10 @@ file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h ${CMAKE_CURRE
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 # Configure assets header file
-include_directories(${CMAKE_BINARY_DIR}/src)
+#include_directories(${CMAKE_BINARY_DIR}/src)
 
 # define the executeable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES} ${GLAD_SOURCES})
 
 # Cmake Dir with some code to find external dependencies
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
@@ -27,13 +28,20 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 #OpenGL
 find_package(OpenGL REQUIRED)
 
+# glad
+set(GLAD_DIR ${CMAKE_SOURCE_DIR}/include/glad)
+add_library(glad ${CMAKE_SOURCE_DIR}/include/glad/src/glad.c)
+target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
+
 # Put all libraries into a variable
-set(LIBS glfw3 glew32 OpenGL::GL fmod_vc)
+set(LIBS glfw3 glew32 OpenGL::GL fmod_vc glad)
+
 
 # Define the include DIRs
 include_directories(
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/include"
+	"${CMAKE_SOURCe_DIR}/glad/include"
 )
 
 # Define the link libraries

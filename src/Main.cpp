@@ -1,5 +1,6 @@
 #include <iostream>
-#include <GL/glew.h>
+//#include <GL/glew.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,6 +19,16 @@
 
 #include "ImGuiHalloWelt.h"
 
+
+int gladInit(){
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Fehler beim Initialisieren von Glad" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    return 1;
+}
+
 int main(void)
 {
     ImGuiHalloWelt imGuiHalloWelt;
@@ -25,6 +36,8 @@ int main(void)
     audioManager.LoadSong("sound/13_Mindriot.mp3");
     
     GLFWwindow* window;
+
+
 
     /* Initialize the library */
     if (!glfwInit())
@@ -55,13 +68,18 @@ int main(void)
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
+    if(gladInit() == -1){
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+
 
     imGuiHalloWelt.imGuiInit(window);
 
     glfwSwapInterval(1);
 
     /* we need a valid context! */
-    if(glewInit() != GLEW_OK){
+    if(!glfwInit()){
         std::cout << "Error! I was not able to initialice glew." << std::endl;
         return -1;
     }else{
