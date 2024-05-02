@@ -102,9 +102,10 @@ void AudioManager::PlaySFX(const std::string& path, float minVolume, float maxVo
 	channel->setVolume(volume);
 
 	float frequency;
+	bool paused = false;
 	channel->getFrequency(&frequency);
 	channel->setFrequency(ChangeSemitone(frequency, pitch));
-	channel->getPaused(false);
+	channel->getPaused(&paused);
 }
 
 void AudioManager::PlaySong(const std::string& path) {
