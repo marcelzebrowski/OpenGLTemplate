@@ -5,6 +5,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <plog/Log.h> // Step 1: include the logger headers
+#include <plog/Initializers/RollingFileInitializer.h>
 
 
 
@@ -29,8 +31,20 @@ int gladInit(){
     return 1;
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height){
+    glViewport(0,0, width, height);
+}
+
+void processInput(GLFWwindow* window){
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+        glfwSetWindowShouldClose(window, true);
+    }
+}
+
 int main(void)
 {
+    plog::init(plog::debug, "Logfile.txt");
+    PLOGD << "main() called";
     ImGuiHalloWelt imGuiHalloWelt;
     AudioManager audioManager;
     audioManager.LoadSong("sound/13_Mindriot.mp3");
@@ -53,7 +67,7 @@ int main(void)
     glfwSetWindowAspectRatio(window, width, height);
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, GLFW_FALSE);
     glfwSetWindowAttrib(window, GLFW_MAXIMIZED, GLFW_FALSE);
-
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     /* Create a windowed mode window and its OpenGL context */
     
@@ -73,6 +87,9 @@ int main(void)
         return -1;
     }
 
+    
+    glViewport(0, 0, width, height);
+    
 
     imGuiHalloWelt.imGuiInit(window);
 
@@ -147,6 +164,7 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
 
+
             rotation1 += imGuiHalloWelt.getRotationSpeed1();               
             rotation2 += imGuiHalloWelt.getRotationSpeed2();
 
@@ -187,7 +205,8 @@ int main(void)
       
 
        
-   
+            /* Check if the window was closed */
+            processInput(window);
             
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
