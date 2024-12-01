@@ -1,25 +1,25 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
+set(CMAKE_CXX_STANDARD 20)
+
 
 project(TestProject VERSION 1.0)
 
 # Add source files
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/*.cpp) 
+file(GLOB_RECURSE IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/include/imgui/*.cpp)
+
+file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/src/*.hpp) 
+file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)  
 
 # Add lib files
-link_directories(${CMAKE_SOURCE_DIR}/lib)
-
-# Configure assets header file
-#configure_file(src/helpers/RootDir.h.in src/helpers/RootDir.h)
-include_directories(${CMAKE_BINARY_DIR}/src)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
 
 # define the executeable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} ${IMGUI_SOURCES} ${GLAD_SOURCES})
 
 # Cmake Dir with some code to find external dependencies
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/)
 
 #------------------
 # external packages
@@ -27,50 +27,32 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 #OpenGL
 find_package(OpenGL REQUIRED)
 
-#GLM - math library
-#find_package(GLM REQUIRED)
-#message(STATUS "GLM included at ${GLM_INCLUDE_DIR}")
-
-#GLFW - window management test
-#find_package(GLFW3 REQUIRED)
-#message(STATUS "GLFW included at ${GLFW3_INCLUDE_DIR}")
-
-#ASSIMP - api for 3d models
-#find_package(ASSIMP REQUIRED)
-#message(STATUS "ASSIMP included at ${ASSIMP_INCLUDE_DIR}")
+# glad
+set(GLAD_DIR ${CMAKE_SOURCE_DIR}/include/glad)
+add_library(glad ${CMAKE_SOURCE_DIR}/include/glad/src/glad.c)
+target_include_directories(glad PUBLIC ${GLAD_DIR}/include)
 
 # Put all libraries into a variable
-set(LIBS glfw3 glew32 soil2 OpenGL::GL fmod_vc)
+set(LIBS glfw3 glew32 OpenGL::GL fmod_vc glad)
+
 
 # Define the include DIRs
-include_directories(
+target_include_directories( ${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/src"
     "${CMAKE_SOURCE_DIR}/include"
 )
 
+
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 
-# Create virtual folders to make it look nicer in VS
-if(MSVC_IDE)
-	# Macro to preserve source files hierarchy in the IDE
-	macro(GroupSources curdir)
-		file(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
+# Default Project
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+# Setze das Arbeitsverzeichnis für Visual Studio (Debug-Modus)
+set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Debug")
 
-		foreach(child ${children})
-			if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-				GroupSources(${curdir}/${child})
-			else()
-				string(REPLACE "/" "\\" groupname ${curdir})
-				string(REPLACE "src" "Sources" groupname ${groupname})
-				source_group(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
-			endif()
-		endforeach()
-	endmacro()
-
-	# Run macro
-	GroupSources(src)
-endif()
+# Setze das Arbeitsverzeichnis für Visual Studio (Release-Modus)
+set_target_properties(${PROJECT_NAME} PROPERTIES VS_RELEASE_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
 
 # Copy dlls
 if(WIN32)
