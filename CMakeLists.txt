@@ -12,7 +12,7 @@ file(GLOB_RECURSE HEADER_FILES ${CMAKE_SOURCE_DIR}/src/*.h ${CMAKE_SOURCE_DIR}/s
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 # Configure assets header file
-configure_file(src/helpers/RootDir.h.in src/helpers/RootDir.h)
+#configure_file(src/helpers/RootDir.h.in src/helpers/RootDir.h)
 include_directories(${CMAKE_BINARY_DIR}/src)
 
 # define the executeable
