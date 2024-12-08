@@ -1,7 +1,24 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <random>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Shader.hpp"
+
+
+int doRandom(){
+	std::random_device rd; // Liefert einen zufälligen Seed
+    std::mt19937 gen(rd()); // Mersenne Twister PRNG initialisiert mit Seed
+
+    // Verteilung festlegen (z. B. Ganzzahlen zwischen 1 und 100)
+    std::uniform_int_distribution<> distr(1, 100);
+
+    // Zufallszahl generieren
+    return distr(gen);
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
@@ -12,81 +29,13 @@ void processInput(GLFWwindow *window){
         glfwSetWindowShouldClose(window, true);
 }
 
-
-void render(const unsigned int VAO, const unsigned int iShaderProgramId){
-	glClearColor(0.2f,0.3f,0.3f,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glBindVertexArray(VAO);
-	glUseProgram(iShaderProgramId);
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-}
-
-unsigned int createShader(const char* program, GLenum shaderType){
-	unsigned int shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &program, NULL);
-	glCompileShader(shader);
-
-	int success;
-	char infoLog[512];
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-	if(!success){
-		glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	return shader;
-}
-
-
-unsigned int createShaderProgram(const char* vertexShaderSource, const char* fragmentShaderSource){
-	unsigned int vertexShader = createShader(vertexShaderSource, GL_VERTEX_SHADER);
-	unsigned int fragmentShader = createShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-	
-	int success;
-	char infoLog[512];
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-	if(!success){
-		glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::CREATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	// delete shader we no longer need them anymore
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	return shaderProgram;
-}
-
 unsigned int createTriangle(){
-
-	/*float vertices[] = {
-		// first triangle
-		 0.5f,  0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
-
-		// second triangle
-		 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
-	};*/
-
 	float vertices[] = {
-		 0.5f,  0.5f, 0.0f, //top right
-		 0.5f, -0.5f, 0.0f, //buttom right
-		-0.5f, -0.5f, 0.0f, //buttom left
-		-0.5f,  0.5f, 0.0f  // top left
+		// positions + color
+		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 0.0f  
 	};
 
 	unsigned int indeces[] = {
@@ -111,8 +60,12 @@ unsigned int createTriangle(){
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indeces), indeces, GL_STATIC_DRAW);
 	
 	// -- linking vertex attributes (interpret the vertex data)
-	glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0); // layout(location = 0)
+
+	//                   index, size,  type,   normalized,  stride,          offset
+	glVertexAttribPointer(  0,  3    ,GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);// layout(location = 0)
+	glVertexAttribPointer(  1,  3    ,GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));// layout(location = 1)
+	glEnableVertexAttribArray(0); 
+	glEnableVertexAttribArray(1); 
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -121,7 +74,32 @@ unsigned int createTriangle(){
 	return VAO;
 }
 
+
+int getMaxVertexAttributes(){
+	int nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+	return nrAttributes;
+}
+
+float randomColor(){
+	float timeValue = (float)glfwGetTime();
+	float value = (sin(timeValue*doRandom())/2.0f) + 0.5f;
+	return value;
+}
+
+void render(const unsigned int VAO){
+	glClearColor(0.2f,0.3f,0.3f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glBindVertexArray(VAO);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+}
+
+
 int main(void) {
+
 	// initialize and configure
 	glfwInit();
 	
@@ -148,37 +126,37 @@ int main(void) {
 		return -1;
 	}    
 
-	// -- create vertex shader
-	const char* vertexShaderSource = "#version 330 core\n"
-					"layout (location = 0) in vec3 aPos;\n"
-					"void main(){ \n"
-					"    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-					"}\0";
+	getMaxVertexAttributes();
 
-	// -- create fragment shader
-	const char* fragmentShaderSource = "#version 330 core\n"
-					"out vec4 FragColor;\n"
-					"void main(){ \n"
-    				"     FragColor = vec4(1.0f,0.5f, 0.2f, 1.0f);\n"
-					"}\0";
 	
-	unsigned int iShaderProgramId = createShaderProgram(vertexShaderSource, fragmentShaderSource);
-	unsigned int VAO = createTriangle();
-	
+	{
+		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
+		unsigned int VAO = createTriangle();
+		
 
-	while(!glfwWindowShouldClose(window)){
-		processInput(window);
+		while(!glfwWindowShouldClose(window)){
+			processInput(window);
 
-		render(VAO, iShaderProgramId);
+			shader.attach();
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();    
+
+			float c1 = randomColor();
+			float c2 = randomColor();
+			float c3 = randomColor();
+
+			shader.setFloat3("color",c1,c2,c3);
+
+			render(VAO);
+			shader.detach();
+
+			glfwSwapBuffers(window);
+			glfwPollEvents();    
+		}
+
+		// clean
+		glDeleteVertexArrays(1,&VAO);
 	}
-
-	// clean
-	glDeleteVertexArrays(1,&VAO);
-	glDeleteProgram(iShaderProgramId);
-
+	
 	glfwTerminate();
 
 	return 0;
