@@ -3,6 +3,18 @@
 #include <GLFW/glfw3.h>
 
 
+float triangle1[] = {
+	0.5f,  0.5f, 0.0f,
+	0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f,
+};
+
+float triangle2[] = {
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height){
     glViewport(0, 0, width, height);
 }  
@@ -14,14 +26,9 @@ void processInput(GLFWwindow *window){
 
 
 void render(const unsigned int VAO, const unsigned int iShaderProgramId){
-	glClearColor(0.2f,0.3f,0.3f,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	glBindVertexArray(VAO);
 	glUseProgram(iShaderProgramId);
-	//glDrawArrays(GL_TRIANGLES, 0, 6);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glBindVertexArray(0);
 }
 
@@ -68,51 +75,20 @@ unsigned int createShaderProgram(const char* vertexShaderSource, const char* fra
 	return shaderProgram;
 }
 
-unsigned int createTriangle(){
-
-	/*float vertices[] = {
-		// first triangle
-		 0.5f,  0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f,
-
-		// second triangle
-		 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		-0.5f,  0.5f, 0.0f
-	};*/
-
-	float vertices[] = {
-		 0.5f,  0.5f, 0.0f, //top right
-		 0.5f, -0.5f, 0.0f, //buttom right
-		-0.5f, -0.5f, 0.0f, //buttom left
-		-0.5f,  0.5f, 0.0f  // top left
-	};
-
-	unsigned int indeces[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
-	};
-
-
+unsigned int createTriangle(float* vertices, size_t size){
 	// create vertex and index buffer
-	unsigned int VAO, VBO, EBO;
+	unsigned int VAO, VBO;
 	glGenVertexArrays(1,&VAO);
 	glGenBuffers(1,&VBO);
-	glGenBuffers(1, &EBO);
 	
 	// bind data
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, size * sizeof(float), vertices, GL_STATIC_DRAW);
 
-	// bind indices
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indeces), indeces, GL_STATIC_DRAW);
-	
 	// -- linking vertex attributes (interpret the vertex data)
-	glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0); // layout(location = 0)
+	glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0); //layout(location = 0)
+	glEnableVertexAttribArray(0); // enable a generic vertex attribute array 
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -120,6 +96,7 @@ unsigned int createTriangle(){
 
 	return VAO;
 }
+
 
 int main(void) {
 	// initialize and configure
@@ -162,21 +139,34 @@ int main(void) {
     				"     FragColor = vec4(1.0f,0.5f, 0.2f, 1.0f);\n"
 					"}\0";
 	
+	const char* fragmentShaderSource2 = "#version 330 core\n"
+					"out vec4 FragColor;\n"
+					"void main(){ \n"
+    				"     FragColor = vec4(1.0f,1.0f, 0.2f, 1.0f);\n"
+					"}\0";
+
 	unsigned int iShaderProgramId = createShaderProgram(vertexShaderSource, fragmentShaderSource);
-	unsigned int VAO = createTriangle();
-	
+	unsigned int iShaderProgramId2 = createShaderProgram(vertexShaderSource, fragmentShaderSource2);
+
+	unsigned int VAO1 = createTriangle(triangle1,sizeof(triangle1)/sizeof(triangle1[0]));
+	unsigned int VAO2 = createTriangle(triangle2,sizeof(triangle2)/sizeof(triangle2[0]));
 
 	while(!glfwWindowShouldClose(window)){
 		processInput(window);
 
-		render(VAO, iShaderProgramId);
+		glClearColor(0.2f,0.3f,0.3f,1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		render(VAO1, iShaderProgramId);
+		render(VAO2, iShaderProgramId2);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
 	}
 
 	// clean
-	glDeleteVertexArrays(1,&VAO);
+	glDeleteVertexArrays(1,&VAO1);
+	glDeleteVertexArrays(1,&VAO2);
 	glDeleteProgram(iShaderProgramId);
 
 	glfwTerminate();
