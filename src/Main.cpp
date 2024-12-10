@@ -32,14 +32,14 @@ void processInput(GLFWwindow *window){
 unsigned int createTriangle(){
 	float vertices[] = {
 		// positions + color
-		 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 0.0f  
+		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  
 	};
 
 	unsigned int indeces[] = {
-		0, 1, 3, // first triangle
+	//	0, 1, 3, // first triangle
 		1, 2, 3  // second triangle
 	};
 
@@ -89,8 +89,7 @@ float randomColor(){
 }
 
 void render(const unsigned int VAO){
-	glClearColor(0.2f,0.3f,0.3f,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+
 	glBindVertexArray(VAO);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -137,17 +136,22 @@ int main(void) {
 		while(!glfwWindowShouldClose(window)){
 			processInput(window);
 
-			shader.attach();
-
+			glClearColor(0.2f,0.3f,0.3f,1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
 
 			float c1 = randomColor();
-			float c2 = randomColor();
-			float c3 = randomColor();
+			float c2 = 0.5f;
+			float c3 = 0.3f;
+
+			shader.attach();
 
 			shader.setFloat3("color",c1,c2,c3);
+			shader.setFloat("time",(float)glfwGetTime());
 
+		
 			render(VAO);
 			shader.detach();
+			
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();    
