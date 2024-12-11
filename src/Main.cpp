@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "Shader.hpp"
+#include "Texture.hpp"
 
 
 int doRandom(){
@@ -130,6 +131,9 @@ int main(void) {
 	
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
+
+		Texture texture("textur/container.jpg");
+
 		unsigned int VAO = createTriangle();
 		
 
@@ -144,12 +148,14 @@ int main(void) {
 			float c3 = 0.3f;
 
 			shader.attach();
+			texture.attach();
 
 			shader.setFloat3("color",c1,c2,c3);
 			shader.setFloat("time",(float)glfwGetTime());
 
 		
 			render(VAO);
+			texture.detach();
 			shader.detach();
 			
 
