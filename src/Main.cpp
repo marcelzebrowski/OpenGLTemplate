@@ -32,15 +32,15 @@ void processInput(GLFWwindow *window){
 
 unsigned int createTriangle(){
 	float vertices[] = {
-		// positions + color
-		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  
+		// positions       +     color       +    texture cords
+		 0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f  
 	};
 
 	unsigned int indeces[] = {
-	//	0, 1, 3, // first triangle
+		0, 1, 3, // first triangle
 		1, 2, 3  // second triangle
 	};
 
@@ -63,10 +63,12 @@ unsigned int createTriangle(){
 	// -- linking vertex attributes (interpret the vertex data)
 
 	//                   index, size,  type,   normalized,  stride,          offset
-	glVertexAttribPointer(  0,  3    ,GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)0);// layout(location = 0)
-	glVertexAttribPointer(  1,  3    ,GL_FLOAT, GL_FALSE, 6*sizeof(float), (void*)(3*sizeof(float)));// layout(location = 1)
+	glVertexAttribPointer(  0,  3    ,GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)0);// layout(location = 0)
+	glVertexAttribPointer(  1,  3    ,GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3*sizeof(float)));// layout(location = 1)
+	glVertexAttribPointer(  2,  2    ,GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(6*sizeof(float)));// layout(location = 2)
 	glEnableVertexAttribArray(0); 
-	glEnableVertexAttribArray(1); 
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2); 
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -132,7 +134,7 @@ int main(void) {
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
 
-		Texture texture("textur/container.jpg");
+		Texture texture("texture/container.png");
 
 		unsigned int VAO = createTriangle();
 		
