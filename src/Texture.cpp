@@ -54,7 +54,9 @@ unsigned int Texture::createTexture(const char* filePath){
         return 0;
     }
 
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    if(GLEW_ARB_framebuffer_object){
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
 
     // free memory
     stbi_image_free(data);
