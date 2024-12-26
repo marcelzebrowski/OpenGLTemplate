@@ -1,9 +1,9 @@
 #include <iostream>
-#include <GL/glew.h>
 #include "Texture.hpp"
+#include "Shader.hpp"
 #include "stb_image.hpp"
 
-Texture::Texture(const char* filePath){
+Texture::Texture(const char* filePath,int unit):unit(unit){
     ID = createTexture(filePath);
 }
 
@@ -12,8 +12,10 @@ Texture::~Texture(){
     ID = 0;
 }
 
-void Texture::attach(){
+void Texture::attach(const Shader& shader, const std::string uniform){
+    glActiveTexture(GL_TEXTURE0 + unit);
     glBindTexture(GL_TEXTURE_2D, ID);
+    shader.setInt(uniform,unit);
 }
 
 void Texture::detach(){
@@ -24,7 +26,7 @@ unsigned int Texture::createTexture(const char* filePath){
 
     int width, height, nrChannels;
 
-    
+    stbi_set_flip_vertically_on_load(true);
     unsigned char* data = stbi_load(filePath,&width,&height,&nrChannels,0);
 
     if(!data){
@@ -54,9 +56,9 @@ unsigned int Texture::createTexture(const char* filePath){
         return 0;
     }
 
-    if(GLEW_ARB_framebuffer_object){
+    /*if(GLEW_ARB_framebuffer_object){
         glGenerateMipmap(GL_TEXTURE_2D);
-    }
+    }*/
 
     // free memory
     stbi_image_free(data);

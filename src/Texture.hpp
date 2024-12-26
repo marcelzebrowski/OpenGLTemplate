@@ -2,16 +2,18 @@
 #define TEXTURE_H
 
 #include <string>
+#include "Shader.hpp"
 
 class Texture{
 
 private:
     unsigned int ID;
+    int unit;
 
 public:
-    Texture(const char* filePath);
+    Texture(const char* filePath, int unit);
     ~Texture();
-    void attach();
+    void attach(const Shader& shader, const std::string uniform);
     void detach();
 
 private:

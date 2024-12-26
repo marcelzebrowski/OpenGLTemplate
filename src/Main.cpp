@@ -5,6 +5,9 @@
 #include <random>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -29,6 +32,7 @@ void processInput(GLFWwindow *window){
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 }
+
 
 unsigned int createTriangle(){
 	float vertices[] = {
@@ -134,9 +138,13 @@ int main(void) {
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
 
-		Texture texture("texture/container.png");
+		Texture containerTexture("texture/container.png",0);
+		Texture awesomeFaceTexture("texture/awesomeface.png",1);
+
 
 		unsigned int VAO = createTriangle();
+
+		
 		
 
 		while(!glfwWindowShouldClose(window)){
@@ -145,22 +153,31 @@ int main(void) {
 			glClearColor(0.2f,0.3f,0.3f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 
+
 			float c1 = randomColor();
 			float c2 = 0.5f;
 			float c3 = 0.3f;
 
+			// create transformation
+			glm::mat4 transform = glm::mat4(1.0f);
+			transform = glm::translate(transform,glm::vec3(0.5,-0.5,0.0));
+			transform = glm::rotate(transform, (float)glfwGetTime(),glm::vec3(0.0,0.0,1.0));
+			
 			shader.attach();
-			texture.attach();
-
+			containerTexture.attach(shader,"texture1");
+			awesomeFaceTexture.attach(shader,"texture2");
 			shader.setFloat3("color",c1,c2,c3);
 			shader.setFloat("time",(float)glfwGetTime());
-
-		
+			shader.setMat4("transform",transform);
 			render(VAO);
-			texture.detach();
+			awesomeFaceTexture.detach();
+			containerTexture.detach();
 			shader.detach();
 			
 
+
+
+			
 			glfwSwapBuffers(window);
 			glfwPollEvents();    
 		}

@@ -38,6 +38,11 @@ void Shader::setFloat3(const std::string& name, float value1, float value2, floa
     glUniform3f(glGetUniformLocation(ID, name.c_str()), value1, value2, value3);
 }
 
+void Shader::setMat4(const std::string& name, glm::mat4& matrix) const{
+    unsigned int transformLoc = glGetUniformLocation(ID,name.c_str());
+    glUniformMatrix4fv(transformLoc,1,GL_FALSE,glm::value_ptr(matrix));
+}
+
 unsigned int Shader::createShaderProgram(const char* vertexPath, const char* fragmentPath){
     unsigned int vertexShader = createShader(vertexPath, GL_VERTEX_SHADER);
 	unsigned int fragmentShader = createShader(fragmentPath, GL_FRAGMENT_SHADER);
