@@ -157,19 +157,35 @@ int main(void) {
 			float c1 = randomColor();
 			float c2 = 0.5f;
 			float c3 = 0.3f;
+			float time = (float)glfwGetTime();
 
 			// create transformation
 			glm::mat4 transform = glm::mat4(1.0f);
 			transform = glm::translate(transform,glm::vec3(0.5,-0.5,0.0));
-			transform = glm::rotate(transform, (float)glfwGetTime(),glm::vec3(0.0,0.0,1.0));
+			transform = glm::rotate(transform, time, glm::vec3(0.0,0.0,1.0));
 			
 			shader.attach();
 			containerTexture.attach(shader,"texture1");
 			awesomeFaceTexture.attach(shader,"texture2");
 			shader.setFloat3("color",c1,c2,c3);
-			shader.setFloat("time",(float)glfwGetTime());
+			shader.setFloat("time",time);
 			shader.setMat4("transform",transform);
 			render(VAO);
+//			awesomeFaceTexture.detach();
+//			containerTexture.detach();
+//			shader.detach();
+
+			// exercise 2
+
+			transform = glm::mat4(1.0f);
+			transform = glm::translate(transform,glm::vec3(-0.5,0.5,0.0));
+			transform = glm::scale(transform,glm::vec3(sin(time),cos(time),0.0));
+			shader.setMat4("transform",transform);
+			render(VAO);
+
+
+
+
 			awesomeFaceTexture.detach();
 			containerTexture.detach();
 			shader.detach();
@@ -177,7 +193,7 @@ int main(void) {
 
 
 
-			
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();    
 		}
