@@ -11,7 +11,11 @@
 
 #include "Shader.hpp"
 #include "Texture.hpp"
+#include "ViewportHandler.hpp"
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height){
+    glViewport(0, 0, width, height);
+}  
 
 int doRandom(){
 	std::random_device rd; // Liefert einen zufälligen Seed
@@ -23,10 +27,6 @@ int doRandom(){
     // Zufallszahl generieren
     return distr(gen);
 }
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height){
-    glViewport(0, 0, width, height);
-}  
 
 void processInput(GLFWwindow *window){
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -82,13 +82,6 @@ unsigned int createTriangle(){
 }
 
 
-int getMaxVertexAttributes(){
-	int nrAttributes;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
-	return nrAttributes;
-}
-
 float randomColor(){
 	float timeValue = (float)glfwGetTime();
 	float value = (sin(timeValue*doRandom())/2.0f) + 0.5f;
@@ -118,13 +111,13 @@ int main(void) {
 
 	// create window
 	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	if (window == NULL){
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);  
 
 	// load all opengl function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
@@ -132,20 +125,24 @@ int main(void) {
 		return -1;
 	}    
 
-	getMaxVertexAttributes();
-
-	
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
+		ViewportHandler viewportHandler(&shader);
+
+		// initial window registration
+		viewportHandler.registerWithWindow(window);
+
+		int width, height;
+		glfwGetFramebufferSize(window, &width,&height);
+		viewportHandler.framebufferSizeCallBack(width,height);
+
+		
 
 		Texture containerTexture("texture/container.png",0);
 		Texture awesomeFaceTexture("texture/awesomeface.png",1);
 
 
 		unsigned int VAO = createTriangle();
-
-		
-		
 
 		while(!glfwWindowShouldClose(window)){
 			processInput(window);
