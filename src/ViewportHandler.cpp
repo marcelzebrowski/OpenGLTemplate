@@ -19,14 +19,14 @@ void ViewportHandler::framebufferSizeCallBack(int width, int height){
 
 void ViewportHandler::registerWithWindow(GLFWwindow* window){
     glfwSetWindowUserPointer(window,this);
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallbackStatic);
+}
 
-    // set call back function
-    glfwSetFramebufferSizeCallback(window, [](GLFWwindow* win,int w, int h){
-        auto* handler = static_cast<ViewportHandler*>(glfwGetWindowUserPointer(win));
-        if(handler){
-            handler->framebufferSizeCallBack(w,h);
-        }
-    });
+void ViewportHandler::framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height){
+    auto* handler = static_cast<ViewportHandler*>(glfwGetWindowUserPointer(window));
+    if(handler){
+        handler->framebufferSizeCallBack(width,height);
+    }
 }
 
 glm::mat4 ViewportHandler::getProjection() const{

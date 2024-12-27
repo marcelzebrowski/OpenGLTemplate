@@ -19,6 +19,8 @@ public:
     void framebufferSizeCallBack(int width, int height);
     void registerWithWindow(GLFWwindow* window);
     glm::mat4 getProjection() const;
+
+    static void framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height);
 };
 
 #endif

@@ -111,7 +111,7 @@ int main(void) {
 
 	// create window
 	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	
 	if (window == NULL){
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
