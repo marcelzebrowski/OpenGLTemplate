@@ -2,19 +2,20 @@
 #include <GLFW/glfw3.h>
 
 
-ViewportHandler::ViewportHandler(Shader* shader):shader(shader),projection(glm::mat4(1.0f)){
+ViewportHandler::ViewportHandler():projection(glm::mat4(1.0f)){
 }
 
 void ViewportHandler::framebufferSizeCallBack(int width, int height){
     glViewport(0,0, width, height);
     float aspect = static_cast<float>(width)/static_cast<float>(height);
-    projection = glm::ortho(-aspect, aspect, -1.0f,1.0f,-1.0f,1.0f);
+    projection = glm::perspective(glm::radians(45.0f),aspect, 0.1f, 100.0f);
 
-    if(shader){
+    for(Shader* shader:shaders){
         shader->attach();
         shader->setMat4("projection",projection);
         shader->detach();
     }
+  
 }
 
 void ViewportHandler::registerWithWindow(GLFWwindow* window){
@@ -31,4 +32,8 @@ void ViewportHandler::framebufferSizeCallbackStatic(GLFWwindow* window, int widt
 
 glm::mat4 ViewportHandler::getProjection() const{
     return projection;
+}
+
+void ViewportHandler::addShader(Shader* shader){
+    shaders.push_back(shader);
 }

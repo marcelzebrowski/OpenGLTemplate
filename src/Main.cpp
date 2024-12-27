@@ -13,10 +13,6 @@
 #include "Texture.hpp"
 #include "ViewportHandler.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height){
-    glViewport(0, 0, width, height);
-}  
-
 int doRandom(){
 	std::random_device rd; // Liefert einen zufälligen Seed
     std::mt19937 gen(rd()); // Mersenne Twister PRNG initialisiert mit Seed
@@ -127,7 +123,8 @@ int main(void) {
 
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
-		ViewportHandler viewportHandler(&shader);
+		ViewportHandler viewportHandler;
+		viewportHandler.addShader(&shader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -136,8 +133,7 @@ int main(void) {
 		glfwGetFramebufferSize(window, &width,&height);
 		viewportHandler.framebufferSizeCallBack(width,height);
 
-		
-
+	
 		Texture containerTexture("texture/container.png",0);
 		Texture awesomeFaceTexture("texture/awesomeface.png",1);
 
@@ -155,17 +151,22 @@ int main(void) {
 			float c2 = 0.5f;
 			float c3 = 0.3f;
 
-			// create transformation
-			glm::mat4 transform = glm::mat4(1.0f);
-			transform = glm::translate(transform,glm::vec3(0.5,-0.5,0.0));
-			transform = glm::rotate(transform, (float)glfwGetTime(),glm::vec3(0.0,0.0,1.0));
+			// create model
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model,glm::vec3(0.5,-0.5,0.0));
+			model = glm::rotate(model, (float)glfwGetTime(),glm::vec3(1.0,0.0,0.0));
 			
+			// create view
+			glm::mat4 view = glm::mat4(1.0f);
+			view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f));
+
 			shader.attach();
 			containerTexture.attach(shader,"texture1");
 			awesomeFaceTexture.attach(shader,"texture2");
 			shader.setFloat3("color",c1,c2,c3);
 			shader.setFloat("time",(float)glfwGetTime());
-			shader.setMat4("transform",transform);
+			shader.setMat4("model",model);
+			shader.setMat4("view",view);
 			render(VAO);
 			awesomeFaceTexture.detach();
 			containerTexture.detach();
