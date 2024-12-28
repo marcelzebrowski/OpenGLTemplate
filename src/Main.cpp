@@ -14,6 +14,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "ViewportHandler.hpp"
+#include "CoordinatesSystem.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -320,8 +321,11 @@ int main(void) {
 
 	{
 		Shader shader("shader/vertex.glsl","shader/fragment.glsl");
+		Shader coordinateSystemShader("shader/axes_vertex.glsl","shader/axes_fragment.glsl");
+		
 		ViewportHandler viewportHandler;
 		viewportHandler.addShader(&shader);
+		viewportHandler.addShader(&coordinateSystemShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -334,6 +338,9 @@ int main(void) {
 		Texture containerTexture("texture/container.png",0);
 		Texture awesomeFaceTexture("texture/awesomeface.png",1);
 
+
+		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
+		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 
 		unsigned int VAO = createCube();
 		
@@ -356,8 +363,6 @@ int main(void) {
 			glClearColor(0.2f,0.3f,0.3f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-			
-
 			shader.attach();
 			containerTexture.attach(shader,"texture1");
 			awesomeFaceTexture.attach(shader,"texture2");
@@ -366,6 +371,10 @@ int main(void) {
 			glm::mat4 view = glm::mat4(1.0f);
 			view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f));
 			shader.setMat4("view",view);
+
+			glm::mat4 normal = glm::mat4(1.0f);
+
+			//coordinateSystem.render(normal,view);
 			
 			for(unsigned int i=0; i<10;i++){
 				
