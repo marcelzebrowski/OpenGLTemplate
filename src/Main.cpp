@@ -14,7 +14,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "ViewportHandler.hpp"
-
+#include "GLErrorCheck.hpp"
 #include "CoordinatesSystem.hpp"
 #include "Cube.hpp"
 
@@ -70,6 +70,10 @@ int main(void) {
 	{
 		Shader coordinateSystemShader("shader/axes_vertex.glsl","shader/axes_fragment.glsl");
 		Shader cubeShader("shader/vertex.glsl","shader/fragment.glsl");
+		Texture cube0Texture("texture/container.png",0);
+		Texture cube1Texture("texture/awesomeface.png",1);
+
+
 		ViewportHandler viewportHandler;
 		viewportHandler.addShader(&coordinateSystemShader);
 		viewportHandler.addShader(&cubeShader);
@@ -85,7 +89,7 @@ int main(void) {
 	
 		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-		Cube cube(&cubeShader);
+		Cube cube(&cubeShader,&cube0Texture, &cube1Texture);
 
 
 		while(!glfwWindowShouldClose(window)){

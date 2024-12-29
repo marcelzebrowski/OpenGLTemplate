@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "Shader.hpp"
+#include "GLErrorCheck.hpp"
 
 class CoordinateSystem {
 private:

@@ -1,5 +1,4 @@
 #include "CoordinatesSystem.hpp"
-#include "GLErrorCheck.hpp"
 
 static const float axesVertices[]={
     // Positions + Colors
