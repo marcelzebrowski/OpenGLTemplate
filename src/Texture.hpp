@@ -14,6 +14,7 @@ public:
     Texture(const char* filePath, int unit);
     ~Texture();
     void attach(const Shader& shader, const std::string uniform);
+    void attach(const Shader* shader, const std::string uniform);
     void detach();
 
 private:

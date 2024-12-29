@@ -18,7 +18,7 @@ public:
     Cube(Shader* shader, Texture* texture0, Texture* texture1);
     ~Cube();
 
-    void render(glm::mat4& model, glm::mat4& view);
+    void render(glm::mat4& model, glm::mat4& view,float c1, float c2, float c3);
 
 };
 

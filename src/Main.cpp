@@ -37,6 +37,12 @@ void processInput(GLFWwindow *window){
         glfwSetWindowShouldClose(window, true);
 }
 
+float randomColor(){
+	float timeValue = (float)glfwGetTime();
+	float value = (sin(timeValue*doRandom())/2.0f) + 0.5f;
+	return value;
+}
+
 int main(void) {
 
 	// initialize and configure
@@ -91,19 +97,39 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 		Cube cube(&cubeShader,&cube0Texture, &cube1Texture);
 
+		glm::vec3 cubePositions[] = {
+			glm::vec3( 0.0f,  0.0f,  0.0f), 
+			glm::vec3( 2.0f,  5.0f, -15.0f), 
+			glm::vec3(-1.5f, -2.2f, -2.5f),  
+			glm::vec3(-3.8f, -2.0f, -12.3f),  
+			glm::vec3( 2.4f, -0.4f, -3.5f),  
+			glm::vec3(-1.7f,  3.0f, -7.5f),  
+			glm::vec3( 1.3f, -2.0f, -2.5f),  
+			glm::vec3( 1.5f,  2.0f, -2.5f), 
+			glm::vec3( 1.5f,  0.2f, -1.5f), 
+			glm::vec3(-1.3f,  1.0f, -1.5f)  
+		};
+
 
 		while(!glfwWindowShouldClose(window)){
 			processInput(window);
 
-			glClearColor(0.0f,0.0f,0.0f,1.0f);
+			glClearColor(0.5f,0.0f,0.0f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 			
-			glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-3.0f));
-			glm::mat4 model = glm::mat4(1.0f); 
-		
+			glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-4.0f));
+			glm::mat4 model = glm::mat4(1.0f);
+
+			
+			
 
 			coordinateSystem.render(model,view);
-			cube.render(model,view);
+
+			for(unsigned int i=0; i<10;i++){
+				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
+				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),cubePositions[i]); 
+				cube.render(modelCube,view, randomColor(), randomColor(), randomColor());
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();    

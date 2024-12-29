@@ -18,6 +18,12 @@ void Texture::attach(const Shader& shader, const std::string uniform){
     shader.setInt(uniform,unit);
 }
 
+void Texture::attach(const Shader* shader, const std::string uniform){
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, ID);
+    shader->setInt(uniform,unit);
+}
+
 void Texture::detach(){
     glBindTexture(GL_TEXTURE_2D,0);
 }
