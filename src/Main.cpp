@@ -17,7 +17,7 @@
 #include "GLErrorCheck.hpp"
 #include "CoordinatesSystem.hpp"
 #include "Cube.hpp"
-
+#include "Camera.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -74,6 +74,7 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
+		Camera camera;
 		Shader coordinateSystemShader("shader/axes_vertex.glsl","shader/axes_fragment.glsl");
 		Shader cubeShader("shader/vertex.glsl","shader/fragment.glsl");
 		Texture cube0Texture("texture/container.png",0);
@@ -117,11 +118,16 @@ int main(void) {
 			glClearColor(0.5f,0.0f,0.0f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 			
-			glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,0.0f,-4.0f));
+			const float radius = 5.0f;
+			float camX = sin(glfwGetTime() / radius);
+			float camZ = cos(glfwGetTime() / radius);
+			//camera.setPosition(glm::vec3(camX,0.0f,camZ));
+			//camera.rotate(glfwGetTime(),glfwGetTime());
+			
+	
 			glm::mat4 model = glm::mat4(1.0f);
-
-			
-			
+		
+			glm::mat4 view = camera.getViewMatrix();
 
 			coordinateSystem.render(model,view);
 
