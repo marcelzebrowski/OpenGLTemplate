@@ -18,6 +18,7 @@
 #include "CoordinatesSystem.hpp"
 #include "Cube.hpp"
 #include "Camera.hpp"
+#include "MarcelsTimer.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -74,7 +75,7 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		Camera camera;
+		Camera camera(glm::vec3(10.0f, 5.0f, 0.0f),glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(0.0f, 1.0f, 0.0f));
 		Shader coordinateSystemShader("shader/axes_vertex.glsl","shader/axes_fragment.glsl");
 		Shader cubeShader("shader/vertex.glsl","shader/fragment.glsl");
 		Texture cube0Texture("texture/container.png",0);
@@ -111,18 +112,34 @@ int main(void) {
 			glm::vec3(-1.3f,  1.0f, -1.5f)  
 		};
 
-
+		float radius = 10.0f;    // Radius der Kreisbahn
+		float baseHeight = 5.0f;     // Fixe Höhe
+		float heightAmplitude = 2.0f;
+		float angle = 0.0f;      // Startwinkel in Grad
+		float speed = 35.0f;  
+		
+		
+		MarcelsTimer timer;
+		
 		while(!glfwWindowShouldClose(window)){
+			float delta = timer.delta();	
+			
 			processInput(window);
 
 			glClearColor(0.5f,0.0f,0.0f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 			
-			const float radius = 5.0f;
-			float camX = sin(glfwGetTime() / radius);
-			float camZ = cos(glfwGetTime() / radius);
-			//camera.setPosition(glm::vec3(camX,0.0f,camZ));
-			//camera.rotate(glfwGetTime(),glfwGetTime());
+			angle += speed * delta;
+
+			
+
+			// Position der Kamera berechnen
+			float x = radius * cos(glm::radians(angle));
+			float z = radius * sin(glm::radians(angle));
+			float y = baseHeight + sin(glm::radians(angle)) * 12.0f;
+
+			// Setze die neue Kameraposition
+			camera.setPosition(glm::vec3(x, y, z));
 			
 	
 			glm::mat4 model = glm::mat4(1.0f);
@@ -138,7 +155,7 @@ int main(void) {
 			}
 
 			glfwSwapBuffers(window);
-			glfwPollEvents();    
+			glfwPollEvents();
 		}
 
 	}
