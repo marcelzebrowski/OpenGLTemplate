@@ -126,7 +126,7 @@ int main(void) {
 			
 			processInput(window);
 
-			glClearColor(0.5f,0.0f,0.0f,1.0f);
+			glClearColor(0.2f,0.4f,0.4f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 			
 			angle += speed * delta;
