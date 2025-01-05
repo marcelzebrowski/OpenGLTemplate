@@ -7,7 +7,7 @@ Camera::Camera(const glm::vec3& position, const glm::vec3& target, const glm::ve
 }
 
 glm::mat4 Camera::getViewMatrix() const{
-    return glm::lookAt(position, target,up);
+    return glm::lookAt(position, position + target,up);
 }
 
 void Camera::move(const glm::vec3& offset){
@@ -22,7 +22,7 @@ void Camera::rotate(float yaw, float pitch){
     direction.y = sin(glm::radians(pitch));
     direction.z = sin(glm::radians(yaw))* cos(glm::radians(pitch));
     direction = glm::normalize(direction);
-    target = position + direction;
+    target = direction;
 }
 
 glm::vec3 Camera::getPosition() const{

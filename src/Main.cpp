@@ -24,6 +24,15 @@
 #define M_PI 3.14159265358979323846
 
 float delta;
+int maxWidth = 800;
+int maxHeight = 600;
+float lastX = (float)maxWidth / 2;
+float lastY = (float)maxHeight / 2;
+const float sensivity = 0.1f;
+float yaw = -90.0f;
+float pitch = 0.0f;
+bool firstMouseMove = true;
+
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3(0.0f, 1.0f, 0.0f));
 
 int doRandom(){
@@ -35,6 +44,36 @@ int doRandom(){
 
     // Zufallszahl generieren
     return distr(gen);
+}
+
+void mouse_call_back(GLFWwindow* window, double xpos, double ypos){
+
+	if(firstMouseMove){
+		lastX = (float)xpos;
+		lastY = (float)ypos;
+		firstMouseMove = false;
+	}
+
+	float xOffset = (float)xpos - lastX;
+	float yOffset = (float)ypos - lastY;
+
+	lastX = (float)xpos;
+	lastY = (float)ypos;
+
+	xOffset *= sensivity;
+	yOffset *= sensivity;
+
+	yaw += xOffset;
+	pitch += yOffset;
+
+	if(pitch > 89.0f){
+		pitch = 89.0f;
+	}
+	if(pitch < -89.0f){
+		pitch = -89.0f;
+	}
+
+	camera.rotate(yaw,pitch);
 }
 
 void processInput(GLFWwindow *window){
@@ -59,6 +98,7 @@ void processInput(GLFWwindow *window){
 	if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
      	camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getTarget(),camera.getUp())) * camSpeed);
 	}
+
 	
 }
 
@@ -81,7 +121,7 @@ int main(void) {
 	#endif
 
 	// create window
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
 	
 	if (window == NULL){
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -94,7 +134,11 @@ int main(void) {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
-	}    
+	}
+
+	// configure mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window,mouse_call_back);    
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -145,7 +189,7 @@ int main(void) {
 		MarcelsTimer timer;
 		
 		while(!glfwWindowShouldClose(window)){
-			delta = timer.delta();
+			delta = (float)timer.delta();
 			timer.printStats();
 			
 			processInput(window);
