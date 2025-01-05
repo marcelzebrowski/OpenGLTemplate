@@ -13,6 +13,7 @@ class ViewportHandler {
 private:
     glm::mat4 projection;
     std::vector<Shader*> shaders;
+    float fov;
 
 public:
     ViewportHandler();
@@ -20,6 +21,7 @@ public:
     void registerWithWindow(GLFWwindow* window);
     glm::mat4 getProjection() const;
     void addShader(Shader* shader);
+    void setFov(float fov);
 
     static void framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height);
 };

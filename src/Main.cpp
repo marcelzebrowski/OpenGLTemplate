@@ -31,9 +31,11 @@ float lastY = (float)maxHeight / 2;
 const float sensivity = 0.1f;
 float yaw = -90.0f;
 float pitch = 0.0f;
+float fov = 45.0f;
 bool firstMouseMove = true;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3(0.0f, 1.0f, 0.0f));
+ViewportHandler viewportHandler;
 
 int doRandom(){
 	std::random_device rd; // Liefert einen zufälligen Seed
@@ -74,6 +76,21 @@ void mouse_call_back(GLFWwindow* window, double xpos, double ypos){
 	}
 
 	camera.rotate(yaw,pitch);
+}
+
+void scroll_back(GLFWwindow *window, double xoffset, double yoffset){
+
+	fov -= (float) yoffset;
+
+	if(fov < 1.0f){
+		fov = 1.0f;
+	}
+	if(fov > 45.0f){
+		fov = 45.0f;
+	}
+
+	viewportHandler.setFov(fov);
+	viewportHandler.framebufferSizeCallBack(maxWidth,maxHeight); // update perspective and shaders
 }
 
 void processInput(GLFWwindow *window){
@@ -138,7 +155,8 @@ int main(void) {
 
 	// configure mouse
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window,mouse_call_back);    
+	glfwSetCursorPosCallback(window,mouse_call_back);
+	glfwSetScrollCallback(window, scroll_back);    
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -149,7 +167,7 @@ int main(void) {
 		Texture cube1Texture("texture/awesomeface.png",1);
 
 
-		ViewportHandler viewportHandler;
+		
 		viewportHandler.addShader(&coordinateSystemShader);
 		viewportHandler.addShader(&cubeShader);
 

@@ -2,13 +2,13 @@
 #include <GLFW/glfw3.h>
 
 
-ViewportHandler::ViewportHandler():projection(glm::mat4(1.0f)){
+ViewportHandler::ViewportHandler():projection(glm::mat4(1.0f)),fov(45.0f){
 }
 
 void ViewportHandler::framebufferSizeCallBack(int width, int height){
     glViewport(0,0, width, height);
     float aspect = static_cast<float>(width)/static_cast<float>(height);
-    projection = glm::perspective(glm::radians(45.0f),aspect, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(fov),aspect, 0.1f, 100.0f);
 
     for(Shader* shader:shaders){
         shader->attach();
@@ -36,4 +36,8 @@ glm::mat4 ViewportHandler::getProjection() const{
 
 void ViewportHandler::addShader(Shader* shader){
     shaders.push_back(shader);
+}
+
+void ViewportHandler::setFov(float fov){
+    this->fov = fov;
 }
