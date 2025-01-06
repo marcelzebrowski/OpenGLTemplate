@@ -223,10 +223,15 @@ int main(void) {
 
 			coordinateSystem.render(model,view);
 
+
+			glm::vec3 lightColor(1.0f,0.9f,0.8f);
+			glm::vec3 toyColor(1.0f,0.5f,0.31f);
+			glm::vec3 result = lightColor * toyColor;
+
 			for(unsigned int i=0; i<10;i++){
 				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
 				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),cubePositions[i]); 
-				cube.render(modelCube,view, randomColor(), randomColor(), randomColor());
+				cube.render(modelCube,view,result);
 			}
 
 			glfwSwapBuffers(window);

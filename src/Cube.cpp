@@ -95,12 +95,12 @@ Cube::~Cube(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Cube::render(glm::mat4& model, glm::mat4& view, float c1, float c2, float c3){
+void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 color){
     shader->attach();
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
-        shader->setFloat3("color",c1,c2,c3);
+        shader->setFloat3("lightColor",color.x, color.y, color.z);
         texture0->attach(shader,"texture1");
 		texture1->attach(shader,"texture2");
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
