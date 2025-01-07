@@ -20,12 +20,13 @@
 #include "Cube.hpp"
 #include "Camera.hpp"
 #include "MarcelsTimer.hpp"
+#include "LightSource.hpp"
 
 #define M_PI 3.14159265358979323846
 
 float delta;
-int maxWidth = 800;
-int maxHeight = 600;
+int maxWidth = 1024;
+int maxHeight = 768;
 float lastX = (float)maxWidth / 2;
 float lastY = (float)maxHeight / 2;
 const float sensivity = 0.1f;
@@ -161,8 +162,10 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		Shader coordinateSystemShader("shader/axes_vertex.glsl","shader/axes_fragment.glsl");
-		Shader cubeShader("shader/vertex.glsl","shader/fragment.glsl");
+		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
+		Shader cubeShader("shader/cube/vertex.glsl","shader/cube/fragment.glsl");
+		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
+
 		Texture cube0Texture("texture/container.png",0);
 		Texture cube1Texture("texture/awesomeface.png",1);
 
@@ -170,6 +173,7 @@ int main(void) {
 		
 		viewportHandler.addShader(&coordinateSystemShader);
 		viewportHandler.addShader(&cubeShader);
+		viewportHandler.addShader(&lampShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -184,17 +188,11 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 		Cube cube(&cubeShader,&cube0Texture, &cube1Texture);
 
+		LightSource lightSource(&lampShader);
+
 		glm::vec3 cubePositions[] = {
-			glm::vec3( 0.0f,  0.0f,  0.0f), 
-			glm::vec3( 2.0f,  5.0f, -15.0f), 
-			glm::vec3(-1.5f, -2.2f, -2.5f),  
-			glm::vec3(-3.8f, -2.0f, -12.3f),  
-			glm::vec3( 2.4f, -0.4f, -3.5f),  
-			glm::vec3(-1.7f,  3.0f, -7.5f),  
-			glm::vec3( 1.3f, -2.0f, -2.5f),  
-			glm::vec3( 1.5f,  2.0f, -2.5f), 
-			glm::vec3( 1.5f,  0.2f, -1.5f), 
-			glm::vec3(-1.3f,  1.0f, -1.5f)  
+			glm::vec3( 0.1f, 0.1f, 0.1f), // main cube
+			glm::vec3( 1.0f, 1.0f, 1.0f)  // light source
 		};
 
 		float radius = 10.0f;    // Radius der Kreisbahn
@@ -212,12 +210,9 @@ int main(void) {
 			
 			processInput(window);
 
-			glClearColor(0.2f,0.4f,0.4f,1.0f);
+			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 			
-			//angle += speed * delta;
-			
-	
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
@@ -225,14 +220,18 @@ int main(void) {
 
 
 			glm::vec3 lightColor(1.0f,0.9f,0.8f);
-			glm::vec3 toyColor(1.0f,0.5f,0.31f);
+			glm::vec3 toyColor(0.5f,0.5f,0.3f);
 			glm::vec3 result = lightColor * toyColor;
 
-			for(unsigned int i=0; i<10;i++){
-				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
-				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),cubePositions[i]); 
-				cube.render(modelCube,view,result);
-			}
+			// light
+			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
+			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),cubePositions[0]); 
+			cube.render(modelCube,view,result);
+
+			// light
+			glm::mat4 modelLight = glm::translate(model,cubePositions[1]); 
+			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
+			lightSource.render(modelLight,view);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
