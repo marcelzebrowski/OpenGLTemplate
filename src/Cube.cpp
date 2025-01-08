@@ -78,11 +78,11 @@ Cube::Cube(Shader* shader, Texture* texture0, Texture* texture1)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // Position
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Farbe
+    /*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Farbe
     glEnableVertexAttribArray(1);
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texturkoordinaten
-    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(2);*/
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -100,9 +100,8 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 color){
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
-        shader->setFloat3("lightColor",color.x, color.y, color.z);
-        texture0->attach(shader,"texture1");
-		texture1->attach(shader,"texture2");
+        shader->setFloat3("lightColor",1.0f, 1.0f, 1.0f);
+        shader->setFloat3("objectColor",1.0f, 0.0f, 0.0f);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

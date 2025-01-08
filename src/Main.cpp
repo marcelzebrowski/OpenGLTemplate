@@ -165,6 +165,7 @@ int main(void) {
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		Shader cubeShader("shader/cube/vertex.glsl","shader/cube/fragment.glsl");
 		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
+		Shader lightShader("shader/light/vertex.glsl","shader/light/fragment.glsl");
 
 		Texture cube0Texture("texture/container.png",0);
 		Texture cube1Texture("texture/awesomeface.png",1);
@@ -174,6 +175,7 @@ int main(void) {
 		viewportHandler.addShader(&coordinateSystemShader);
 		viewportHandler.addShader(&cubeShader);
 		viewportHandler.addShader(&lampShader);
+		viewportHandler.addShader(&lightShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -186,7 +188,7 @@ int main(void) {
 	
 		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-		Cube cube(&cubeShader,&cube0Texture, &cube1Texture);
+		Cube cube(&lightShader,&cube0Texture, &cube1Texture);
 
 		LightSource lightSource(&lampShader);
 
@@ -235,7 +237,7 @@ int main(void) {
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::sleep_for(std::chrono::milliseconds(120));
 		}
 
 	}
