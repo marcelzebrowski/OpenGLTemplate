@@ -237,7 +237,7 @@ int main(void) {
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-			std::this_thread::sleep_for(std::chrono::milliseconds(120));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
 	}
