@@ -38,7 +38,7 @@ public:
 
     // Gibt FPS und Delta aus, ohne die Schleifenlogik zu stören
     void printStats() {
-        std::cout << "Delta Time: " << lastDelta << "s, FPS: " << fps() << std::endl;
+        //std::cout << "Delta Time: " << lastDelta << "s, FPS: " << fps() << std::endl;
     }
 
 private:

@@ -194,7 +194,7 @@ int main(void) {
 
 		glm::vec3 cubePositions[] = {
 			glm::vec3( 0.1f, 0.1f, 0.1f), // main cube
-			glm::vec3( 1.0f, 1.0f, 1.0f)  // light source
+			glm::vec3( 1.0f, 1.0f, 1.0f)  // light source (light position vector) 
 		};
 
 		float radius = 10.0f;    // Radius der Kreisbahn
@@ -220,15 +220,10 @@ int main(void) {
 
 			coordinateSystem.render(model,view);
 
-
-			glm::vec3 lightColor(1.0f,0.9f,0.8f);
-			glm::vec3 toyColor(0.5f,0.5f,0.3f);
-			glm::vec3 result = lightColor * toyColor;
-
 			// light
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
-			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),cubePositions[0]); 
-			cube.render(modelCube,view,result);
+			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
+			cube.render(modelCube,view, cubePositions[1],camera.getPosition());
 
 			// light
 			glm::mat4 modelLight = glm::translate(model,cubePositions[1]); 

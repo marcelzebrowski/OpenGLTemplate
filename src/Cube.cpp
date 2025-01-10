@@ -1,43 +1,43 @@
 #include "Cube.hpp"
 
 static float vertices[] = {
-    // Position           // Farbe           // Texturkoordinaten
+    // Position           // Normalenvektoren         // Texturkoordinaten
     // Vorderseite
-    -0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 1.0f,
 
     // Rückseite
-    -0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 1.0f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
 
     // Linke Seite
-    -0.5f, -0.5f, -0.5f,   1.0f, 0.5f, 0.0f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,   0.5f, 1.0f, 0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,   0.0f, 0.5f, 1.0f,  1.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   0.5f, 0.0f, 1.0f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
     // Rechte Seite
-    0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.5f,  0.0f, 0.0f,
-    0.5f,  0.5f, -0.5f,   0.5f, 1.0f, 0.0f,  1.0f, 0.0f,
-    0.5f,  0.5f,  0.5f,   1.0f, 0.5f, 1.0f,  1.0f, 1.0f,
-    0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
     // Unterseite
-    -0.5f, -0.5f, -0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,   0.5f, 0.5f, 1.0f,  1.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 1.0f,
 
     // Oberseite
-    -0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  0.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,   1.0f, 1.0f, 0.0f,  0.0f, 1.0f,
-    };
+    -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
+};
 
     // Indizes für den Würfel
     static unsigned int indices[] = {
@@ -78,11 +78,11 @@ Cube::Cube(Shader* shader, Texture* texture0, Texture* texture1)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // Position
     glEnableVertexAttribArray(0);
 
-    /*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Farbe
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Normal
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texturkoordinaten
-    glEnableVertexAttribArray(2);*/
+  //  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texturkoordinaten
+  //  glEnableVertexAttribArray(2);
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -95,13 +95,17 @@ Cube::~Cube(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 color){
+void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition){
     shader->attach();
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
+        shader->setFloat("ambientStrength",0.1f);
+        shader->setFloat("specularStrength",0.5f);
         shader->setFloat3("lightColor",1.0f, 1.0f, 1.0f);
         shader->setFloat3("objectColor",1.0f, 0.0f, 0.0f);
+        shader->setFloat3("lightPosition", lightPosition);
+        shader->setFloat3("viewPosition", viewPosition);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
