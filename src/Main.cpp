@@ -221,12 +221,18 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// light
+			glm::vec3 lightPosition = cubePositions[1];
+			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
+			lightPosition.y = float(sin(glfwGetTime()/2.0f));
+
+			// cube
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
 			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-			cube.render(modelCube,view, cubePositions[1],camera.getPosition());
+			cube.render(modelCube,view, lightPosition,camera.getPosition());
 
-			// light
-			glm::mat4 modelLight = glm::translate(model,cubePositions[1]); 
+			
+			
+			glm::mat4 modelLight = glm::translate(model,lightPosition); 
 			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
 			lightSource.render(modelLight,view);
 
