@@ -103,7 +103,7 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
         shader->setFloat("ambientStrength",0.1f);
         shader->setFloat("specularStrength",0.5f);
         shader->setFloat3("lightColor",1.0f, 1.0f, 1.0f);
-        shader->setFloat3("objectColor",1.0f, 1.0f, 0.0f);
+        shader->setFloat3("objectColor",0.3f, 0.7f, 0.9f);
         shader->setFloat3("lightPosition", lightPosition);
         shader->setFloat3("viewPosition", viewPosition);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

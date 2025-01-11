@@ -175,7 +175,7 @@ int main(void) {
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		Shader cubeShader("shader/cube/vertex.glsl","shader/cube/fragment.glsl");
 		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
-		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
+		Shader lightShader("shader/light/gouraud_vs.glsl","shader/light/gouraud_fs.glsl");
 
 		Texture cube0Texture("texture/container.png",0);
 		Texture cube1Texture("texture/awesomeface.png",1);
