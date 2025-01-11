@@ -130,7 +130,15 @@ int main(void) {
 
 	// initialize and configure
 	glfwInit();
+
+	// fullscreen
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	
+	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+	maxWidth = mode->width;
+	maxHeight = mode->height;
+	
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -159,13 +167,15 @@ int main(void) {
 	glfwSetCursorPosCallback(window,mouse_call_back);
 	glfwSetScrollCallback(window, scroll_back);    
 
+	glfwSwapInterval(1); 
+
 	glEnable(GL_DEPTH_TEST);
 
 	{
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		Shader cubeShader("shader/cube/vertex.glsl","shader/cube/fragment.glsl");
 		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
-		Shader lightShader("shader/light/vertex.glsl","shader/light/fragment.glsl");
+		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
 
 		Texture cube0Texture("texture/container.png",0);
 		Texture cube1Texture("texture/awesomeface.png",1);
