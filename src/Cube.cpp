@@ -81,8 +81,8 @@ Cube::Cube(Shader* shader, Texture* texture0, Texture* texture1)
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float))); // Normal
     glEnableVertexAttribArray(1);
 
-  //  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texturkoordinaten
-  //  glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float))); // Texturkoordinaten
+    glEnableVertexAttribArray(2);
 
 	// -- unbind
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -97,13 +97,13 @@ Cube::~Cube(){
 
 void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition){
     shader->attach();
+
+        texture0->attach(shader,"material.diffuse");
+
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
         shader->setFloat3("viewPosition", viewPosition);
-
-        shader->setFloat3("material.ambient",1.0f, 0.5f,0.31f);
-        shader->setFloat3("material.diffuse",1.0f, 0.5f,0.31f);
         shader->setFloat3("material.specular",0.5f, 0.5f,0.5f);
         shader->setFloat("material.shininess",32.0f);
 
@@ -115,6 +115,8 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
+        texture0->detach();
     shader->detach();
 }
 

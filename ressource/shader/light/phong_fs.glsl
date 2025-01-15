@@ -1,11 +1,12 @@
 #version 330 core
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
+    sampler2D diffuse;
     vec3 specular;
     float shininess;
 };
+
+in vec2 TexCoords;
 
 uniform Material material;
 
@@ -26,7 +27,7 @@ out vec4 FragColor;
 
 vec3 calculateDiffuseColor(vec3 normal, vec3 lightDirection){
     float diffuse = max(dot(normal,lightDirection),0.0f);
-    return light.diffuse * (diffuse * material.diffuse);
+    return light.diffuse * (diffuse * vec3(texture(material.diffuse, TexCoords)));
 }
 
 vec3 calculateSpecularLight(vec3 viewDirection, vec3 reflectDirection){
@@ -35,7 +36,7 @@ vec3 calculateSpecularLight(vec3 viewDirection, vec3 reflectDirection){
 }
 
 vec3 calculateAmbientLight(){
-    return light.ambient * material.ambient;
+    return light.ambient * vec3(texture(material.diffuse, TexCoords));
 }
 
 void main(){
