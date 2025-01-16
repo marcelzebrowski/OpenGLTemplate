@@ -179,7 +179,7 @@ int main(void) {
 		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
 
 		Texture cube0Texture("texture/container2.png",0);
-		Texture cube1Texture("texture/awesomeface.png",1);
+		Texture cube1Texture("texture/container2_specular.png",1);
 
 
 		

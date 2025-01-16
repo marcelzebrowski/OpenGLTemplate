@@ -99,12 +99,13 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
     shader->attach();
 
         texture0->attach(shader,"material.diffuse");
+        texture1->attach(shader,"material.specular");
 
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
         shader->setFloat3("viewPosition", viewPosition);
-        shader->setFloat3("material.specular",0.5f, 0.5f,0.5f);
+        //shader->setFloat3("material.specular",0.5f, 0.5f,0.5f);
         shader->setFloat("material.shininess",32.0f);
 
         shader->setFloat3("light.ambient",0.2f,0.2f,0.2f);
@@ -116,6 +117,7 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
+        texture1->detach();
         texture0->detach();
     shader->detach();
 }

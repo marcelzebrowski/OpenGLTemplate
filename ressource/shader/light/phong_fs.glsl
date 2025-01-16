@@ -2,7 +2,7 @@
 
 struct Material {
     sampler2D diffuse;
-    vec3 specular;
+    sampler2D specular;
     float shininess;
 };
 
@@ -32,7 +32,7 @@ vec3 calculateDiffuseColor(vec3 normal, vec3 lightDirection){
 
 vec3 calculateSpecularLight(vec3 viewDirection, vec3 reflectDirection){
     float spec = pow(max(dot(viewDirection, reflectDirection),0.0f),material.shininess);
-    return light.specular * (spec * material.specular);
+    return light.specular * (spec * vec3(texture(material.specular, TexCoords)));
 }
 
 vec3 calculateAmbientLight(){
