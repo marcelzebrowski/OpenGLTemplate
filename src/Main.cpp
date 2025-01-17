@@ -21,6 +21,7 @@
 #include "Camera.hpp"
 #include "MarcelsTimer.hpp"
 #include "LightSource.hpp"
+#include "Fraktal.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -135,10 +136,13 @@ int main(void) {
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	
 	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-	maxWidth = mode->width;
-	maxHeight = mode->height;
-	
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	//maxWidth = mode->width;
+	//maxHeight = mode->height;
+	maxWidth = 800;
+	maxHeight = 600;
+
+
+	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -177,6 +181,7 @@ int main(void) {
 		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
 		//Shader lightShader("shader/light/gouraud_vs.glsl","shader/light/gouraud_fs.glsl");
 		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
+		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 
 		Texture cube0Texture("texture/container2.png",0);
 		Texture cube1Texture("texture/container2_specular.png",1);
@@ -203,6 +208,9 @@ int main(void) {
 
 		LightSource lightSource(&lampShader);
 
+		// Fraktal
+		Fraktal fraktal(&fraktalShader);
+
 		glm::vec3 cubePositions[] = {
 			glm::vec3( 0.1f, 0.1f, 0.1f), // main cube
 			glm::vec3( 1.0f, 1.0f, 1.0f)  // light source (light position vector) 
@@ -225,7 +233,9 @@ int main(void) {
 
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			
+
+			fraktal.render();
+
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
