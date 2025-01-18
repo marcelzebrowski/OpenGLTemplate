@@ -11,7 +11,8 @@ static unsigned int indices[]{
     0,1,2,0,2,3
 };
 
-Fraktal::Fraktal(Shader* shader):shader(shader){
+Fraktal::Fraktal(Shader* shader, int height, int width)
+    :shader(shader),zoom(1.0f),centerX(-0.743643887037151f), centerY(0.13182590420533f), height(height), width(width){
     // create vertex and index buffer
     glGenVertexArrays(1,&VAO);
     glGenBuffers(1, &VBO);
@@ -41,12 +42,26 @@ Fraktal::~Fraktal(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Fraktal::render(){
+void Fraktal::render(float render){
+
+
+    zoom = 1.0f * render;
+    centerX += sin(render) * 0.002f;
+    centerY += cos(render) * 0.002f;
+
+
+    glDisable(GL_DEPTH_TEST);
     shader->attach();
-        GL(glBindVertexArray(VAO));
+
+        shader->setFloat2("uResolution",(float)width, (float)height);
+        shader->setFloat2("uCenter",centerX,centerY);
+        shader->setFloat("uZoom", zoom);
+        shader->setFloat("uTime",render);
+
+        glBindVertexArray(VAO);
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
         glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
-
+    glEnable(GL_DEPTH_TEST);
 }

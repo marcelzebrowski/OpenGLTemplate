@@ -8,11 +8,16 @@ class Fraktal{
 private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;
+    float zoom;
+    float centerX;
+    float centerY;
+    int height;
+    int width;
 
 public:
-    Fraktal(Shader* shader);
+    Fraktal(Shader* shader, int height, int width);
     ~Fraktal();
-    void render();
+    void render(float delta);
 };
 
 #endif

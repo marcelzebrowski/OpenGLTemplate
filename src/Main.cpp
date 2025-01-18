@@ -136,13 +136,13 @@ int main(void) {
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	
 	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-	//maxWidth = mode->width;
-	//maxHeight = mode->height;
-	maxWidth = 800;
-	maxHeight = 600;
+	maxWidth = mode->width;
+	maxHeight = mode->height;
+	//maxWidth = 800;
+	//maxHeight = 600;
 
 
-	//glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -209,7 +209,7 @@ int main(void) {
 		LightSource lightSource(&lampShader);
 
 		// Fraktal
-		Fraktal fraktal(&fraktalShader);
+		Fraktal fraktal(&fraktalShader, height, width);
 
 		glm::vec3 cubePositions[] = {
 			glm::vec3( 0.1f, 0.1f, 0.1f), // main cube
@@ -234,7 +234,7 @@ int main(void) {
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-			fraktal.render();
+			fraktal.render(glfwGetTime());
 
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
