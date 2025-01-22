@@ -36,17 +36,6 @@ int burningShipIterations(vec2 c, int maxIterations) {
     return i;
 }
 
-vec2 newtonIterations(vec2 z, int maxIterations) {
-    int i;
-    for (i = 0; i < maxIterations; i++) {
-        // Newton-Raphson Methode für f(z) = z^2 - 1 (Nullstellen bei -1 und 1)
-        vec2 dz = z * z - vec2(1.0, 0.0);  // f(z) = z^2 - 1
-        vec2 dz_prime = vec2(2.0 * z.x, 2.0 * z.y);  // f'(z) = 2z
-        z = z - dz / dz_prime; // Berechnung der nächsten Iteration
-        if (length(dz) < 0.0001) break; // Konvergenzbedingung
-    }
-    return z;
-}
 
 void main() {
     // Pixel-Koordinaten in den Bereich [0, 1] normalisieren
