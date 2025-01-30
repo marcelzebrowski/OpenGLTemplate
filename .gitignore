@@ -1,3 +1,5 @@
 stuff/*
 build/*
 .vscode
+.idea
+cmake-build-debug/*

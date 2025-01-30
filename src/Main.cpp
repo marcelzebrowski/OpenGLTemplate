@@ -185,6 +185,7 @@ int main(void) {
 
 		Texture cube0Texture("texture/container2.png",0);
 		Texture cube1Texture("texture/container2_specular.png",1);
+		Texture emissionTexture("texture/matrix.jpg",2);
 
 
 		
@@ -204,7 +205,7 @@ int main(void) {
 	
 		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-		Cube cube(&lightShader,&cube0Texture, &cube1Texture);
+		Cube cube(&lightShader,{&cube0Texture, &cube1Texture, &emissionTexture});
 
 		LightSource lightSource(&lampShader);
 
@@ -249,7 +250,7 @@ int main(void) {
 			// cube
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
 			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-			cube.render(modelCube,view, lightPosition,camera.getPosition());
+			cube.render(modelCube,view, lightPosition,camera.getPosition(),(float)glfwGetTime());
 
 			
 			

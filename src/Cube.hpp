@@ -6,19 +6,20 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "GLErrorCheck.hpp"
+#include <vector>
 
 class Cube {
 private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;
-    Texture* texture0;
-    Texture* texture1;
+    std::vector<Texture*> textures;
 
 public:
-    Cube(Shader* shader, Texture* texture0, Texture* texture1);
+
+    Cube(Shader* shader, const std::vector<Texture*> textures);
     ~Cube();
 
-    void render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition);
+    void render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition, float time);
 
 };
 

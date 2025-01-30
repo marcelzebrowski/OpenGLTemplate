@@ -55,8 +55,8 @@ static float vertices[] = {
         20, 21, 22, 20, 22, 23,
     };
 
-Cube::Cube(Shader* shader, Texture* texture0, Texture* texture1)
-    :shader(shader),texture0(texture0), texture1(texture1){
+Cube::Cube(Shader* shader, const std::vector<Texture*> textures)
+    :shader(shader),textures(textures){
     // create vertex and index buffer
 	glGenVertexArrays(1,&VAO);
 	glGenBuffers(1,&VBO);
@@ -95,11 +95,12 @@ Cube::~Cube(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition){
+void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition, float time){
     shader->attach();
 
-        texture0->attach(shader,"material.diffuse");
-        texture1->attach(shader,"material.specular");
+        textures[0]->attach(shader,"material.diffuse");
+        textures[1]->attach(shader,"material.specular");
+        textures[2]->attach(shader,"material.emission");
 
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
@@ -112,13 +113,15 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
         shader->setFloat3("light.diffuse",0.5f,0.5f,0.5f);
         shader->setFloat3("light.specular",1.0f,1.0f,1.0f);
         shader->setFloat3("light.position",viewPosition);
+        shader->setFloat("time",time);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-        texture1->detach();
-        texture0->detach();
+        textures[2]->detach();
+        textures[1]->detach();
+        textures[0]->detach();
     shader->detach();
 }
 
