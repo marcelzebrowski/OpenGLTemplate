@@ -12,7 +12,7 @@ out vec3 FragmentPosition;
 out vec2 TexCoords;
 
 vec4 applyTransformation(vec3 pos, mat4 model, mat4 view, mat4 projection){
-    return projection * view * model * vec4(pos,1.0f);
+    return projection * view  * model* vec4(pos,1.0f);
 }
 
 void main(){
