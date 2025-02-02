@@ -113,6 +113,10 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, gl
         shader->setFloat3("light.diffuse",0.5f,0.5f,0.5f);
         shader->setFloat3("light.specular",1.0f,1.0f,1.0f);
         shader->setFloat3("light.position",viewPosition);
+
+        shader->setFloat("light.constant", 1.0f);
+        shader->setFloat("light.linear", 0.09f);
+        shader->setFloat("light.quadratic", 0.032f);
         shader->setFloat("time",time);
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

@@ -16,6 +16,10 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
 };
 
 uniform Light light;
@@ -48,9 +52,17 @@ void main(){
     vec3 viewDirection = normalize(viewPosition - FragmentPosition);
     vec3 reflectDirection = reflect(-lightDirection, norm);
 
+    float distance  = length(light.position - FragmentPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+
     vec3 ambientLight = calculateAmbientLight();
     vec3 diffuseLight = calculateDiffuseColor(norm, lightDirection);
     vec3 specularLight = calculateSpecularLight(viewDirection, reflectDirection);
+
+    ambientLight *= attenuation;
+    diffuseLight *= attenuation;
+    specularLight *= attenuation;
+
 
     vec3 emission = vec3(0.0);
     if (texture(material.specular, TexCoords).r == 0.0){   /*rough check for blackbox inside spec texture */
@@ -64,6 +76,8 @@ void main(){
 
     //vec3 emission = vec3(texture(material.emission, TexCoords));       
     //emission = emission * vec3(texture(material.specular, TexCoords));
+
+    
 
     vec3 result = ambientLight + diffuseLight + specularLight + emission;
     FragColor = vec4(result, 1.0f); 

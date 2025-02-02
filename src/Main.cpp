@@ -213,9 +213,17 @@ int main(void) {
 		Fraktal fraktal(&fraktalShader, height, width);
 
 		glm::vec3 cubePositions[] = {
-			glm::vec3( 0.1f, 0.1f, 0.1f), // main cube
-			glm::vec3( 1.0f, 1.0f, 1.0f)  // light source (light position vector) 
-		};
+			glm::vec3( 0.0f,  0.0f,  0.0f),
+			glm::vec3( 2.0f,  5.0f, -15.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3( 2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3( 1.3f, -2.0f, -2.5f),
+			glm::vec3( 1.5f,  2.0f, -2.5f),
+			glm::vec3( 1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+    	};
 
 		float radius = 10.0f;    // Radius der Kreisbahn
 		float baseHeight = 5.0f;     // Fixe Höhe
@@ -243,15 +251,17 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// light
-			glm::vec3 lightPosition = cubePositions[1];
+			glm::vec3 lightPosition = glm::vec3( 1.0f, 1.0f, 1.0f);
 			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
 			lightPosition.y = float(sin(glfwGetTime()/2.0f));
 
-			// cube
-			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
-			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-			cube.render(modelCube,view, lightPosition,camera.getPosition(),(float)glfwGetTime());
 
+			for(int i = 0; i < 10; i++){
+				// cube
+				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
+				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
+				cube.render(modelCube,view, lightPosition,camera.getPosition(),(float)glfwGetTime());
+			}
 			
 			
 			glm::mat4 modelLight = glm::translate(model,lightPosition); 
