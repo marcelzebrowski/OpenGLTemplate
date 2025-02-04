@@ -205,7 +205,7 @@ int main(void) {
 	
 		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-		Cube cube(&lightShader,{&cube0Texture, &cube1Texture, &emissionTexture});
+		Cube cube(&lightShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
 
 		LightSource lightSource(&lampShader);
 
@@ -260,7 +260,7 @@ int main(void) {
 				// cube
 				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
 				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-				cube.render(modelCube,view, lightPosition,camera.getPosition(),(float)glfwGetTime());
+				cube.render(modelCube,view, lightPosition,(float)glfwGetTime());
 			}
 			
 			

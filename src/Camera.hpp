@@ -22,10 +22,13 @@ public:
     void setTarget(const glm::vec3& target);
     void setUp(const glm::vec3& up);
 
+    
+
 private:
     glm::vec3 position;
     glm::vec3 target;
     glm::vec3 up;
+    glm::vec3 front;
 };
 
 #endif

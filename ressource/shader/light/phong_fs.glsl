@@ -13,6 +13,10 @@ uniform Material material;
 
 struct Light {
     vec3 position;
+    vec3 direction;
+    float cutOff;
+
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -49,36 +53,37 @@ void main(){
 
     vec3 norm = normalize(Normal);
     vec3 lightDirection = normalize(light.position - FragmentPosition);
-    vec3 viewDirection = normalize(viewPosition - FragmentPosition);
-    vec3 reflectDirection = reflect(-lightDirection, norm);
+    float theta = dot(lightDirection, normalize(-light.direction));
+    
+    vec3 result;
+    if(theta > light.cutOff){
+    
+    
+        vec3 viewDirection = normalize(viewPosition - FragmentPosition);
+        vec3 reflectDirection = reflect(-lightDirection, norm);
 
-    float distance  = length(light.position - FragmentPosition);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+        float distance  = length(light.position - FragmentPosition);
+        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 
-    vec3 ambientLight = calculateAmbientLight();
-    vec3 diffuseLight = calculateDiffuseColor(norm, lightDirection);
-    vec3 specularLight = calculateSpecularLight(viewDirection, reflectDirection);
+        vec3 ambientLight = calculateAmbientLight();
+        vec3 diffuseLight = calculateDiffuseColor(norm, lightDirection);
+        vec3 specularLight = calculateSpecularLight(viewDirection, reflectDirection);
 
-    ambientLight *= attenuation;
-    diffuseLight *= attenuation;
-    specularLight *= attenuation;
+        ambientLight *= attenuation;
+        diffuseLight *= attenuation;
+        specularLight *= attenuation;
 
 
-    vec3 emission = vec3(0.0);
-    if (texture(material.specular, TexCoords).r == 0.0){   /*rough check for blackbox inside spec texture */
-        /*apply emission texture */
-       // emission = texture(material.emission, TexCoords).rgb;
-        
-        /*some extra fun stuff with "time uniform" */
-        emission = texture(material.emission, TexCoords * sin(time) + vec2(0.0,sin(time))).rgb;   /*moving */
-        //emission = emission * (sin(time) * 0.5 + 0.5) * 2.0;                     /*fading */
+        vec3 emission = vec3(0.0);
+        if (texture(material.specular, TexCoords).r == 0.0){
+            emission = texture(material.emission, TexCoords /* sin(time) + vec2(0.0,sin(time))*/).rgb;
+        }
+
+        result = ambientLight + diffuseLight + specularLight + emission;
+    }else{
+        result = calculateAmbientLight() / 2.0f;
     }
 
-    //vec3 emission = vec3(texture(material.emission, TexCoords));       
-    //emission = emission * vec3(texture(material.specular, TexCoords));
-
     
-
-    vec3 result = ambientLight + diffuseLight + specularLight + emission;
     FragColor = vec4(result, 1.0f); 
 }

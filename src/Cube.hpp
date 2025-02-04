@@ -7,19 +7,20 @@
 #include "Texture.hpp"
 #include "GLErrorCheck.hpp"
 #include <vector>
+#include "Camera.hpp"
 
 class Cube {
 private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;
     std::vector<Texture*> textures;
-
+    Camera* camera;
 public:
 
-    Cube(Shader* shader, const std::vector<Texture*> textures);
+    Cube(Shader* shader, Camera* camera, const std::vector<Texture*> textures);
     ~Cube();
 
-    void render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, glm::vec3 viewPosition, float time);
+    void render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, float time);
 
 };
 
