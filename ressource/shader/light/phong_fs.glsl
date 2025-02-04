@@ -15,6 +15,7 @@ struct Light {
     vec3 position;
     vec3 direction;
     float cutOff;
+    float outerCutOff;
 
 
     vec3 ambient;
@@ -53,25 +54,31 @@ void main(){
 
     vec3 norm = normalize(Normal);
     vec3 lightDirection = normalize(light.position - FragmentPosition);
+
     float theta = dot(lightDirection, normalize(-light.direction));
-    
+    float epsilon = light.cutOff - light.outerCutOff;
+    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
+
     vec3 result;
-    if(theta > light.cutOff){
+
+    float distance  = length(light.position - FragmentPosition);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+       
+  //  if(theta > light.cutOff){
     
     
         vec3 viewDirection = normalize(viewPosition - FragmentPosition);
         vec3 reflectDirection = reflect(-lightDirection, norm);
 
-        float distance  = length(light.position - FragmentPosition);
-        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-
+        
         vec3 ambientLight = calculateAmbientLight();
         vec3 diffuseLight = calculateDiffuseColor(norm, lightDirection);
         vec3 specularLight = calculateSpecularLight(viewDirection, reflectDirection);
-
+        
         ambientLight *= attenuation;
         diffuseLight *= attenuation;
         specularLight *= attenuation;
+
 
 
         vec3 emission = vec3(0.0);
@@ -79,10 +86,15 @@ void main(){
             emission = texture(material.emission, TexCoords /* sin(time) + vec2(0.0,sin(time))*/).rgb;
         }
 
-        result = ambientLight + diffuseLight + specularLight + emission;
-    }else{
-        result = calculateAmbientLight() / 2.0f;
-    }
+        ambientLight *= intensity;
+        diffuseLight *= intensity;
+        specularLight *= intensity;
+
+        result = ambientLight + diffuseLight + specularLight; //+ emission;
+  //  }else{
+  //      result = calculateAmbientLight() / 2.0f ;
+  //  }
+        
 
     
     FragColor = vec4(result, 1.0f); 

@@ -123,6 +123,7 @@ void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, fl
         //spotlight
         shader->setFloat3("light.direction",camera->getTarget());
         shader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        shader->setFloat("light.outerCutOff", glm::cos(glm::radians(14.5f)));
 
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
