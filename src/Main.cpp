@@ -39,6 +39,14 @@ bool firstMouseMove = true;
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3(0.0f, 1.0f, 0.0f));
 ViewportHandler viewportHandler;
 
+
+static std::vector<glm::vec3> pointLightPositions = {
+	glm::vec3( 0.7f,  0.2f,  2.0f),
+	glm::vec3( 2.3f, -3.3f, -4.0f),
+	glm::vec3(-4.0f,  2.0f, -12.0f),
+	glm::vec3( 0.0f,  0.0f, -3.0f)
+};
+
 int doRandom(){
 	std::random_device rd; // Liefert einen zufälligen Seed
     std::mt19937 gen(rd()); // Mersenne Twister PRNG initialisiert mit Seed
@@ -260,13 +268,20 @@ int main(void) {
 				// cube
 				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
 				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-				cube.render(modelCube,view, lightPosition,(float)glfwGetTime());
+				cube.render(modelCube,view, pointLightPositions,(float)glfwGetTime());
 			}
 			
 			
 			glm::mat4 modelLight = glm::translate(model,lightPosition); 
 			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
 			lightSource.render(modelLight,view);
+
+
+			for(int i = 0; i < pointLightPositions.size(); i++){
+				glm::mat4 modelLamp = glm::translate(model,pointLightPositions[i]);
+				modelLamp = glm::scale(modelLamp,glm::vec3(0.2f,0.2f,0.2f));
+				lightSource.render(modelLamp,view);
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

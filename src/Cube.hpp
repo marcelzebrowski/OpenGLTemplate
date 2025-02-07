@@ -20,7 +20,7 @@ public:
     Cube(Shader* shader, Camera* camera, const std::vector<Texture*> textures);
     ~Cube();
 
-    void render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, float time);
+    void render(glm::mat4& model, glm::mat4& view, const std::vector<glm::vec3> lightPositions, float time);
 
 };
 

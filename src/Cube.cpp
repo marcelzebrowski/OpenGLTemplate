@@ -95,35 +95,49 @@ Cube::~Cube(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Cube::render(glm::mat4& model, glm::mat4& view, glm::vec3 lightPosition, float time){
+void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<glm::vec3> lightPositions, float time){
     shader->attach();
 
         textures[0]->attach(shader,"material.diffuse");
         textures[1]->attach(shader,"material.specular");
-        textures[2]->attach(shader,"material.emission");
 
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
         shader->setFloat3("viewPosition", camera->getPosition());
-        //shader->setFloat3("material.specular",0.5f, 0.5f,0.5f);
         shader->setFloat("material.shininess",32.0f);
 
-        shader->setFloat3("light.ambient",0.2f,0.2f,0.2f);
-        shader->setFloat3("light.diffuse",0.5f,0.5f,0.5f);
-        shader->setFloat3("light.specular",1.0f,1.0f,1.0f);
-        shader->setFloat3("light.position",camera->getPosition());
+        // directional light
+        shader->setFloat3("directionalLight.direction",-0.2f,-1.0f,-0.3f);
+        shader->setFloat3("directionalLight.ambient",0.2f,0.2f,0.2f);
+        shader->setFloat3("directionalLight.diffuse",0.5f,0.5f,0.5f);
+        shader->setFloat3("directionalLight.specular",1.0f,1.0f,1.0f);
 
-        shader->setFloat("light.constant", 1.0f);
-        shader->setFloat("light.linear", 0.09f);
-        shader->setFloat("light.quadratic", 0.032f);
-        shader->setFloat("time",time);
-
+        // point light
+        // Setze die Point Lights aus dem Parameter
+        for (size_t i = 0; i < lightPositions.size(); ++i) {
+            std::string index = std::to_string(i);
+            shader->setFloat3("pointLight[" + index + "].position", lightPositions[i]);
+            shader->setFloat("pointLight[" + index + "].constant", 1.0f);
+            shader->setFloat("pointLight[" + index + "].linear", 0.09f);
+            shader->setFloat("pointLight[" + index + "].quadratic", 0.032f);
+            shader->setFloat3("pointLight["+ index+ "].ambient", 0.05f, 0.05f, 1.05f);
+            shader->setFloat3("pointLight[" + index + "].diffuse", 0.4f, 0.4f, 0.4f);
+            shader->setFloat3("pointLight["+ index + "].specular", 0.5f, 0.5f, 0.5f);
+        }
 
         //spotlight
-        shader->setFloat3("light.direction",camera->getTarget());
-        shader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
-        shader->setFloat("light.outerCutOff", glm::cos(glm::radians(14.5f)));
+        shader->setFloat3("spotLight.position",camera->getPosition());
+        shader->setFloat3("spotLight.direction",camera->getTarget());
+        shader->setFloat3("spotLight.ambient", 0.05f, 0.0f, 0.0f);
+        shader->setFloat3("spotLight.diffuse", 0.5f, 0.0f, 0.0f);
+        shader->setFloat3("spotLight.specular", 1.0f, 0.0f, 0.0f);
+
+        shader->setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        shader->setFloat("spotLight.outerCutOff", glm::cos(glm::radians(14.5f)));
+        shader->setFloat("spotLight.constant", 1.0f);
+        shader->setFloat("spotLight.linear", 0.09f);
+        shader->setFloat("spotLight.quadratic", 0.032f);
 
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
