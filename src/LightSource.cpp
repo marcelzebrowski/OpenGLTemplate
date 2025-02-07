@@ -93,8 +93,25 @@ void LightSource::render(glm::mat4& model, glm::mat4& view){
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
+        shader->setFloat3("lightColor",color);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
+}
+
+void LightSource::setPosition(const glm::vec3 position){
+    this->position = position;
+}
+
+glm::vec3 LightSource::getPosition() const{
+    return this->position;
+}
+
+void LightSource::setColor(const glm::vec3 color){
+    this->color = color;
+}
+
+glm::vec3 LightSource::getColor() const{
+    return this->color;
 }

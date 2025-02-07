@@ -8,6 +8,7 @@
 #include "GLErrorCheck.hpp"
 #include <vector>
 #include "Camera.hpp"
+#include "LightSource.hpp"
 
 class Cube {
 private:
@@ -20,7 +21,7 @@ public:
     Cube(Shader* shader, Camera* camera, const std::vector<Texture*> textures);
     ~Cube();
 
-    void render(glm::mat4& model, glm::mat4& view, const std::vector<glm::vec3> lightPositions, float time);
+    void render(glm::mat4& model, glm::mat4& view, const std::vector<LightSource*> lightSources, float time);
 
 };
 

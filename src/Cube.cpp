@@ -95,7 +95,7 @@ Cube::~Cube(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<glm::vec3> lightPositions, float time){
+void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<LightSource*> lightSources, float time){
     shader->attach();
 
         textures[0]->attach(shader,"material.diffuse");
@@ -115,14 +115,14 @@ void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<glm::vec3
 
         // point light
         // Setze die Point Lights aus dem Parameter
-        for (size_t i = 0; i < lightPositions.size(); ++i) {
+        for (size_t i = 0; i < lightSources.size(); ++i) {
             std::string index = std::to_string(i);
-            shader->setFloat3("pointLight[" + index + "].position", lightPositions[i]);
+            shader->setFloat3("pointLight[" + index + "].position", lightSources[i]->getPosition());
             shader->setFloat("pointLight[" + index + "].constant", 1.0f);
             shader->setFloat("pointLight[" + index + "].linear", 0.09f);
             shader->setFloat("pointLight[" + index + "].quadratic", 0.032f);
-            shader->setFloat3("pointLight["+ index+ "].ambient", 0.05f, 0.05f, 1.05f);
-            shader->setFloat3("pointLight[" + index + "].diffuse", 0.4f, 0.4f, 0.4f);
+            shader->setFloat3("pointLight["+ index+ "].ambient", lightSources[i]->getColor());
+            shader->setFloat3("pointLight[" + index + "].diffuse", lightSources[i]->getColor() * 0.5f);
             shader->setFloat3("pointLight["+ index + "].specular", 0.5f, 0.5f, 0.5f);
         }
 

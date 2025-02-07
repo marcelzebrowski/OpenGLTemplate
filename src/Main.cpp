@@ -40,12 +40,37 @@ Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3
 ViewportHandler viewportHandler;
 
 
-static std::vector<glm::vec3> pointLightPositions = {
-	glm::vec3( 0.7f,  0.2f,  2.0f),
-	glm::vec3( 2.3f, -3.3f, -4.0f),
-	glm::vec3(-4.0f,  2.0f, -12.0f),
-	glm::vec3( 0.0f,  0.0f, -3.0f)
-};
+std::vector<LightSource*> lightSources;
+
+float randomLightColor() {
+    static std::random_device rd;  // Seed für Zufallsgenerator
+    static std::mt19937 gen(rd()); // Mersenne-Twister
+    static std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+    return dis(gen);
+}
+
+void setupLights(Shader* shader){
+	std::vector<glm::vec3> pointLightPositions = {
+		glm::vec3( 0.7f,  0.2f,  2.0f),
+		glm::vec3( 2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3( 0.0f,  0.0f, -3.0f)
+	};
+
+	for(const auto& position : pointLightPositions){
+		LightSource* lightSource = new LightSource(shader);
+		lightSource->setPosition(position);
+
+		float r = randomLightColor();
+		float g = randomLightColor();
+		float b = randomLightColor();
+		lightSource->setColor(glm::vec3(r,g,b));
+
+		std::cout << "LightColor: " << r << " " << g << " " << b << std::endl;
+		lightSources.push_back(lightSource);
+	}
+}
+
 
 int doRandom(){
 	std::random_device rd; // Liefert einen zufälligen Seed
@@ -144,10 +169,10 @@ int main(void) {
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	
 	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-	maxWidth = mode->width;
-	maxHeight = mode->height;
-	//maxWidth = 800;
-	//maxHeight = 600;
+	//maxWidth = mode->width;
+	//maxHeight = mode->height;
+	maxWidth = 800;
+	maxHeight = 600;
 
 
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
@@ -175,7 +200,7 @@ int main(void) {
 	}
 
 	// configure mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window,mouse_call_back);
 	glfwSetScrollCallback(window, scroll_back);    
 
@@ -195,6 +220,8 @@ int main(void) {
 		Texture cube1Texture("texture/container2_specular.png",1);
 		Texture emissionTexture("texture/matrix.jpg",2);
 
+
+		setupLights(&lampShader);
 
 		
 		viewportHandler.addShader(&coordinateSystemShader);
@@ -216,6 +243,7 @@ int main(void) {
 		Cube cube(&lightShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
 
 		LightSource lightSource(&lampShader);
+		lightSource.setColor(glm::vec3(1.0f,1.0f,1.0f));
 
 		// Fraktal
 		Fraktal fraktal(&fraktalShader, height, width);
@@ -268,7 +296,7 @@ int main(void) {
 				// cube
 				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
 				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-				cube.render(modelCube,view, pointLightPositions,(float)glfwGetTime());
+				cube.render(modelCube,view, lightSources,(float)glfwGetTime());
 			}
 			
 			
@@ -277,10 +305,10 @@ int main(void) {
 			lightSource.render(modelLight,view);
 
 
-			for(int i = 0; i < pointLightPositions.size(); i++){
-				glm::mat4 modelLamp = glm::translate(model,pointLightPositions[i]);
+			for(int i = 0; i < lightSources.size(); i++){
+				glm::mat4 modelLamp = glm::translate(model,lightSources[i]->getPosition());
 				modelLamp = glm::scale(modelLamp,glm::vec3(0.2f,0.2f,0.2f));
-				lightSource.render(modelLamp,view);
+				lightSources[i]->render(modelLamp,view);
 			}
 
 			glfwSwapBuffers(window);
