@@ -64,7 +64,9 @@ void setupLights(Shader* shader){
 		float r = randomLightColor();
 		float g = randomLightColor();
 		float b = randomLightColor();
-		lightSource->setColor(glm::vec3(r,g,b));
+		lightSource->setAmbientColor(glm::vec3(r,g,b) * 0.4f);
+		lightSource->setSpecularColor(glm::vec3(1.0f,1.0f,1.0f));
+		lightSource->setDiffuseColor(glm::vec3(r,g,b));
 
 		std::cout << "LightColor: " << r << " " << g << " " << b << std::endl;
 		lightSources.push_back(lightSource);
@@ -169,10 +171,10 @@ int main(void) {
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	
 	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-	//maxWidth = mode->width;
-	//maxHeight = mode->height;
-	maxWidth = 800;
-	maxHeight = 600;
+	maxWidth = mode->width;
+	maxHeight = mode->height;
+	//maxWidth = 800;
+	//maxHeight = 600;
 
 
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
@@ -200,7 +202,7 @@ int main(void) {
 	}
 
 	// configure mouse
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window,mouse_call_back);
 	glfwSetScrollCallback(window, scroll_back);    
 
@@ -243,7 +245,7 @@ int main(void) {
 		Cube cube(&lightShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
 
 		LightSource lightSource(&lampShader);
-		lightSource.setColor(glm::vec3(1.0f,1.0f,1.0f));
+		lightSource.setAmbientColor(glm::vec3(1.0f,1.0f,1.0f));
 
 		// Fraktal
 		Fraktal fraktal(&fraktalShader, height, width);

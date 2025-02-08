@@ -93,7 +93,7 @@ void LightSource::render(glm::mat4& model, glm::mat4& view){
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
         shader->setMat4("view",view);
-        shader->setFloat3("lightColor",color);
+        shader->setFloat3("lightColor",getAmbientColor());
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
@@ -108,10 +108,26 @@ glm::vec3 LightSource::getPosition() const{
     return this->position;
 }
 
-void LightSource::setColor(const glm::vec3 color){
-    this->color = color;
+void LightSource::setAmbientColor(const glm::vec3 color){
+    this->ambientColor = color;
 }
 
-glm::vec3 LightSource::getColor() const{
-    return this->color;
+glm::vec3 LightSource::getAmbientColor() const{
+    return this->ambientColor;
+}
+
+void LightSource::setDiffuseColor(const glm::vec3 color){
+    this->diffuseColor = color;
+}
+
+glm::vec3 LightSource::getDiffuseColor() const{
+    return this->diffuseColor;
+}
+
+void LightSource::setSpecularColor(const glm::vec3 color){
+    this->specularColor = color;
+}
+
+glm::vec3 LightSource::getSpecularColor() const{
+    return this->specularColor;
 }

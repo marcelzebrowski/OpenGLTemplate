@@ -121,9 +121,9 @@ void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<LightSour
             shader->setFloat("pointLight[" + index + "].constant", 1.0f);
             shader->setFloat("pointLight[" + index + "].linear", 0.09f);
             shader->setFloat("pointLight[" + index + "].quadratic", 0.032f);
-            shader->setFloat3("pointLight["+ index+ "].ambient", lightSources[i]->getColor());
-            shader->setFloat3("pointLight[" + index + "].diffuse", lightSources[i]->getColor() * 0.5f);
-            shader->setFloat3("pointLight["+ index + "].specular", 0.5f, 0.5f, 0.5f);
+            shader->setFloat3("pointLight["+ index+ "].ambient", lightSources[i]->getAmbientColor());
+            shader->setFloat3("pointLight[" + index + "].diffuse", lightSources[i]->getDiffuseColor());
+            shader->setFloat3("pointLight["+ index + "].specular", lightSources[i]->getSpecularColor());
         }
 
         //spotlight
