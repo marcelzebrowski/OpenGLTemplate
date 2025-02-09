@@ -39,31 +39,46 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------
 */
 
-/** @file commonMetaData.h
- *  @brief Defines a set of common scene metadata keys.
+/** @file OBJMATERIAL.h
+ *  @brief Obj-specific material macros
+ *
  */
-#pragma once
-#ifndef AI_COMMONMETADATA_H_INC
-#define AI_COMMONMETADATA_H_INC
+
+#ifndef AI_OBJMATERIAL_H_INC
+#define AI_OBJMATERIAL_H_INC
 
 #ifdef __GNUC__
-#pragma GCC system_header
+#   pragma GCC system_header
 #endif
 
-/// Scene metadata holding the name of the importer which loaded the source asset.
-/// This is always present if the scene was created from an imported asset.
-#define AI_METADATA_SOURCE_FORMAT "SourceAsset_Format"
+#include <assimp/material.h>
 
-/// Scene metadata holding the version of the source asset as a string, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_FORMAT_VERSION "SourceAsset_FormatVersion"
+// ---------------------------------------------------------------------------
 
-/// Scene metadata holding the name of the software which generated the source asset, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_GENERATOR "SourceAsset_Generator"
+// the original illum property
+#define AI_MATKEY_OBJ_ILLUM "$mat.illum", 0, 0
 
-/// Scene metadata holding the source asset copyright statement, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_COPYRIGHT "SourceAsset_Copyright"
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Pure key names for all obj texture-related properties
+//! @cond MATS_DOC_FULL
+
+// support for bump -bm
+#define _AI_MATKEY_OBJ_BUMPMULT_BASE "$tex.bumpmult"
+//! @endcond
+
+// ---------------------------------------------------------------------------
+#define AI_MATKEY_OBJ_BUMPMULT(type, N) _AI_MATKEY_OBJ_BUMPMULT_BASE, type, N
+
+//! @cond MATS_DOC_FULL
+#define AI_MATKEY_OBJ_BUMPMULT_NORMALS(N) \
+    AI_MATKEY_OBJ_BUMPMULT(aiTextureType_NORMALS, N)
+
+#define AI_MATKEY_OBJ_BUMPMULT_HEIGHT(N) \
+    AI_MATKEY_OBJ_BUMPMULT(aiTextureType_HEIGHT, N)
+
+//! @endcond
+
 
 #endif

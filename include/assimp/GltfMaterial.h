@@ -39,31 +39,36 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---------------------------------------------------------------------------
 */
 
-/** @file commonMetaData.h
- *  @brief Defines a set of common scene metadata keys.
+/** @file GltfMaterial.h
+ *  @brief glTF-specific material macros
+ *  These will be made generic at some future date
  */
-#pragma once
-#ifndef AI_COMMONMETADATA_H_INC
-#define AI_COMMONMETADATA_H_INC
+
+#ifndef AI_GLTFMATERIAL_H_INC
+#define AI_GLTFMATERIAL_H_INC
 
 #ifdef __GNUC__
-#pragma GCC system_header
+#   pragma GCC system_header
 #endif
 
-/// Scene metadata holding the name of the importer which loaded the source asset.
-/// This is always present if the scene was created from an imported asset.
-#define AI_METADATA_SOURCE_FORMAT "SourceAsset_Format"
+#include <assimp/material.h>
 
-/// Scene metadata holding the version of the source asset as a string, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_FORMAT_VERSION "SourceAsset_FormatVersion"
+#define AI_MATKEY_GLTF_PBRMETALLICROUGHNESS_METALLICROUGHNESS_TEXTURE aiTextureType_UNKNOWN, 0
+#define AI_MATKEY_GLTF_ALPHAMODE "$mat.gltf.alphaMode", 0, 0
+#define AI_MATKEY_GLTF_ALPHACUTOFF "$mat.gltf.alphaCutoff", 0, 0
 
-/// Scene metadata holding the name of the software which generated the source asset, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_GENERATOR "SourceAsset_Generator"
+#define _AI_MATKEY_GLTF_MAPPINGNAME_BASE "$tex.mappingname"
+#define _AI_MATKEY_GLTF_MAPPINGID_BASE "$tex.mappingid"
+#define _AI_MATKEY_GLTF_MAPPINGFILTER_MAG_BASE "$tex.mappingfiltermag"
+#define _AI_MATKEY_GLTF_MAPPINGFILTER_MIN_BASE "$tex.mappingfiltermin"
+#define _AI_MATKEY_GLTF_SCALE_BASE "$tex.scale"
+#define _AI_MATKEY_GLTF_STRENGTH_BASE "$tex.strength"
 
-/// Scene metadata holding the source asset copyright statement, if available.
-/// Not all formats add this metadata.
-#define AI_METADATA_SOURCE_COPYRIGHT "SourceAsset_Copyright"
+#define AI_MATKEY_GLTF_MAPPINGNAME(type, N) _AI_MATKEY_GLTF_MAPPINGNAME_BASE, type, N
+#define AI_MATKEY_GLTF_MAPPINGID(type, N) _AI_MATKEY_GLTF_MAPPINGID_BASE, type, N
+#define AI_MATKEY_GLTF_MAPPINGFILTER_MAG(type, N) _AI_MATKEY_GLTF_MAPPINGFILTER_MAG_BASE, type, N
+#define AI_MATKEY_GLTF_MAPPINGFILTER_MIN(type, N) _AI_MATKEY_GLTF_MAPPINGFILTER_MIN_BASE, type, N
+#define AI_MATKEY_GLTF_TEXTURE_SCALE(type, N) _AI_MATKEY_GLTF_SCALE_BASE, type, N
+#define AI_MATKEY_GLTF_TEXTURE_STRENGTH(type, N) _AI_MATKEY_GLTF_STRENGTH_BASE, type, N
 
 #endif
