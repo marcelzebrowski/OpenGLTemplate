@@ -42,6 +42,15 @@ target_include_directories( ${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/include"
 )
 
+# assimp
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include/assimp)
+set(LIBS ${LIBS} assimp-vc143-mt)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include/")
+
+configure_file(
+    "${CMAKE_SOURCE_DIR}/include/assimp/config.h.in"
+    "${CMAKE_SOURCE_DIR}/include/assimp/config.h"
+)
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
