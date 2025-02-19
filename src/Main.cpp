@@ -22,6 +22,7 @@
 #include "MarcelsTimer.hpp"
 #include "LightSource.hpp"
 #include "Fraktal.hpp"
+#include "Mesh.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -163,6 +164,8 @@ float randomColor(){
 }
 
 int main(void) {
+
+	MeshRenderer::Mesh mesh;
 
 	// initialize and configure
 	glfwInit();
