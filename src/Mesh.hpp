@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 #include <vector>
 #include <string>
-
+#include "Shader.hpp"
 
 namespace MeshRenderer {
 
@@ -22,8 +22,18 @@ namespace MeshRenderer {
 
     class Mesh {
     public:
-        Mesh();
+        std::vector<Vertex> vertices;
+        std::vector<unsigned int> indices;
+        std::vector<Texture> textures;
+
+        Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+        void Draw(Shader &shader);
         ~Mesh();
+
+    private:
+        unsigned int VAO, VBO, EBO;
+
+        void setupMesh();
     };
 
 }
