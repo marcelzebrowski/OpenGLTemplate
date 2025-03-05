@@ -165,7 +165,7 @@ float randomColor(){
 
 int main(void) {
 
-	MeshRenderer::Mesh mesh;
+	//MeshRenderer::Mesh mesh;
 
 	// initialize and configure
 	glfwInit();
