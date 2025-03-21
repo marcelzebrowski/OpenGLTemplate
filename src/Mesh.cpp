@@ -16,12 +16,12 @@ namespace MeshRenderer{
     }
 
     void Mesh::setupMesh(){
-    // create vertex and index buffer
-	glGenVertexArrays(1,&VAO);
-	glGenBuffers(1,&VBO);
-	glGenBuffers(1, &EBO);
+        // create vertex and index buffer
+        glGenVertexArrays(1,&VAO);
+        glGenBuffers(1,&VBO);
+        glGenBuffers(1, &EBO);
 	
-	// bind data
+	    // bind data
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
@@ -54,12 +54,28 @@ namespace MeshRenderer{
     void Mesh::Draw(Shader& shader){
         shader.attach();
 
+        unsigned int diffuseNr = 1;
+        unsigned int specularNr = 1;
+
         for (size_t i = 0; i < textures.size(); i++) {
+
+             // todo hier die texturen auslesen anhand des namen
             glActiveTexture(GL_TEXTURE0 + i);
+            std::string number;
+            std::string name = textures[i].type;
+
+            if (name == "texture_diffuse") {
+                number = std::to_string(diffuseNr++);
+            }
+            else if (name == "texture_specular") {
+                number = std::to_string(specularNr++);
+            }
+
+            shader.setFloat(("material." + name + number).c_str(), i);
             glBindTexture(GL_TEXTURE_2D, textures[i].id);
-            shader.setInt(textures[i].type, i);
         }
 
+        glActiveTexture(GL_TEXTURE0);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);

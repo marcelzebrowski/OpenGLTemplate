@@ -28,9 +28,10 @@
 |g pressed + z pressed|Objekt bewegen and der z Achse, aber gedrückt halten|\
 |object mode| tab|
 |object mode 1 2 oder 3| switch select mode|
-|object mode e| extrude |
-|object mode i| inset |
-|object mode strg r| loop cut|
+|edit mode e| extrude |
+|edit mode i| inset |
+|edit mode strg r| loop cut|
+|edit mode edge select mode (2) e|Kante verlängern|
 
 
 Weitere Shortcuts findet man unter dem folgenden Link https://docs.blender.org/manual/en/4.3/interface/keymap/introduction.html
@@ -38,7 +39,4 @@ Weitere Shortcuts findet man unter dem folgenden Link https://docs.blender.org/m
 file:///C:/Users/marce/Downloads/blender_manual_html/blender_manual_v430_en.html/editors/index.html
 
 
-https://www.youtube.com/watch?v=lEaGkWghBn4&list=PLi8OvEs6MhuVmI1bHwjse4VHahQy5nkK8 18:10
-
-
-16:33 https://www.youtube.com/watch?v=tF6YZGv2yag&list=PLi8OvEs6MhuVmI1bHwjse4VHahQy5nkK8&index=3
+https://www.youtube.com/watch?v=tF6YZGv2yag&list=WL&index=1&t=993s 44:45
