@@ -18,7 +18,7 @@ namespace MeshRenderer{
     void Mesh::setupMesh(){
         // create vertex and index buffer
         glGenVertexArrays(1,&VAO);
-        glGenBuffers(1,&VBO);
+        glGenBuffers(1, &VBO);
         glGenBuffers(1, &EBO);
 	
 	    // bind data
