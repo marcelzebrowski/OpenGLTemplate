@@ -17,7 +17,7 @@ public:
     void attach(const Shader* shader, const std::string uniform);
     void detach();
 
-private:
+//private:
     unsigned int createTexture(const char* filePath);
    
 };
