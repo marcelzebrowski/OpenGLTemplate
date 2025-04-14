@@ -3,12 +3,12 @@ out vec4 FragColor;
 
 in vec2 textureCoord;
 
-struct Material {}
+struct Material {
     sampler2D texture_diffuse1;
 };
 
 uniform Material material;
 
 void main(){
-    FragColor = (texture(material.texture_diffuse1, textureCoord);
+    FragColor = texture(material.texture_diffuse1, textureCoord);
 }

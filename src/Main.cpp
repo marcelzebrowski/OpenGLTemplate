@@ -22,9 +22,10 @@
 #include "MarcelsTimer.hpp"
 #include "LightSource.hpp"
 #include "Fraktal.hpp"
-#include "Mesh.hpp"
+#include "Model.hpp"
 
 #define M_PI 3.14159265358979323846
+
 
 float delta;
 int maxWidth = 1024;
@@ -165,8 +166,6 @@ float randomColor(){
 
 int main(void) {
 
-	//MeshRenderer::Mesh mesh;
-
 	// initialize and configure
 	glfwInit();
 
@@ -176,9 +175,6 @@ int main(void) {
 	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
 	maxWidth = mode->width;
 	maxHeight = mode->height;
-	//maxWidth = 800;
-	//maxHeight = 600;
-
 
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -189,7 +185,18 @@ int main(void) {
 	#endif
 
 	// create window
-	GLFWwindow* window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window;
+
+	#ifndef NDEBUG
+		// Debug-Modus: Windowed
+		maxWidth = 800;
+		maxHeight = 600;
+		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
+	#else
+		// Release-Modus: Fullscreen
+		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", primaryMonitor, NULL);
+	#endif
+
 	
 	if (window == NULL){
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -220,6 +227,9 @@ int main(void) {
 		//Shader lightShader("shader/light/gouraud_vs.glsl","shader/light/gouraud_fs.glsl");
 		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
+
+		Shader simpleMeshShader("shader/mesh/vertex.glsl","shader/mesh/fragment.glsl");
+
 
 		Texture cube0Texture("texture/container2.png",0);
 		Texture cube1Texture("texture/container2_specular.png",1);
@@ -291,6 +301,10 @@ int main(void) {
 
 			coordinateSystem.render(model,view);
 
+
+			//Model backpack("model/backpack/backpack.obj");
+			//backpack.draw(simpleMeshShader);
+
 			// light
 			glm::vec3 lightPosition = glm::vec3( 1.0f, 1.0f, 1.0f);
 			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
@@ -301,7 +315,7 @@ int main(void) {
 				// cube
 				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
 				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-				cube.render(modelCube,view, lightSources,(float)glfwGetTime());
+				//cube.render(modelCube,view, lightSources,(float)glfwGetTime());
 			}
 			
 			
@@ -313,7 +327,7 @@ int main(void) {
 			for(int i = 0; i < lightSources.size(); i++){
 				glm::mat4 modelLamp = glm::translate(model,lightSources[i]->getPosition());
 				modelLamp = glm::scale(modelLamp,glm::vec3(0.2f,0.2f,0.2f));
-				lightSources[i]->render(modelLamp,view);
+				//lightSources[i]->render(modelLamp,view);
 			}
 
 			glfwSwapBuffers(window);

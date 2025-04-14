@@ -1,5 +1,5 @@
 #include "Model.hpp"
-
+#include "stb_image.hpp"
 
 
 void Model::draw(Shader& shader) {
@@ -89,12 +89,70 @@ std::vector<MeshRenderer::Texture> Model::loadMaterialTextures(aiMaterial* mat, 
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++){
         aiString fileName;
         mat->GetTexture(type, i, &fileName);
-        MeshRenderer::Texture texture;
-        std::string fullPath = directory + "/" + fileName.C_Str();
-        texture.id = textureHelper.createTexture(fullPath.c_str());
-        texture.type = typeName;
-        texture.path = fileName.C_Str();;
-        textures.push_back(texture);
+
+
+        bool skip = false;
+
+        for (size_t j = 0; j < texturesLoaded.size(); j++){
+            if(std::strcmp(texturesLoaded[j].path.data(),fileName.C_Str())){
+                textures.push_back(texturesLoaded[j]);
+                skip = true;
+                break;
+            }
+        }
+        
+        
+        if(!skip){
+            MeshRenderer::Texture texture;
+            std::string fullPath = directory + "/" + fileName.C_Str();
+            texture.id = loadTextureFromDisc(fullPath.c_str());
+            texture.type = typeName;
+            texture.path = fileName.C_Str();
+            textures.push_back(texture);
+            texturesLoaded.push_back(texture);
+        }
     }
     return textures;    
+}
+
+
+unsigned int Model::loadTextureFromDisc(const char* filePath){
+
+    int width, height, nrChannels;
+
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char* data = stbi_load(filePath,&width,&height,&nrChannels,0);
+
+    if(!data){
+        std::cout << "Failed to load texture from file" << std::endl;
+        return 0;
+    }
+
+
+    unsigned int textureID;
+    glGenTextures(1,&textureID);
+    glBindTexture(GL_TEXTURE_2D, textureID);
+
+    // set the texture wrapping/filtering options
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // check channels
+    GLenum format = (nrChannels == 4) ? GL_RGBA: GL_RGB;
+    // load texture to opengl
+    glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
+    GLenum error = glGetError();
+    if(error != GL_NO_ERROR){
+        std::cerr << "OpenGL Error after glTexImage2D:" << error << std::endl;
+        stbi_image_free(data);
+        return 0;
+    }
+
+    // free memory
+    stbi_image_free(data);
+    return textureID;
 }
