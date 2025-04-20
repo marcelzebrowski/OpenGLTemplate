@@ -2,10 +2,16 @@
 #include "stb_image.hpp"
 
 
-void Model::draw(Shader& shader) {
-    for (size_t i = 0; i < meshes.size(); i++) {
-        meshes[i].Draw(shader);
-    }
+void Model::render(glm::mat4& model, glm::mat4& view) {
+
+    shader->attach();
+        shader->setMat4("view",view);
+        shader->setMat4("model",model);
+        for (size_t i = 0; i < meshes.size(); i++) {
+            meshes[i].Draw(shader);
+        }
+    shader->detach();
+    
 }
 
 void Model::loadModel(std::string path){
@@ -24,7 +30,8 @@ void Model::processNode(aiNode* node, const aiScene* scene){
     // process all the meshes in this node
     for(unsigned int i = 0; i < node->mNumMeshes; i++){
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(processMesh(mesh, scene));
+        MeshRenderer::Mesh m = processMesh(mesh, scene);
+        meshes.push_back(std::move(m));
     }
 
     // then do the same for each of its children
@@ -47,10 +54,12 @@ MeshRenderer::Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene){
         vector.z = mesh->mVertices[i].z;
         vertex.position = vector;
 
-        vector.x = mesh->mNormals[i].x;
-        vector.y = mesh->mNormals[i].y;
-        vector.z = mesh->mNormals[i].z;
-        vertex.normal = vector;
+        if (mesh->HasNormals()){
+            vector.x = mesh->mNormals[i].x;
+            vector.y = mesh->mNormals[i].y;
+            vector.z = mesh->mNormals[i].z;
+            vertex.normal = vector;
+        }
 
         if(mesh->mTextureCoords[0]){ // does the mesh contain texture coordinates?
             glm::vec2 vec;
@@ -94,7 +103,7 @@ std::vector<MeshRenderer::Texture> Model::loadMaterialTextures(aiMaterial* mat, 
         bool skip = false;
 
         for (size_t j = 0; j < texturesLoaded.size(); j++){
-            if(std::strcmp(texturesLoaded[j].path.data(),fileName.C_Str())){
+            if(std::strcmp(texturesLoaded[j].path.data(),fileName.C_Str())==0){
                 textures.push_back(texturesLoaded[j]);
                 skip = true;
                 break;

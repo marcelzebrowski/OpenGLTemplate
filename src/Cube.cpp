@@ -101,7 +101,7 @@ void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<LightSour
         textures[0]->attach(shader,"material.diffuse");
         textures[1]->attach(shader,"material.specular");
 
-        GL(glBindVertexArray(VAO));
+        
         shader->setMat4("model",model);
         shader->setMat4("view",view);
         shader->setFloat3("viewPosition", camera->getPosition());
@@ -140,13 +140,18 @@ void Cube::render(glm::mat4& model, glm::mat4& view, const std::vector<LightSour
         shader->setFloat("spotLight.quadratic", 0.032f);
 
 
+        
+
+        GL(glBindVertexArray(VAO));
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
+
 
         textures[2]->detach();
         textures[1]->detach();
         textures[0]->detach();
     shader->detach();
+
 }
 

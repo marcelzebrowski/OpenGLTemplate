@@ -80,4 +80,5 @@ void CoordinateSystem::render(glm::mat4& model, glm::mat4& view){
         glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
+    
 }

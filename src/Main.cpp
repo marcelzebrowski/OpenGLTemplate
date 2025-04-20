@@ -240,9 +240,10 @@ int main(void) {
 
 		
 		viewportHandler.addShader(&coordinateSystemShader);
-		viewportHandler.addShader(&cubeShader);
-		viewportHandler.addShader(&lampShader);
-		viewportHandler.addShader(&lightShader);
+		//viewportHandler.addShader(&cubeShader);
+		//viewportHandler.addShader(&lampShader);
+		//viewportHandler.addShader(&lightShader);
+		viewportHandler.addShader(&simpleMeshShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -284,6 +285,7 @@ int main(void) {
 		
 		
 		MarcelsTimer timer;
+		Model backpack("model/backpack/backpack.obj",&simpleMeshShader);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -294,42 +296,16 @@ int main(void) {
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-			fraktal.render(glfwGetTime());
+			fraktal.render((float)glfwGetTime());
 
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
 			coordinateSystem.render(model,view);
 
-
-			//Model backpack("model/backpack/backpack.obj");
-			//backpack.draw(simpleMeshShader);
-
-			// light
-			glm::vec3 lightPosition = glm::vec3( 1.0f, 1.0f, 1.0f);
-			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
-			lightPosition.y = float(sin(glfwGetTime()/2.0f));
-
-
-			for(int i = 0; i < 10; i++){
-				// cube
-				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
-				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
-				//cube.render(modelCube,view, lightSources,(float)glfwGetTime());
-			}
-			
-			
-			glm::mat4 modelLight = glm::translate(model,lightPosition); 
-			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
-			lightSource.render(modelLight,view);
-
-
-			for(int i = 0; i < lightSources.size(); i++){
-				glm::mat4 modelLamp = glm::translate(model,lightSources[i]->getPosition());
-				modelLamp = glm::scale(modelLamp,glm::vec3(0.2f,0.2f,0.2f));
-				//lightSources[i]->render(modelLamp,view);
-			}
-
+			backpack.render(model, view);
+	
+				
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));

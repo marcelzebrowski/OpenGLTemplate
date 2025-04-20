@@ -16,15 +16,16 @@
 
 class Model {
     public:
-        Model(std::string const &path){
+        Model(std::string const &path, Shader* shader):shader(shader){
             loadModel(path);
         }
-        void draw(Shader& shader);
+        void render(glm::mat4& model, glm::mat4& view);
 
     private:
         std::vector<MeshRenderer::Mesh> meshes;
         std::string directory;
         std::vector<MeshRenderer::Texture> texturesLoaded;
+        Shader* shader;
         
         void loadModel(std::string path);
 
