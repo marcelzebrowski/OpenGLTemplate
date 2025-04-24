@@ -9,7 +9,6 @@ void Model::render(glm::mat4& model, glm::mat4& view) {
         shader->setMat4("model",model);
         for (size_t i = 0; i < meshes.size(); i++) {
             meshes[i].Draw(shader);
-            break;
         }
     shader->detach();
     

@@ -28,6 +28,9 @@ public:
 
     void setMat4(const std::string& name, glm::mat4& matrix) const;
 
+    unsigned int getID() const{
+        return ID;
+    }
 private:
     unsigned int createShaderProgram(const char* vertexPath, const char* fragmentPath);
     unsigned int createShader(const char* program, GLenum shaderType);

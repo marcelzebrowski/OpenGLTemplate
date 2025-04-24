@@ -215,7 +215,9 @@ int main(void) {
 	}
 
 	// configure mouse
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	#ifdef NDEBUG
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	#endif
 	glfwSetCursorPosCallback(window,mouse_call_back);
 	glfwSetScrollCallback(window, scroll_back);    
 
