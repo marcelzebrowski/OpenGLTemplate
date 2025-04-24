@@ -29,6 +29,14 @@ namespace MeshRenderer {
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
         void Draw(Shader *shader);
         ~Mesh();
+
+         // Move-Semantik erlaubt
+         Mesh(Mesh&& other) noexcept;
+         Mesh& operator=(Mesh&& other) noexcept;
+ 
+         // Kopieren VERBOTEN (wegen VAO)
+         Mesh(const Mesh&) = delete;
+         Mesh& operator=(const Mesh&) = delete;
         
     private:
         unsigned int VAO, VBO, EBO;

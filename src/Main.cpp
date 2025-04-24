@@ -164,6 +164,9 @@ float randomColor(){
 	return value;
 }
 
+
+
+
 int main(void) {
 
 	// initialize and configure
@@ -301,11 +304,15 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-			coordinateSystem.render(model,view);
+			
 
-			backpack.render(model, view);
 	
 				
+			coordinateSystem.render(model,view);	
+			
+			backpack.render(model, view);
+
+			
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -317,3 +324,4 @@ int main(void) {
 
 	return 0;
 }
+

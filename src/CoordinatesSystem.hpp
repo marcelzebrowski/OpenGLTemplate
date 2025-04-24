@@ -15,6 +15,12 @@ public:
     CoordinateSystem(Shader* shader);
     ~CoordinateSystem();
 
+    CoordinateSystem(CoordinateSystem&& other) noexcept;
+    CoordinateSystem& operator=(CoordinateSystem&& other) noexcept;
+
+    CoordinateSystem(const CoordinateSystem&) = delete;
+    CoordinateSystem& operator=(const CoordinateSystem&) = delete;
+
     void render(glm::mat4& model, glm::mat4& view);
 
 };

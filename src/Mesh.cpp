@@ -2,24 +2,62 @@
 
 
 namespace MeshRenderer{
-    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
+    Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures) 
+    :   vertices(std::move(vertices)),
+        indices(std::move(indices)),
+        textures(std::move(textures))  {
 
-   
-        setupMesh();
+         setupMesh();
     
         
     }
 
+    Mesh::Mesh(Mesh&& other) noexcept {
+        vertices = std::move(other.vertices);
+        indices = std::move(other.indices);
+        textures = std::move(other.textures);
+
+        VAO = other.VAO;
+        VBO = other.VBO;
+        EBO = other.EBO;
+
+        other.VAO = 0;
+        other.VBO = 0;
+        other.EBO = 0;
+    }
+
+    Mesh& Mesh::operator=(Mesh&& other) noexcept {
+        if (this != &other) {
+            this->~Mesh(); // zuerst alles alte aufräumen
+
+            vertices = std::move(other.vertices);
+            indices = std::move(other.indices);
+            textures = std::move(other.textures);
+
+            VAO = other.VAO;
+            VBO = other.VBO;
+            EBO = other.EBO;
+
+            other.VAO = 0;
+            other.VBO = 0;
+            other.EBO = 0;
+        }
+        return *this;
+    }
+
     Mesh::~Mesh() {
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
-        glDeleteBuffers(1, &EBO);
+        if (glIsVertexArray(VAO)) glDeleteVertexArrays(1, &VAO);
+        if (glIsBuffer(VBO)) glDeleteBuffers(1, &VBO);
+        if (glIsBuffer(EBO)) glDeleteBuffers(1, &EBO);
     }
 
     void Mesh::setupMesh(){
+
+        if (vertices.empty() || indices.empty()) {
+            std::cerr << "[setupMesh] Leeres Mesh - keine VAO-Erstellung" << std::endl;
+            return;
+        }
+
         // create vertex and index buffer
         glGenVertexArrays(1,&VAO);
         glGenBuffers(1, &VBO);
@@ -52,24 +90,44 @@ namespace MeshRenderer{
 
         if (!glIsVertexArray(VAO)) {
             std::cerr << "[Fehler] VAO " << VAO << " ist kein gültiges Vertex Array!" << std::endl;
+        }else{
+            std::cout << "[DEBUG Mesh] VAO created: " << VAO << std::endl;
         }
 
 
         // -- unbind
-        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
 
+
+    inline unsigned int getBoundVAO() {
+        GLint vao = 0;
+        glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vao);
+        return static_cast<unsigned int>(vao);
+    }
+
+    void CheckGLErrors(const std::string& location) {
+        GLenum err;
+        while ((err = glGetError()) != GL_NO_ERROR) {
+            std::cerr << "[OpenGL Error] at " << location << ": " << std::hex << err << std::endl;
+        }
+    }
+
     void Mesh::Draw(Shader* shader){
-        
-    
+        if (!glIsVertexArray(VAO)) {
+            std::cerr << "[Draw] Ungültiger VAO in Mesh!" << std::endl;
+            return;
+        }
+
+      
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
 
-        for (size_t i = 0; i < textures.size(); i++) {
 
-             // todo hier die texturen auslesen anhand des namen
-            glActiveTexture(GL_TEXTURE0 + i);
+       for (size_t i = 0; i < textures.size(); i++) {
+
+            glActiveTexture(GL_TEXTURE0 + static_cast<int>(i));
             std::string number;
             std::string name = textures[i].type;
 
@@ -84,20 +142,23 @@ namespace MeshRenderer{
             if (glIsTexture(textures[i].id)) {
                 glBindTexture(GL_TEXTURE_2D, textures[i].id);
             } else {
-                std::cerr << "Invalid texture id: " << textures[i].id << std::endl;
+                std::cerr << "[Draw] Ungültige oder fehlende Textur (ID: " << textures[i].id << ") für Shader: " << ("material." + name + number) << std::endl;
+                glBindTexture(GL_TEXTURE_2D, 0); // Bind dummy texture oder 0
             }
+
         }
 
-      
+        
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
-        glActiveTexture(GL_TEXTURE0);
+
         
+        glBindTexture(GL_TEXTURE_2D, 0);  // <- wichtig
+        glActiveTexture(GL_TEXTURE0);
+
+        glBindVertexArray(0);
 
     
-
-
     }
 }

@@ -16,6 +16,29 @@ static const unsigned int axesIndices[] = {
     4, 5, // Z-Axis
 };
 
+CoordinateSystem::CoordinateSystem(CoordinateSystem&& other) noexcept{
+    VAO = other.VAO;
+    VBO = other.VBO;
+    EBO = other.EBO;
+
+    other.VAO = 0;
+    other.VBO = 0;
+    other.EBO = 0;
+}
+
+CoordinateSystem& CoordinateSystem::operator=(CoordinateSystem&& other) noexcept{
+    if(this != &other){
+        this->~CoordinateSystem();
+        VAO = other.VAO;
+        VBO = other.VBO;
+        EBO = other.EBO;
+
+        other.EBO = 0;
+        other.VAO = 0;
+        other.EBO = 0;
+    }
+    return *this;
+}
 
 CoordinateSystem::CoordinateSystem(Shader* shader):shader(shader){
     
@@ -60,6 +83,8 @@ CoordinateSystem::CoordinateSystem(Shader* shader):shader(shader){
 
     if (VAO == 0 || VBO == 0 || EBO == 0) {
         std::cerr << "OpenGL buffer creation failed!" << std::endl;
+    }else{
+        std::cout << "[DEBUG CoordinateSystem] VAO created: " << VAO << std::endl;
     }
 
     
@@ -71,8 +96,10 @@ CoordinateSystem::~CoordinateSystem(){
     glDeleteBuffers(1,&EBO);
 }
 
+
+
 void CoordinateSystem::render(glm::mat4& model, glm::mat4& view){
-    
+
     shader->attach();
         GL(glBindVertexArray(VAO));
         shader->setMat4("model",model);
@@ -80,5 +107,7 @@ void CoordinateSystem::render(glm::mat4& model, glm::mat4& view){
         glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
+
+
     
 }
