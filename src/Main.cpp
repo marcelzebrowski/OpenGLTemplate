@@ -290,7 +290,8 @@ int main(void) {
 		
 		
 		MarcelsTimer timer;
-		Model backpack("model/backpack/backpack.obj",&simpleMeshShader);
+		//Model backpack("model/backpack/backpack.obj",&simpleMeshShader);
+		Model floor("model/floor/floor.obj",&simpleMeshShader);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -312,7 +313,7 @@ int main(void) {
 				
 			coordinateSystem.render(model,view);	
 			
-			backpack.render(model, view);
+			floor.render(model, view);
 
 			
 			glfwSwapBuffers(window);
