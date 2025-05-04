@@ -232,6 +232,7 @@ int main(void) {
 		//Shader lightShader("shader/light/gouraud_vs.glsl","shader/light/gouraud_fs.glsl");
 		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
+		Shader simpleStencilShader("shader/light/phong_vs.glsl","shader/stencil/fragment.glsl");
 
 		//Shader simpleMeshShader("shader/mesh/vertex.glsl","shader/mesh/fragment.glsl");
 
@@ -247,10 +248,11 @@ int main(void) {
 
 		
 		viewportHandler.addShader(&coordinateSystemShader);
-		//viewportHandler.addShader(&cubeShader);
-		//viewportHandler.addShader(&lampShader);
-		//viewportHandler.addShader(&lightShader);
+		viewportHandler.addShader(&cubeShader);
+		viewportHandler.addShader(&lampShader);
+		viewportHandler.addShader(&lightShader);
 		viewportHandler.addShader(&simpleMeshShader);
+		viewportHandler.addShader(&simpleStencilShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -268,20 +270,14 @@ int main(void) {
 		LightSource lightSource(&lampShader);
 		lightSource.setAmbientColor(glm::vec3(1.0f,1.0f,1.0f));
 
+		LightSource stencilLight(&lampShader);
+		stencilLight.setAmbientColor(glm::vec3(0.04f,0.28f,0.26f));
+
 		// Fraktal
 		Fraktal fraktal(&fraktalShader, height, width);
 
 		glm::vec3 cubePositions[] = {
-			glm::vec3( 0.0f,  0.0f,  0.0f),
-			glm::vec3( 2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3( 2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3( 1.3f, -2.0f, -2.5f),
-			glm::vec3( 1.5f,  2.0f, -2.5f),
-			glm::vec3( 1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
+			glm::vec3( 0.0f,  1.0f,  0.0f)
     	};
 
 		float radius = 10.0f;    // Radius der Kreisbahn
@@ -295,6 +291,8 @@ int main(void) {
 		//Model backpack("model/backpack/backpack.obj",&simpleMeshShader);
 		Model floor("model/floor/floor.obj",&simpleMeshShader);
 		//Model floor("model/deph_testing/deph_testing.obj",&simpleMeshShader);
+
+		lightSources.push_back(&lightSource);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -304,23 +302,40 @@ int main(void) {
 
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-			fraktal.render((float)glfwGetTime());
-
+			
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-			
+			coordinateSystem.render(model,view);
 
-	
-				
-			coordinateSystem.render(model,view);	
-			
-			//floor.render(model, view);
 
-			cube.render(model,view, lightSources, delta);
+			// floor
+			floor.render(model,view);
+
+
+			// render stencil
+
+
+			// disable stencil
+
+
+
+			// light
+			glm::vec3 lightPosition = cubePositions[1];
+			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
+			lightPosition.y = float(sin(glfwGetTime()/2.0f));
+
+			// cube
+			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
+			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
+			cube.render(modelCube,view, lightSources, delta);
 
 			
+			
+			glm::mat4 modelLight = glm::translate(model,lightPosition); 
+			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
+			lightSource.render(modelLight,view);
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
