@@ -266,6 +266,7 @@ int main(void) {
 		// we have to take care that we instantiate our shader after framebufferSizeCallBack!
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 		Cube cube(&lightShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
+		Cube cubeSimple(&simpleStencilShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
 
 		LightSource lightSource(&lampShader);
 		lightSource.setAmbientColor(glm::vec3(1.0f,1.0f,1.0f));
@@ -301,40 +302,47 @@ int main(void) {
 			processInput(window);
 
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
+			
+
+
+			// render stencil
+			glEnable(GL_STENCIL_TEST);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glStencilMask(0x00); // no update
+
+
+			fraktal.render(1000* delta);
+			// coordinate
 			coordinateSystem.render(model,view);
-
-
 			// floor
 			floor.render(model,view);
 
 
-			// render stencil
-
-
-			// disable stencil
-
-
-
-			// light
-			glm::vec3 lightPosition = cubePositions[1];
-			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
-			lightPosition.y = float(sin(glfwGetTime()/2.0f));
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glStencilMask(0xFF);
 
 			// cube
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
 			modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
 			cube.render(modelCube,view, lightSources, delta);
+			
+
+			// disable stencil
+			glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+			glStencilMask(0x00);
+			glDisable(GL_DEPTH_TEST);
+			modelCube = glm::scale(modelCube,glm::vec3(1.05f,1.05f,1.05f));
+			cubeSimple.render(modelCube,view, lightSources, delta);
+			glStencilMask(0xFF);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF);
+			glEnable(GL_DEPTH_TEST);
 
 			
-			
-			glm::mat4 modelLight = glm::translate(model,lightPosition); 
-			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
-			lightSource.render(modelLight,view);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
