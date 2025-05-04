@@ -192,8 +192,8 @@ int main(void) {
 
 	#ifndef NDEBUG
 		// Debug-Modus: Windowed
-		maxWidth = 800;
-		maxHeight = 600;
+		maxWidth = 1024;
+		maxHeight = 1024;
 		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
@@ -233,7 +233,9 @@ int main(void) {
 		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 
-		Shader simpleMeshShader("shader/mesh/vertex.glsl","shader/mesh/fragment.glsl");
+		//Shader simpleMeshShader("shader/mesh/vertex.glsl","shader/mesh/fragment.glsl");
+
+		Shader simpleMeshShader("shader/depth/vertex.glsl","shader/depth/fragment.glsl");
 
 
 		Texture cube0Texture("texture/container2.png",0);
@@ -292,6 +294,7 @@ int main(void) {
 		MarcelsTimer timer;
 		//Model backpack("model/backpack/backpack.obj",&simpleMeshShader);
 		Model floor("model/floor/floor.obj",&simpleMeshShader);
+		//Model floor("model/deph_testing/deph_testing.obj",&simpleMeshShader);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -313,7 +316,9 @@ int main(void) {
 				
 			coordinateSystem.render(model,view);	
 			
-			floor.render(model, view);
+			//floor.render(model, view);
+
+			cube.render(model,view, lightSources, delta);
 
 			
 			glfwSwapBuffers(window);
