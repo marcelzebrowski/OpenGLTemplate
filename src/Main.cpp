@@ -325,9 +325,9 @@ int main(void) {
 			floor.render(model,view);
 
 
-			glStencilFunc(GL_ALWAYS, 1, 0xFF);
-			glStencilMask(0xFF);
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			glStencilFunc(GL_ALWAYS, 1, 0xFF); // immer wahr -> ref = 1
+			glStencilMask(0xFF); // darf nun schreiben
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // bei erfolg 1 schreiben
 
 			// cube
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);
