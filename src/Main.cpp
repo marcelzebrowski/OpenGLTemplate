@@ -294,13 +294,17 @@ int main(void) {
 		//Model floor("model/deph_testing/deph_testing.obj",&simpleMeshShader);
 
 		lightSources.push_back(&lightSource);
-		
+
+		float zoom = 2.0f;
+		bool in = false;
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 			timer.printStats();
 			
 			processInput(window);
 
+			glClearStencil(0);
+			glClear(GL_STENCIL_BUFFER_BIT);
 			glClearColor(0.2f,0.2f,0.2f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			
@@ -308,15 +312,13 @@ int main(void) {
 			glm::mat4 view = camera.getViewMatrix();
 
 			
-
-
+	
 			// render stencil
 			glEnable(GL_STENCIL_TEST);
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			glStencilMask(0x00); // no update
 
 
-			fraktal.render(1000* delta);
+			fraktal.render(zoom);
 			// coordinate
 			coordinateSystem.render(model,view);
 			// floor
@@ -325,6 +327,7 @@ int main(void) {
 
 			glStencilFunc(GL_ALWAYS, 1, 0xFF);
 			glStencilMask(0xFF);
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 			// cube
 			glm::mat4 modelCube = glm::translate(model,cubePositions[0]);

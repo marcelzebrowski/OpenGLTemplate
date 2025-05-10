@@ -46,8 +46,8 @@ void Fraktal::render(float render){
 
 
     zoom = 1.0f * render;
-    centerX += sin(render) * 0.002f;
-    centerY += cos(render) * 0.002f;
+    centerX += sin(render) * 0.0002f;
+    centerY += cos(render) * 0.0002f;
 
 
     glDisable(GL_DEPTH_TEST);
@@ -56,7 +56,7 @@ void Fraktal::render(float render){
         shader->setFloat2("uResolution",(float)width, (float)height);
         shader->setFloat2("uCenter",centerX,centerY);
         shader->setFloat("uZoom", zoom);
-        shader->setFloat("uTime",render);
+        shader->setFloat("uTime",zoom);
 
         glBindVertexArray(VAO);
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);

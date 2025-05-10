@@ -42,17 +42,16 @@ void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Normalisierte Koordinaten in den Bereich von -1 bis 1 skalieren, basierend auf der Auflösung
-    vec2 p = (uv - 0.5) * 2.0 * vec2(uResolution.x / uResolution.y, 1.0);
+    vec2 p = (uv - 0.5) * 1.0 * vec2(uResolution.x / uResolution.y, 1.0);
 
     // Berechnung eines animierten Zentrumspunkts (`uCenter`), das sich im Verlauf der Zeit verändert
     vec2 animatedCenter = uCenter + vec2(sin(uTime * 0.1) * 0.5, cos(uTime * 0.2) * 0.5); // Dynamische Bewegung
 
     // Zoomen und Zentrieren unter Verwendung des angepassten Zentrumspunkts
     vec2 c = animatedCenter + p / uZoom;
-    vec2 c1 = p / uZoom;
-
+    
     // Fraktal-Iterationen berechnen
-    int maxIterations = 300;
+    int maxIterations = 50;
     int iters = juliaIterations(p,c, maxIterations);
 
     // Glatte Farbinterpolation
