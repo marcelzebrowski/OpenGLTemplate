@@ -24,6 +24,9 @@
 #include "Fraktal.hpp"
 #include "Model.hpp"
 
+#include "Square.hpp"
+
+
 #define M_PI 3.14159265358979323846
 
 
@@ -131,6 +134,8 @@ int main(void) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+	glfwWindowHint(GLFW_STENCIL_BITS, 8);
 	#ifdef __APPLE__
    		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	#endif
@@ -174,6 +179,8 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
+
+		Shader stencilShader("shader/stencil/stencil_vertex.glsl","shader/stencil/stencil_fragment.glsl");
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		viewportHandler.addShader(&coordinateSystemShader);
 
@@ -184,34 +191,64 @@ int main(void) {
 		glfwGetFramebufferSize(window, &width,&height);
 		viewportHandler.framebufferSizeCallBack(width,height);
 
-	
+		Square square(&stencilShader,glm::vec3(0.4f,0.6f,0.4f),0.4f);
+		glm::vec3 red = glm::vec3(1.0f,0.0f,0.0f);
+		glm::vec3 green = glm::vec3(0.0f,1.0f,0.0f);
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-	
-
 		
 		MarcelsTimer timer;
 		
-		float zoom = 2.0f;
-		bool in = false;
+		glClearColor(0.0f,0.0f,0.0f,1.0f);
+
 		while(!glfwWindowShouldClose(window)){
+			
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			delta = (float)timer.delta();
 			timer.printStats();
 			
 			processInput(window);
 
-			glClearStencil(0);
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glClearColor(0.2f,0.2f,0.2f,1.0f);
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
-			
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-			
-			// coordinate
+			glDisable(GL_STENCIL_TEST);
 			coordinateSystem.render(model,view);
 
+			glEnable(GL_STENCIL_TEST); // 1. step
 
+			// 2. step - write mask to stencil buffer
+			glStencilFunc(GL_ALWAYS, 1, 0xFF); // all fragments will pass the stencil test and if it is equal to 1
+			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // replace with 1
+			glStencilMask(0xFF);
+
+			// no color
+			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+			glDepthMask(GL_FALSE);
+			square.setScale(0.51f);
+			square.render();
+
+			// activate color
+			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+			glDepthMask(GL_TRUE);
+
+			glStencilFunc(GL_NOTEQUAL,1,0xFF);
+			glStencilMask(0x00); // don't write to stencil buffer
+			square.setColor(red);
+			square.setScale(0.52f);
+			square.render();
+			
+			// render normal
+			/*glStencilFunc(GL_EQUAL, 1, 0xFF);
+       		glStencilMask(0x00);
+			square.setColor(green);
+			square.setScale(0.4f);
+			square.render();*/
+
+			
+
+			
+			
+			
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
