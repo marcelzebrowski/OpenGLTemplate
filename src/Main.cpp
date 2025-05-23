@@ -117,6 +117,38 @@ void processInput(GLFWwindow *window){
 	
 }
 
+std::vector<LightSource*> lightSources;
+
+float randomLightColor() {
+    static std::random_device rd;  // Seed für Zufallsgenerator
+    static std::mt19937 gen(rd()); // Mersenne-Twister
+    static std::uniform_real_distribution<float> dis(0.0f, 1.0f);
+    return dis(gen);
+}
+
+void setupLights(Shader* shader){
+	std::vector<glm::vec3> pointLightPositions = {
+		glm::vec3( 0.7f,  0.2f,  2.0f),
+		glm::vec3( 2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3( 0.0f,  0.0f, -3.0f)
+	};
+
+	for(const auto& position : pointLightPositions){
+		LightSource* lightSource = new LightSource(shader);
+		lightSource->setPosition(position);
+
+		float r = randomLightColor();
+		float g = randomLightColor();
+		float b = randomLightColor();
+		lightSource->setAmbientColor(glm::vec3(r,g,b) * 0.4f);
+		lightSource->setSpecularColor(glm::vec3(1.0f,1.0f,1.0f));
+		lightSource->setDiffuseColor(glm::vec3(r,g,b));
+
+		std::cout << "LightColor: " << r << " " << g << " " << b << std::endl;
+		lightSources.push_back(lightSource);
+	}
+}
 
 int main(void) {
 
@@ -182,7 +214,24 @@ int main(void) {
 
 		Shader stencilShader("shader/stencil/stencil_vertex.glsl","shader/stencil/stencil_fragment.glsl");
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
+
+
+		Shader cubeShader("shader/cube/vertex.glsl","shader/cube/fragment.glsl");
+		Shader lightShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
+		Shader lampShader("shader/lamp/vertex.glsl","shader/lamp/fragment.glsl");
+
+		Shader lightSourceShader("shader/light/phong_vs.glsl","shader/light/phong_fs.glsl");
+
+		Texture cube0Texture("texture/container2.png",0);
+		Texture cube1Texture("texture/container2_specular.png",1);
+		Texture emissionTexture("texture/matrix.jpg",2);
+
+		setupLights(&lampShader);
+
 		viewportHandler.addShader(&coordinateSystemShader);
+		viewportHandler.addShader(&cubeShader);
+		viewportHandler.addShader(&lampShader);
+		viewportHandler.addShader(&lightShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -195,9 +244,25 @@ int main(void) {
 		glm::vec3 red = glm::vec3(1.0f,0.0f,0.0f);
 		glm::vec3 green = glm::vec3(0.0f,1.0f,0.0f);
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
+
+		Cube cube(&lightShader,&camera, {&cube0Texture, &cube1Texture, &emissionTexture});
+		LightSource lightSource(&lampShader);
+		lightSource.setAmbientColor(glm::vec3(1.0f,1.0f,1.0f));
 		
 		MarcelsTimer timer;
-		
+
+		glm::vec3 cubePositions[] = {
+			glm::vec3( 0.0f,  0.0f,  0.0f),
+			glm::vec3( 2.0f,  5.0f, -15.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3( 2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3( 1.3f, -2.0f, -2.5f),
+			glm::vec3( 1.5f,  2.0f, -2.5f),
+			glm::vec3( 1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+    	};\
 		glClearColor(0.0f,0.0f,0.0f,1.0f);
 
 		while(!glfwWindowShouldClose(window)){
@@ -231,11 +296,38 @@ int main(void) {
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 			glDepthMask(GL_TRUE);
 
-			glStencilFunc(GL_NOTEQUAL,1,0xFF);
+			glStencilFunc(GL_EQUAL,1,0xFF);
 			glStencilMask(0x00); // don't write to stencil buffer
-			square.setColor(red);
-			square.setScale(0.52f);
-			square.render();
+			//square.setColor(red);
+			//square.setScale(0.52f);
+			//square.render();
+
+			// ---
+			// light
+			glm::vec3 lightPosition = glm::vec3( 1.0f, 1.0f, 1.0f);
+			lightPosition.x = 1.0f + float(sin(glfwGetTime()))*2.0f;
+			lightPosition.y = float(sin(glfwGetTime()/2.0f));
+
+
+			for(int i = 0; i < 10; i++){
+				// cube
+				glm::mat4 modelCube = glm::translate(model,cubePositions[i]);
+				modelCube = glm::rotate(modelCube, (float)glfwGetTime(),glm::vec3(1.0f,1.0f,-1.0f)); 
+				cube.render(modelCube,view, lightSources,(float)glfwGetTime());
+			}
+			
+			
+			glm::mat4 modelLight = glm::translate(model,lightPosition); 
+			modelLight = glm::scale(modelLight,glm::vec3(0.2f,0.2f,0.2f));
+			lightSource.render(modelLight,view);
+
+
+			for(int i = 0; i < lightSources.size(); i++){
+				glm::mat4 modelLamp = glm::translate(model,lightSources[i]->getPosition());
+				modelLamp = glm::scale(modelLamp,glm::vec3(0.2f,0.2f,0.2f));
+				lightSources[i]->render(modelLamp,view);
+			}
+			// -----
 			
 			// render normal
 			/*glStencilFunc(GL_EQUAL, 1, 0xFF);
