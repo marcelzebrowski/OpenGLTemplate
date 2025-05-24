@@ -232,6 +232,7 @@ int main(void) {
 		viewportHandler.addShader(&cubeShader);
 		viewportHandler.addShader(&lampShader);
 		viewportHandler.addShader(&lightShader);
+		viewportHandler.addShader(&stencilShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -290,7 +291,7 @@ int main(void) {
 			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 			glDepthMask(GL_FALSE);
 			square.setScale(0.51f);
-			square.render();
+			square.render(model, view);
 
 			// activate color
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);

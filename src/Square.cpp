@@ -42,12 +42,14 @@ void Square::setup(){
 }
 
 
-void Square::render(){
+void Square::render(glm::mat4& model, glm::mat4& view){
     glDisable(GL_DEPTH_TEST);
     shader->attach();
         GL(glBindVertexArray(VAO));
         shader->setFloat3("color",color);
         shader->setFloat("scale",scale);
+        shader->setMat4("model",model);
+        shader->setMat4("view",view);
         glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT,0);
         glBindVertexArray(0);
 

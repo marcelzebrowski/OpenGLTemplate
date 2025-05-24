@@ -21,7 +21,7 @@ public:
     Square(Shader* shader, const glm::vec3& color = glm::vec3(1.0f), const float scale = 1.0f);
     ~Square();
 
-    void render();
+    void render(glm::mat4& model, glm::mat4& view);
     void setColor(glm::vec3& color);
     void setScale(float scale);
 
