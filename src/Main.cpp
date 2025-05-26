@@ -266,6 +266,8 @@ int main(void) {
     	};\
 		glClearColor(0.0f,0.0f,0.0f,1.0f);
 
+		glm::mat4 fix = glm::mat4(1.0f);
+		glm::mat4 fixCam = camera.getViewMatrix();
 		while(!glfwWindowShouldClose(window)){
 			
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
@@ -291,7 +293,7 @@ int main(void) {
 			glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 			glDepthMask(GL_FALSE);
 			square.setScale(0.51f);
-			square.render(model, view);
+			square.render(fix, fixCam);
 
 			// activate color
 			glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
