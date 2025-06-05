@@ -23,6 +23,7 @@
 #include "LightSource.hpp"
 #include "Fraktal.hpp"
 #include "Model.hpp"
+#include "Text.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -190,6 +191,9 @@ int main(void) {
 
 		
 		MarcelsTimer timer;
+
+		Text text;
+		text.render();
 		
 		float zoom = 2.0f;
 		bool in = false;
