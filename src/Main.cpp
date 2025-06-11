@@ -193,7 +193,7 @@ int main(void) {
 		MarcelsTimer timer;
 
 		Text text;
-		text.render();
+		
 		
 		float zoom = 2.0f;
 		bool in = false;
@@ -214,6 +214,9 @@ int main(void) {
 			
 			// coordinate
 			coordinateSystem.render(model,view);
+
+			// Text
+			text.render();
 
 
 			glfwSwapBuffers(window);
