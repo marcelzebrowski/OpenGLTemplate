@@ -14,7 +14,7 @@ class Shader
 private:
     unsigned int ID;
 public:
-    Shader(const char* vertexPath, const char* fragmentPath);
+    Shader(const char* vertexPath, const char* fragmentPath, bool orthogonal = false);
     ~Shader();
     void attach();
     void detach();
@@ -31,10 +31,17 @@ public:
     unsigned int getID() const{
         return ID;
     }
+
+    bool isOrthogonal() const {
+        return orthogonalProjection;
+    }
+
+
 private:
     unsigned int createShaderProgram(const char* vertexPath, const char* fragmentPath);
     unsigned int createShader(const char* program, GLenum shaderType);
     const char* loadShaderFromFile(const std::string& filename);
+    bool orthogonalProjection;
 };
 
 

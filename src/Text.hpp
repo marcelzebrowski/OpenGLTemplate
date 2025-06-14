@@ -23,11 +23,11 @@ private:
     Texture* texture;
 
     void initGlyphs();
-
+    void setupMesh();
 
 public:
 
-    Text();
+    Text(Shader* shader, Texture* texture);
     ~Text();
     void render();
 };

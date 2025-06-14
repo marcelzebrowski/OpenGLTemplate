@@ -1,6 +1,6 @@
 #include "Shader.hpp"
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath){
+Shader::Shader(const char* vertexPath, const char* fragmentPath, bool orthogonal):orthogonalProjection(orthogonal){
     // -- create vertex shader
 	const char* vertexShaderSource = loadShaderFromFile(vertexPath);
 
@@ -8,7 +8,10 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath){
 	const char* fragmentShaderSource = loadShaderFromFile(fragmentPath);
 
     ID = createShaderProgram(vertexShaderSource, fragmentShaderSource);
+
+    orthogonalProjection = false;
 }
+
 
 Shader::~Shader(){
     glDeleteProgram(ID);

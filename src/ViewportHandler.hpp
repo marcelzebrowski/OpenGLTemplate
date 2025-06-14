@@ -12,6 +12,7 @@ struct GLFWwindow;
 class ViewportHandler {
 private:
     glm::mat4 projection;
+    glm::mat4 orthoProjection;
     std::vector<Shader*> shaders;
     float fov;
 

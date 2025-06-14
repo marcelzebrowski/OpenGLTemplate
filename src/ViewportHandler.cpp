@@ -9,10 +9,17 @@ void ViewportHandler::framebufferSizeCallBack(int width, int height){
     glViewport(0,0, width, height);
     float aspect = static_cast<float>(width)/static_cast<float>(height);
     projection = glm::perspective(glm::radians(fov),aspect, 0.1f, 100.0f);
+    orthoProjection = glm::ortho(0.0f, static_cast<float>(width), 0.0f, static_cast<float>(height), 0.1f, 100.0f);
 
     for(Shader* shader:shaders){
         shader->attach();
-        shader->setMat4("projection",projection);
+        
+        if(shader->isOrthogonal()){
+            shader->setMat4("projection",orthoProjection);    
+        }else {
+            shader->setMat4("projection",projection);
+        }
+        
         shader->detach();
     }
   

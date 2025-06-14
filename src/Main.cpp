@@ -192,7 +192,9 @@ int main(void) {
 		
 		MarcelsTimer timer;
 
-		Text text;
+		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",true);
+		Texture textTexture("texture/ASCII.png",0);
+		Text text(&textShader, &textTexture);
 		
 		
 		float zoom = 2.0f;
@@ -216,7 +218,7 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// Text
-			text.render();
+			//text.render();
 
 
 			glfwSwapBuffers(window);
