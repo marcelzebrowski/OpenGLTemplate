@@ -8,8 +8,6 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath, bool orthogonal
 	const char* fragmentShaderSource = loadShaderFromFile(fragmentPath);
 
     ID = createShaderProgram(vertexShaderSource, fragmentShaderSource);
-
-    orthogonalProjection = false;
 }
 
 

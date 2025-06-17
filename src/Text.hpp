@@ -29,7 +29,7 @@ public:
 
     Text(Shader* shader, Texture* texture);
     ~Text();
-    void render();
+    void render(glm::mat4& model, glm::mat4& view);
 };
 
 #endif

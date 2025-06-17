@@ -1,11 +1,13 @@
 #include "Text.hpp"
 #include <iostream>
+#include "GLErrorCheck.hpp"
 
 static float vertices[] = {
-    // x, y, u, v
-    0.0f, 1.0f, 0.0f, 1.0f,
-    1.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f
+    // x, y, z, u, v
+    -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
+     1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
+    -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
 };
 
 static unsigned int indices[]= {
@@ -24,11 +26,21 @@ Text::~Text(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Text::render(){
+void Text::render(glm::mat4& model, glm::mat4& view){
     shader->attach();
+        texture->attach(shader,"texture");
+
+        shader->setMat4("model",model);
+        shader->setMat4("view",view);
+
+        GL(glBindVertexArray(VAO));
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
 
 
-    shader->attach();
+        texture->detach();
+    shader->detach();
 }
 
 void Text::setupMesh(){
@@ -44,16 +56,16 @@ void Text::setupMesh(){
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // bind indices
-    glBindBuffer(GL_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // linking vertex attributes
     //                   index, size,  type,   normalized,  stride,          offset
     // position
-    glVertexAttribPointer(0,2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // uv
-    glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2* sizeof(float)));
+    glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2* sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // unbind

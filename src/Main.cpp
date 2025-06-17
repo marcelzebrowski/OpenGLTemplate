@@ -173,10 +173,13 @@ int main(void) {
 	glfwSwapInterval(1); 
 
 	glEnable(GL_DEPTH_TEST);
-
 	{
+		MarcelsTimer timer;
+
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		viewportHandler.addShader(&coordinateSystemShader);
+		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",false);
+		viewportHandler.addShader(&textShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -189,11 +192,7 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		
-		MarcelsTimer timer;
-
-		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",true);
-		Texture textTexture("texture/ASCII.png",0);
+		Texture textTexture("texture/bp9itilhre2f1.jpg",0);
 		Text text(&textShader, &textTexture);
 		
 		
@@ -217,8 +216,8 @@ int main(void) {
 			// coordinate
 			coordinateSystem.render(model,view);
 
-			// Text
-			//text.render();
+						// Text
+			text.render(model, view);
 
 
 			glfwSwapBuffers(window);
