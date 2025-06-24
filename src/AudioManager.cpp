@@ -107,9 +107,12 @@ void AudioManager::PlaySFX(const std::string& path, float minVolume, float maxVo
 }
 
 void AudioManager::PlaySong(const std::string& path) {
+
 	if (currentSongPath == path) {
 		return;
 	}
+
+	LoadSong(path);
 
 	if (currentSong != 0) {
 		StopSongs();
@@ -167,6 +170,8 @@ void AudioManager::Load(Category type, const std::string& path) {
 	system->createSound(path.c_str(), modes[type], 0, &sound);
 
 	sounds[type].insert(std::make_pair(path, sound));
+
+
 }
 
 float AudioManager::RandomBetween(float min, float max) {
