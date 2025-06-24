@@ -3,11 +3,11 @@
 #include "GLErrorCheck.hpp"
 
 static float vertices[] = {
-    // x, y, z, u, v
-    -1.0f, -1.0f,  1.0f,  0.0f, 0.0f,
-     1.0f, -1.0f,  1.0f,  1.0f, 0.0f,
-     1.0f,  1.0f,  1.0f,  1.0f, 1.0f,
-    -1.0f,  1.0f,  1.0f,  0.0f, 1.0f,
+    // x, y, u, v
+    -1.0f, -1.0f,  0.0f, 0.0f,
+     1.0f, -1.0f,  1.0f, 0.0f,
+     1.0f,  1.0f,  1.0f, 1.0f,
+    -1.0f,  1.0f,  0.0f, 1.0f,
 };
 
 static unsigned int indices[]= {
@@ -27,6 +27,8 @@ Text::~Text(){
 }
 
 void Text::render(glm::mat4& model, glm::mat4& view){
+	
+    glDisable(GL_DEPTH_TEST);
     shader->attach();
         texture->attach(shader,"texture");
 
@@ -38,9 +40,9 @@ void Text::render(glm::mat4& model, glm::mat4& view){
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 
-
         texture->detach();
     shader->detach();
+    glEnable(GL_DEPTH_TEST);
 }
 
 void Text::setupMesh(){
@@ -62,10 +64,10 @@ void Text::setupMesh(){
     // linking vertex attributes
     //                   index, size,  type,   normalized,  stride,          offset
     // position
-    glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0,2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // uv
-    glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2* sizeof(float)));
+    glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2* sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // unbind

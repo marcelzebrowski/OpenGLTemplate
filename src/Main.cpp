@@ -24,6 +24,8 @@
 #include "Fraktal.hpp"
 #include "Model.hpp"
 #include "Text.hpp"
+#include "Picture.hpp"
+#include "PictureFadeController.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -173,13 +175,14 @@ int main(void) {
 	glfwSwapInterval(1); 
 
 	glEnable(GL_DEPTH_TEST);
+
 	{
 		MarcelsTimer timer;
 
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		viewportHandler.addShader(&coordinateSystemShader);
-		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",false);
-		viewportHandler.addShader(&textShader);
+		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl",true);
+		viewportHandler.addShader(&pictureShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -192,8 +195,10 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture textTexture("texture/bp9itilhre2f1.jpg",0);
-		Text text(&textShader, &textTexture);
+		Texture pictureTexture("texture/bp9itilhre2f1.jpg",0);
+		Picture picture(&pictureShader, &pictureTexture);
+
+		PictureFadeController pictureFadeController(&picture);
 		
 		
 		float zoom = 2.0f;
@@ -212,12 +217,13 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
+
+			// Picture
+			pictureFadeController.render(delta);
 			
 			// coordinate
 			coordinateSystem.render(model,view);
 
-						// Text
-			text.render(model, view);
 
 
 			glfwSwapBuffers(window);
