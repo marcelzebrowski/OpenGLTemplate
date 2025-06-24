@@ -26,6 +26,7 @@
 #include "Text.hpp"
 #include "Picture.hpp"
 #include "PictureFadeController.hpp"
+#include "AudioManager.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -43,6 +44,8 @@ bool firstMouseMove = true;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3(0.0f, 1.0f, 0.0f));
 ViewportHandler viewportHandler;
+
+AudioManager audioManager;
 
 
 
@@ -172,6 +175,10 @@ int main(void) {
 	glfwSetCursorPosCallback(window,mouse_call_back);
 	glfwSetScrollCallback(window, scroll_back);    
 
+	// play sound
+	audioManager.PlaySong("sound/CHROMAG - Switchback.mod");
+
+
 	glfwSwapInterval(1); 
 
 	glEnable(GL_DEPTH_TEST);
@@ -234,6 +241,8 @@ int main(void) {
 	}
 	
 	glfwTerminate();
+
+	audioManager.StopSongs();
 
 	return 0;
 }
