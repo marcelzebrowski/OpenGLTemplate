@@ -176,7 +176,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/CHROMAG - Switchback.mod");
+	audioManager.PlaySong("sound/y2k-1_experience.mod");
 
 
 	glfwSwapInterval(1); 
@@ -202,7 +202,7 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture pictureTexture("texture/bp9itilhre2f1.jpg",0);
+		Texture pictureTexture("texture/61b5f0df-0642-48bc-a389-0b0c0e7f36fb.png",0);
 		Picture picture(&pictureShader, &pictureTexture);
 
 		PictureFadeController pictureFadeController(&picture);
@@ -220,7 +220,7 @@ int main(void) {
 
 			glClearStencil(0);
 			glClear(GL_STENCIL_BUFFER_BIT);
-			glClearColor(0.2f,0.2f,0.2f,1.0f);
+			glClearColor(0.1f,0.1f,0.1f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			
 			glm::mat4 model = glm::mat4(1.0f);
