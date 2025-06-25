@@ -32,6 +32,7 @@
 
 
 float delta;
+float elapsed;
 int maxWidth = 1024;
 int maxHeight = 768;
 float lastX = (float)maxWidth / 2;
@@ -120,6 +121,12 @@ void processInput(GLFWwindow *window){
 	
 }
 
+float easeOutBack(float t) {
+    float c1 = 1.70158f;
+    float c3 = c1 + 1.0f;
+    return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
+}
+
 
 int main(void) {
 
@@ -202,14 +209,13 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture pictureTexture("texture/61b5f0df-0642-48bc-a389-0b0c0e7f36fb.png",0);
+		Texture pictureTexture("texture/horror_512x768.png",0);
 		Picture picture(&pictureShader, &pictureTexture);
 
 		PictureFadeController pictureFadeController(&picture);
 		
-		
-		float zoom = 2.0f;
-		bool in = false;
+	
+
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 			timer.printStats();
@@ -228,10 +234,29 @@ int main(void) {
 
 
 			// Picture
-			pictureFadeController.render(delta);
+
+			float duration = 2.0f;
+
+			elapsed += delta;
+			float t = glm::clamp(elapsed / duration, 0.0f, 1.0f);
+			float x = glm::mix(-1024.0f, 0.0f, easeOutBack(t));
+
+
+			view = glm::mat4(1.0f);
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(x + 1024.0f/2.0f, 0.0f + 768.0f, 0.0f));
+
+			model = glm::scale(model, glm::vec3(512.0f, 768.0f, 1.0f));
+			pictureFadeController.render(delta, view, model);
 			
+
+
 			// coordinate
+			model = glm::mat4(1.0f);
+			view = camera.getViewMatrix();
 			coordinateSystem.render(model,view);
+
+			// todo Text rendering
 
 
 

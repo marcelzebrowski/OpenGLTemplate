@@ -48,6 +48,7 @@ private:
     int frameCount = 0;                          // Anzahl der Frames in der letzten Sekunde
     double currentFPS = 0.0;                     // Berechnete FPS für die aktuelle Sekunde
 
+
     void initialize() {
         lastFrame = high_resolution_clock::now();
     }

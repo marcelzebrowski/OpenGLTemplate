@@ -25,7 +25,7 @@ Picture::~Picture(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Picture::render(float alpha){
+void Picture::render(float alpha, glm::mat4 view, glm::mat4 model){
 	
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -33,6 +33,8 @@ void Picture::render(float alpha){
     shader->attach();
         texture->attach(shader,"texture");
         shader->setFloat("alpha",alpha);
+        shader->setMat4("view",view);
+        shader->setMat4("model",model);
 
         GL(glBindVertexArray(VAO));
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
