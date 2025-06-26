@@ -4,10 +4,10 @@
 
 static float vertices[] = {
     // x, y, u, v
-    -1.0f, -1.0f,  0.0f, 0.0f,
-     1.0f, -1.0f,  1.0f, 0.0f,
+     0.0f,  0.0f,  0.0f, 0.0f,
+     1.0f,  0.0f,  1.0f, 0.0f,
      1.0f,  1.0f,  1.0f, 1.0f,
-    -1.0f,  1.0f,  0.0f, 1.0f,
+     0.0f,  1.0f,  0.0f, 1.0f,
 };
 
 static unsigned int indices[]= {
