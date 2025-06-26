@@ -27,6 +27,7 @@
 #include "Picture.hpp"
 #include "PictureFadeController.hpp"
 #include "AudioManager.hpp"
+#include "PictureAnimator.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -121,11 +122,7 @@ void processInput(GLFWwindow *window){
 	
 }
 
-float easeOutBack(float t) {
-    float c1 = 1.70158f;
-    float c3 = c1 + 1.0f;
-    return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
-}
+
 
 
 int main(void) {
@@ -215,8 +212,10 @@ int main(void) {
 		Picture picture(&pictureShader, &pictureTexture);
 
 		PictureFadeController pictureFadeController(&picture);
-		
-	
+
+		PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
+		pictureAnimator.setTargetSize(maxWidth, maxHeight);
+		pictureAnimator.start();
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -236,31 +235,7 @@ int main(void) {
 
 
 			// Picture
-
-			float duration = 2.0f;
-
-			float originalWidth = 1024.0f;
-			float originalHeight = 1536.0f;
-
-			float targetHeight = maxHeight;
-			float targetWidth = maxWidth;
-			float scale = targetHeight / originalHeight;
-
-			float scaledWidth = originalWidth * scale;
-			float scaledHeight = originalHeight * scale;
-
-			elapsed += delta;
-			float t = glm::clamp(elapsed / duration, 0.0f, 1.0f);
-			float x = glm::mix(-scaledWidth, 0.0f, easeOutBack(t));
-
-
-			view = glm::mat4(1.0f);
-			model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(x, 0.0f, 0.0f));
-
-			model = glm::scale(model, glm::vec3(scaledWidth, scaledHeight, 1.0f));
-			pictureFadeController.render(delta, view, model);
-			
+			pictureAnimator.render(delta);
 
 
 			// coordinate
