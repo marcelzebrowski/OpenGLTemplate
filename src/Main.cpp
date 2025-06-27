@@ -182,7 +182,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/y2k-1_experience.mod");
+	audioManager.PlaySong("sound/share_and_enjoy.mod");
 
 
 	glfwSwapInterval(1); 
@@ -192,10 +192,13 @@ int main(void) {
 	{
 		MarcelsTimer timer;
 
+		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
+		viewportHandler.addShader(&fraktalShader);
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		viewportHandler.addShader(&coordinateSystemShader);
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl",true);
 		viewportHandler.addShader(&pictureShader);
+
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -208,15 +211,26 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture pictureTexture("texture/horror_1024x1536.png",0);
+		Texture pictureTexture("texture/real.png",0);
+		Texture pictureNerdvana("texture/Nerdvana.png",0);
 		Picture picture(&pictureShader, &pictureTexture);
+		Picture logo (&pictureShader, &pictureNerdvana);
 
 		PictureFadeController pictureFadeController(&picture);
+		PictureFadeController logoFadeController(&logo);
 
 		PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
 		pictureAnimator.setTargetSize(maxWidth, maxHeight);
 		pictureAnimator.start();
 
+		PictureAnimator logoAnimator(1200.0f,262.0f,5.0f, &logoFadeController);
+		logoAnimator.setTargetSize(maxWidth/4.0f, maxHeight/4.0f);
+		logoAnimator.start();
+
+
+		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
+
+		float frak;
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 			timer.printStats();
@@ -233,9 +247,13 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
+			frak += delta/2;
+			fraktal.render(frak);
 
 			// Picture
 			pictureAnimator.render(delta);
+
+			logoAnimator.render(delta);
 
 
 			// coordinate
@@ -244,6 +262,8 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// todo Text rendering
+
+
 
 
 
