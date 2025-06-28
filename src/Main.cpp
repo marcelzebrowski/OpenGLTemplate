@@ -151,7 +151,7 @@ int main(void) {
 	#ifndef NDEBUG
 		// Debug-Modus: Windowed
 		maxWidth = 1024;
-		maxHeight = 1024;
+		maxHeight = 768;
 		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
@@ -198,7 +198,8 @@ int main(void) {
 		viewportHandler.addShader(&coordinateSystemShader);
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl",true);
 		viewportHandler.addShader(&pictureShader);
-
+		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",true);
+		viewportHandler.addShader(&textShader);
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -211,8 +212,10 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture pictureTexture("texture/real.png",0);
-		Texture pictureNerdvana("texture/Nerdvana.png",0);
+		Texture pictureTexture("texture/umbreon.png",0);
+		Texture pictureNerdvana("texture/Nerdvana2.png",0);
+		Texture textTexture("texture/ASCII.png",0);
+
 		Picture picture(&pictureShader, &pictureTexture);
 		Picture logo (&pictureShader, &pictureNerdvana);
 
@@ -223,14 +226,17 @@ int main(void) {
 		pictureAnimator.setTargetSize(maxWidth, maxHeight);
 		pictureAnimator.start();
 
-		PictureAnimator logoAnimator(1200.0f,262.0f,5.0f, &logoFadeController);
-		logoAnimator.setTargetSize(maxWidth/4.0f, maxHeight/4.0f);
+		PictureAnimator logoAnimator(1536.0f,1024.0f,2.0f, &logoFadeController,AnimationType::Swing);
+		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
 		logoAnimator.start();
 
 
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
 
-		float frak;
+
+		Text text(&textShader,&textTexture);
+
+		float frak = 0.0f;
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 			timer.printStats();
@@ -262,6 +268,7 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// todo Text rendering
+			text.render("Hallo Welt! Na alles fitt? % abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",glm::vec2(0.0f,0.0f),5.0f);
 
 
 
@@ -280,4 +287,3 @@ int main(void) {
 
 	return 0;
 }
-

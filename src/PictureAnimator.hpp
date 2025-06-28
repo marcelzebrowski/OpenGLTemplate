@@ -1,12 +1,19 @@
+
+
 #ifndef PICTUREANIMATOR_HPP
 #define PICTUREANIMATOR_HPP
 
 #include "PictureFadeController.hpp"
 
+enum class AnimationType {
+    EaseOutBack,
+    Swing
+};
+
 class PictureAnimator {
 public:
     PictureAnimator(float originalWidth, float originalHeight, float durationSeconds,
-        PictureFadeController* pictureFadeController);
+        PictureFadeController* pictureFadeController, AnimationType animationType = AnimationType::EaseOutBack);
 
     void start();
     void render(float delta);
@@ -30,8 +37,11 @@ private:
 
     PictureFadeController* pictureFadeController;
 
+    AnimationType animationType;
+
 
     float easeOutBack(float t);
+    glm::vec2 swing(float t);
 };
 
 #endif

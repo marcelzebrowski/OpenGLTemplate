@@ -26,22 +26,42 @@ Text::~Text(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Text::render(glm::mat4& model, glm::mat4& view){
+void Text::render(const std::string& text, glm::vec2 startPos, float scale){
 	
     glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     shader->attach();
         texture->attach(shader,"texture");
+
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
 
         shader->setMat4("model",model);
         shader->setMat4("view",view);
 
         GL(glBindVertexArray(VAO));
+
+
+        float xCursor = startPos.x;
+
+        for(char c: text){
+            int ascii = (int)c;
+
+
+            Glyph character = asciiTable[ascii];
+           // std::cout << character.width << " " << character.height  << " " << character.sign << std::endl;
+
+        }
+
+
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
 
+        glBindVertexArray(0);
         texture->detach();
     shader->detach();
+    glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }
 

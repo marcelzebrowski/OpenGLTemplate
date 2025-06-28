@@ -29,7 +29,6 @@ public:
 
     Text(Shader* shader, Texture* texture);
     ~Text();
-    void render(glm::mat4& model, glm::mat4& view);
+    void render(const std::string& text, glm::vec2 startPos, float scale);
 };
-
 #endif
