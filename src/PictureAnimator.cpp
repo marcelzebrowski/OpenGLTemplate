@@ -21,8 +21,8 @@ float PictureAnimator::easeOutBack(float t) {
 }
 
 glm::vec2 PictureAnimator::swing(float t){
-    float x = sin(t*glm::two_pi<float>()) * (scaledWidth * 0.3f);
-    float y = (scaledHeight * 0.8f) + abs(sin(t*glm::two_pi<float>() * 0.2f)) * (scaledWidth * 0.2f);
+    float x = sin(t*glm::two_pi<float>()) * (scaledWidth * 0.06f);
+    float y = (scaledHeight * 0.8f) + abs(sin(t*glm::two_pi<float>() * 0.2f)) * (scaledWidth * 0.05f);
     return glm::vec2(x,y);
 }
 
@@ -32,6 +32,7 @@ void PictureAnimator::start(){
 
 void PictureAnimator::render(float delta){
     elapsed += delta;
+
     float t = elapsed / durationSeconds;
     glm::vec2 offset;
     switch(animationType){
@@ -46,7 +47,7 @@ void PictureAnimator::render(float delta){
             break;
         }
     }
-     
+
 
     view = glm::mat4(1.0f);
     model = glm::mat4(1.0f);
@@ -54,5 +55,5 @@ void PictureAnimator::render(float delta){
 
     model = glm::scale(model, glm::vec3(scaledWidth, scaledHeight, 1.0f));
 
-    pictureFadeController->render(delta, view, model);
+    pictureFadeController->render(delta, elapsed, view, model);
 }

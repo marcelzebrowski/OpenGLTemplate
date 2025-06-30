@@ -47,10 +47,20 @@ void Text::render(const std::string& text, glm::vec2 startPos, float scale){
 
         for(char c: text){
             int ascii = (int)c;
-
-
             Glyph character = asciiTable[ascii];
-           // std::cout << character.width << " " << character.height  << " " << character.sign << std::endl;
+
+            int index = ascii - 32;
+
+            int column = index % 12;
+            int row = index / 12;
+            
+            int pixel_x = column * character.width;
+            int pixel_y = row * character.height;
+
+
+
+            
+            std::cout << character.width << " " << character.height  << " " << character.sign << " column: " << column << " row: " << row << std::endl;
 
         }
 

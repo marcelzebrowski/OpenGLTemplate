@@ -17,7 +17,7 @@ public:
 
     Picture(Shader* shader, Texture* texture);
     ~Picture();
-    void render(float alpha, glm::mat4 view, glm::mat4 model);
+    void render(float alpha, float elapsed,  glm::mat4 view, glm::mat4 model);
 
 };
 

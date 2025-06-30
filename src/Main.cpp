@@ -182,7 +182,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/share_and_enjoy.mod");
+	audioManager.PlaySong("sound/13_Mindriot.mp3");
 
 
 	glfwSwapInterval(1); 
@@ -198,6 +198,8 @@ int main(void) {
 		viewportHandler.addShader(&coordinateSystemShader);
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl",true);
 		viewportHandler.addShader(&pictureShader);
+		Shader pictureWobbleShader("shader/picture/vertex.glsl","shader/picture/fragment_wobbel.glsl",true);
+		viewportHandler.addShader(&pictureWobbleShader);
 		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",true);
 		viewportHandler.addShader(&textShader);
 
@@ -217,7 +219,7 @@ int main(void) {
 		Texture textTexture("texture/ASCII.png",0);
 
 		Picture picture(&pictureShader, &pictureTexture);
-		Picture logo (&pictureShader, &pictureNerdvana);
+		Picture logo (&pictureWobbleShader, &pictureNerdvana);
 
 		PictureFadeController pictureFadeController(&picture);
 		PictureFadeController logoFadeController(&logo);
@@ -268,7 +270,7 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// todo Text rendering
-			text.render("Hallo Welt! Na alles fitt? % abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",glm::vec2(0.0f,0.0f),5.0f);
+			text.render("A",glm::vec2(0.0f,0.0f),5.0f);
 
 
 

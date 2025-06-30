@@ -25,7 +25,7 @@ Picture::~Picture(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Picture::render(float alpha, glm::mat4 view, glm::mat4 model){
+void Picture::render(float alpha, float elapsed, glm::mat4 view, glm::mat4 model){
 	
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
@@ -35,6 +35,10 @@ void Picture::render(float alpha, glm::mat4 view, glm::mat4 model){
         shader->setFloat("alpha",alpha);
         shader->setMat4("view",view);
         shader->setMat4("model",model);
+
+        if(elapsed > 0){
+            shader->setFloat("time",elapsed);
+        }
 
         GL(glBindVertexArray(VAO));
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
