@@ -256,7 +256,7 @@ int main(void) {
 			glm::mat4 view = camera.getViewMatrix();
 
 			frak += delta/2;
-			fraktal.render(frak);
+			//fraktal.render(frak);
 
 			// Picture
 			pictureAnimator.render(delta);

@@ -37,42 +37,68 @@ void Text::render(const std::string& text, glm::vec2 startPos, float scale){
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = glm::mat4(1.0f);
 
-        shader->setMat4("model",model);
-        shader->setMat4("view",view);
-
         GL(glBindVertexArray(VAO));
 
 
         float xCursor = startPos.x;
 
         for(char c: text){
+            int letterCount = 12;
             int ascii = (int)c;
-            Glyph character = asciiTable[ascii];
+
+            if(ascii < 32 || ascii > 126){
+                continue;
+            }
+
+            const Glyph& character = asciiTable[ascii];
 
             int index = ascii - 32;
 
-            int column = index % 12;
-            int row = index / 12;
+            int column = index % letterCount; // 12 = count
+            int row = index / letterCount;
+        
+            updateVBO(character.x,character.y, (float)character.height, (float)character.width);
+            model = glm::translate(glm::mat4(1.0f),glm::vec3(xCursor, startPos.y, 0.0f));
+            model = glm::scale(model, glm::vec3(scale));
+
+            shader->setMat4("model", model);
+            shader->setMat4("view",view);
             
-            int pixel_x = column * character.width;
-            int pixel_y = row * character.height;
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-
-            
-            std::cout << character.width << " " << character.height  << " " << character.sign << " column: " << column << " row: " << row << std::endl;
+            xCursor += scale;
 
         }
 
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(0);
         texture->detach();
     shader->detach();
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
+}
+
+void Text::updateVBO(float uPx, float vPx, float heigth, float width){
+
+    const float TEXTURE_WIDTH = 1800.0f;
+    const float TEXTURE_HEIGHT = 1800.0f;
+
+    const float u = uPx / TEXTURE_WIDTH;
+    const float v = vPx / TEXTURE_HEIGHT;
+
+    const float glyphW = heigth / TEXTURE_WIDTH;
+    const float glyphH = width / TEXTURE_HEIGHT;
+    float newVertices[4*4] = {
+        // x, y, u, v
+        -1.0f, -1.0f,  u, v,
+        1.0f, -1.0f,  u + glyphW, v,
+        1.0f,  1.0f,  u + glyphH, v + glyphW,
+        -1.0f,  1.0f,  u, v + glyphW,
+    };
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newVertices),newVertices);
 }
 
 void Text::setupMesh(){
