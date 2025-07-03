@@ -6,59 +6,50 @@ uniform float uTime;
 uniform vec2 uCenter;
 uniform float uZoom;
 
-// Funktion, die die Iterationen des Mandelbrot-Fraktals berechnet
-int mandelbrotIterations(vec2 c, int maxIterations) {
-    vec2 z = vec2(0.0);
-    int i;
-    for (i = 0; i < maxIterations; i++) {
-        if (dot(z, z) > 4.0) break; // Wenn der Betrag von z größer als 2 ist
-        z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
-    }
-    return i;
-}
-
+// Fraktal-Iteration für Julia-Menge
 int juliaIterations(vec2 z, vec2 c, int maxIterations) {
     int i;
     for (i = 0; i < maxIterations; i++) {
-        if (dot(z, z) > 4.0) break; // Wenn der Betrag von z größer als 2 ist
+        if (dot(z, z) > 4.0) break;
         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + c;
     }
     return i;
 }
 
-int burningShipIterations(vec2 c, int maxIterations) {
-    vec2 z = vec2(0.0);
-    int i;
-    for (i = 0; i < maxIterations; i++) {
-        if (dot(z, z) > 4.0) break; // Wenn der Betrag von z größer als 2 ist
-        z = vec2(abs(z.x) * abs(z.x) - abs(z.y) * abs(z.y), 2.0 * abs(z.x) * abs(z.y)) + c;
-    }
-    return i;
-}
-
-
 void main() {
-    // Pixel-Koordinaten in den Bereich [0, 1] normalisieren
     vec2 uv = gl_FragCoord.xy / uResolution;
+    vec2 p = (uv - 0.5) * vec2(uResolution.x / uResolution.y, 1.0);
 
-    // Normalisierte Koordinaten in den Bereich von -1 bis 1 skalieren, basierend auf der Auflösung
-    vec2 p = (uv - 0.5) * 1.0 * vec2(uResolution.x / uResolution.y, 1.0);
+    // Rotation für mehr Dynamik
+    float angle = uTime * 0.2;
+    mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+    vec2 pRotated = rot * p;
 
-    // Berechnung eines animierten Zentrumspunkts (`uCenter`), das sich im Verlauf der Zeit verändert
-    vec2 animatedCenter = uCenter + vec2(sin(uTime * 0.1) * 0.5, cos(uTime * 0.2) * 0.5); // Dynamische Bewegung
+    // Animiertes Zentrum
+    vec2 animatedCenter = uCenter + vec2(sin(uTime * 0.1) * 0.5, cos(uTime * 0.2) * 0.5);
+    vec2 c = animatedCenter + pRotated / uZoom;
 
-    // Zoomen und Zentrieren unter Verwendung des angepassten Zentrumspunkts
-    vec2 c = animatedCenter + p / uZoom;
-    
-    // Fraktal-Iterationen berechnen
     int maxIterations = 50;
-    int iters = juliaIterations(p,c, maxIterations);
+    int iters = juliaIterations(pRotated, c, maxIterations);
 
-    // Glatte Farbinterpolation
-    float color = float(iters) / float(maxIterations);
+    // Glüheffekt
+    float glow = pow(float(iters) / float(maxIterations), 2.0);
 
-    // Farbzuweisung basierend auf den Iterationen
-    vec3 col = vec3(color * 0.5, sin(color * 3.1415), color);
+    // Pulsierender Rhythmus
+    float pulse = 0.9 + 0.1 * sin(uTime);
 
-    FragColor = vec4(col, 1.0);
+    // Warme Fraktalfarbe
+    vec3 glowColor = vec3(
+        0.6 + 0.4 * glow,
+        0.2 * glow,
+        0.1 + 0.3 * (1.0 - glow)
+    );
+
+    // Dunkler Hintergrund
+    vec3 bgColor = vec3(0.05, 0.02, 0.01);
+
+    // Mischung mit Pulsieren
+    vec3 finalColor = mix(bgColor, glowColor, glow * pulse);
+
+    FragColor = vec4(finalColor, 1.0);
 }

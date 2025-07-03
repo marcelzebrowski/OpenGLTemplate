@@ -30,6 +30,6 @@ public:
     Text(Shader* shader, Texture* texture);
     ~Text();
     void render(const std::string& text, glm::vec2 startPos, float scale);
-    void updateVBO(float u, float v, float height, float width);
+    void updateVBO(const Glyph* glypgh);
 };
 #endif

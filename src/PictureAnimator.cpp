@@ -38,7 +38,7 @@ void PictureAnimator::render(float delta){
     switch(animationType){
         case AnimationType::EaseOutBack:{
             float x = glm::mix(-scaledWidth, 0.0f, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
-            offset = glm::vec2(x,0.0f);
+            offset = glm::vec2(x + 100.0f,0.0f);
             break;
         }
         case AnimationType::Swing:{

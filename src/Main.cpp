@@ -182,7 +182,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/13_Mindriot.mp3");
+	audioManager.PlaySong("sound/y2k-1_experience.mod");
 
 
 	glfwSwapInterval(1); 
@@ -225,7 +225,7 @@ int main(void) {
 		PictureFadeController logoFadeController(&logo);
 
 		PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
-		pictureAnimator.setTargetSize(maxWidth, maxHeight);
+		pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
 		pictureAnimator.start();
 
 		PictureAnimator logoAnimator(1536.0f,1024.0f,2.0f, &logoFadeController,AnimationType::Swing);
@@ -256,7 +256,7 @@ int main(void) {
 			glm::mat4 view = camera.getViewMatrix();
 
 			frak += delta/2;
-			//fraktal.render(frak);
+			fraktal.render(frak);
 
 			// Picture
 			pictureAnimator.render(delta);
@@ -270,7 +270,7 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// todo Text rendering
-			text.render("A",glm::vec2(0.0f,0.0f),5.0f);
+			text.render("Nerdvana!",glm::vec2(0.0f,0.0f),50.0f);
 
 
 
