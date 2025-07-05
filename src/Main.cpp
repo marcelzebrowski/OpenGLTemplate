@@ -182,7 +182,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/y2k-1_experience.mod");
+	audioManager.PlaySong("sound/02_Bliss_of_Fairlight-Nerds_iNC.mp3");
 
 
 	glfwSwapInterval(1); 
@@ -270,7 +270,7 @@ int main(void) {
 			coordinateSystem.render(model,view);
 
 			// todo Text rendering
-			text.render("Nerdvana!",glm::vec2(0.0f,0.0f),50.0f);
+			text.render("Nerdpol sucks!",glm::vec2(0.0f,0.0f),1.0f);
 
 
 

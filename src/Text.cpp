@@ -57,8 +57,7 @@ void Text::render(const std::string& text, glm::vec2 startPos, float scale){
             int column = index % letterCount; // 12 = count
             int row = index / letterCount;
         
-            xCursor += character.width * scale * 100;
-            model = glm::translate(model,glm::vec3(xCursor, startPos.y, 0.0f));
+            model = glm::translate(model,glm::vec3(xCursor, 0.0f, 0.0f));
             model = glm::scale(model, glm::vec3(scale));
 
             shader->setMat4("model", model);
@@ -70,7 +69,7 @@ void Text::render(const std::string& text, glm::vec2 startPos, float scale){
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
             
-
+            xCursor = character.width / 3000.0f;
         }
 
 
@@ -179,27 +178,27 @@ void Text::initGlyphs(){
     asciiTable[64]  = {'@' , 1200,  400, 150, 200,  64};
     asciiTable[65]  = {'A' , 1350,  400, 150, 200,  65};
     asciiTable[66]  = {'B' , 1500,  400, 150, 200,  66};
-    asciiTable[67]  = {'C' , 1650,  400, 150, 200,  67};
+    asciiTable[67]  = {'C' , 1650,  400, 180, 200,  67};
 
     asciiTable[68]  = {'D' ,    0,  600, 150, 200,  68};
-    asciiTable[69]  = {'E' ,  150,  600, 150, 200,  69};
-    asciiTable[70]  = {'F' ,  300,  600, 150, 200,  70};
+    asciiTable[69]  = {'E' ,  150,  600, 180, 200,  69};
+    asciiTable[70]  = {'F' ,  300,  600, 110, 200,  70};
     asciiTable[71]  = {'G' ,  450,  600, 150, 200,  71};
-    asciiTable[72]  = {'H' ,  600,  600, 150, 200,  72};
-    asciiTable[73]  = {'I' ,  750,  600, 150, 200,  73};
+    asciiTable[72]  = {'H' ,  600,  600, 100, 200,  72};
+    asciiTable[73]  = {'I' ,  750,  600, 100, 200,  73};
     asciiTable[74]  = {'J' ,  900,  600, 150, 200,  74};
     asciiTable[75]  = {'K' , 1050,  600, 150, 200,  75};
     asciiTable[76]  = {'L' , 1200,  600, 150, 200,  76};
     asciiTable[77]  = {'M' , 1350,  600, 150, 200,  77};
-    asciiTable[78]  = {'N' , 1500,  600, 150, 200,  78};
+    asciiTable[78]  = {'N' , 1500,  600, 130, 200,  78};
     asciiTable[79]  = {'O' , 1650,  600, 150, 200,  79};
 
     asciiTable[80]  = {'P' ,    0,  800, 150, 200,  80};
     asciiTable[81]  = {'Q' ,  150,  800, 150, 200,  81};
-    asciiTable[82]  = {'R' ,  300,  800, 150, 200,  82};
+    asciiTable[82]  = {'R' ,  300,  800, 100, 200,  82};
     asciiTable[83]  = {'S' ,  450,  800, 150, 200,  83};
-    asciiTable[84]  = {'T' ,  600,  800, 150, 200,  84};
-    asciiTable[85]  = {'U' ,  750,  800, 150, 200,  85};
+    asciiTable[84]  = {'T' ,  600,  800, 190, 200,  84};
+    asciiTable[85]  = {'U' ,  750,  800, 120, 200,  85};
     asciiTable[86]  = {'V' ,  900,  800, 150, 200,  86};
     asciiTable[87]  = {'W' , 1050,  800, 150, 200,  87};
     asciiTable[88]  = {'X' , 1200,  800, 150, 200,  88};
@@ -214,7 +213,7 @@ void Text::initGlyphs(){
     asciiTable[96]  = {'`' ,  600, 1000, 150, 200,  96};
     asciiTable[97]  = {'a' ,  750, 1000, 150, 200,  97};
     asciiTable[98]  = {'b' ,  900, 1000, 150, 200,  98};
-    asciiTable[99]  = {'c' , 1050, 1000, 150, 200,  99};
+    asciiTable[99]  = {'c' , 1050, 1000, 130, 200,  99};
     asciiTable[100] = {'d' , 1200, 1000, 150, 200, 100};
     asciiTable[101] = {'e' , 1350, 1000, 150, 200, 101};
     asciiTable[102] = {'f' , 1500, 1000, 150, 200, 102};
@@ -223,18 +222,18 @@ void Text::initGlyphs(){
     asciiTable[104] = {'h' ,    0, 1200, 150, 200, 104};
     asciiTable[105] = {'i' ,  150, 1200, 150, 200, 105};
     asciiTable[106] = {'j' ,  300, 1200, 150, 200, 106};
-    asciiTable[107] = {'k' ,  450, 1200, 150, 200, 107};
+    asciiTable[107] = {'k' ,  450, 1200, 100, 200, 107};
     asciiTable[108] = {'l' ,  600, 1200, 150, 200, 108};
     asciiTable[109] = {'m' ,  750, 1200, 150, 200, 109};
     asciiTable[110] = {'n' ,  900, 1200, 150, 200, 110};
-    asciiTable[111] = {'o' , 1050, 1200, 150, 200, 111};
+    asciiTable[111] = {'o' , 1050, 1200, 100, 200, 111};
     asciiTable[112] = {'p' , 1200, 1200, 150, 200, 112};
     asciiTable[113] = {'q' , 1350, 1200, 150, 200, 113};
     asciiTable[114] = {'r' , 1500, 1200, 150, 200, 114};
-    asciiTable[115] = {'s' , 1650, 1200, 150, 200, 115};
+    asciiTable[115] = {'s' , 1650, 1200, 100, 200, 115};
 
     asciiTable[116] = {'t' ,    0, 1400, 150, 200, 116};
-    asciiTable[117] = {'u' ,  150, 1400, 150, 200, 117};
+    asciiTable[117] = {'u' ,  150, 1400, 130, 200, 117};
     asciiTable[118] = {'v' ,  300, 1400, 150, 200, 118};
     asciiTable[119] = {'w' ,  450, 1400, 150, 200, 119};
     asciiTable[120] = {'x' ,  600, 1400, 150, 200, 120};
