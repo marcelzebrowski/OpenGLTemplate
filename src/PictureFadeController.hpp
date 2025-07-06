@@ -9,7 +9,7 @@ private:
 public:
     PictureFadeController(Picture* picture);
     ~PictureFadeController();
-    void render(float delta, float elapsed, glm::mat4 view, glm::mat4 model);
+    void render(bool fadeIn, float delta, float elapsed, glm::mat4 view, glm::mat4 model);
 };
 
 #endif

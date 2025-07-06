@@ -2,7 +2,7 @@
 
 PictureAnimator::PictureAnimator(float originalWidth, float originalHeight, 
     float durationSeconds, PictureFadeController* pictureFadeController, AnimationType animationType):originalWidth(originalWidth), originalHeight(originalHeight), 
-    durationSeconds(durationSeconds), elapsed(0.0f), pictureFadeController(pictureFadeController), animationType(animationType){}
+    durationSeconds(durationSeconds), elapsed(0.0f), pictureFadeController(pictureFadeController), animationType(animationType), offset(glm::vec2(0.0f,0.0f)),animationDirection(AnimationDirection::IN){}
 
 void PictureAnimator::setTargetSize(float screenWidth, float screenHeight){
     maxHeight = screenHeight;
@@ -28,17 +28,32 @@ glm::vec2 PictureAnimator::swing(float t){
 
 void PictureAnimator::start(){
     elapsed = 0.0f;
+    animationDirection = AnimationDirection::IN;
+    std::cout << "animationdirection set to IN" << std::endl;
 }
 
-void PictureAnimator::render(float delta){
+void PictureAnimator::startExit(){
+    elapsed = 0.0f;
+    animationDirection = AnimationDirection::OUT;
+    std::cout << "animationdirection set to OUT" << std::endl;
+}
+
+void PictureAnimator::update(float delta){
     elapsed += delta;
 
     float t = elapsed / durationSeconds;
-    glm::vec2 offset;
+
     switch(animationType){
         case AnimationType::EaseOutBack:{
-            float x = glm::mix(-scaledWidth, 0.0f, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
-            offset = glm::vec2(x + 100.0f,0.0f);
+            float x;
+            if(animationDirection == AnimationDirection::IN){
+                x = glm::mix(-scaledWidth, 0.0f, easeOutBack(glm::clamp(t, 0.0f,1.0f)));   
+            } 
+            if(animationDirection == AnimationDirection::OUT){
+                std::cout << "animation direction out set x" << std::endl;
+                x = glm::mix(0.0f, scaledWidth, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
+            }
+            offset = glm::vec2(x,0.0f);
             break;
         }
         case AnimationType::Swing:{
@@ -47,13 +62,18 @@ void PictureAnimator::render(float delta){
             break;
         }
     }
+}
 
-
+void PictureAnimator::render(float delta){
     view = glm::mat4(1.0f);
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(offset.x, offset.y, 0.0f));
-
     model = glm::scale(model, glm::vec3(scaledWidth, scaledHeight, 1.0f));
 
-    pictureFadeController->render(delta, elapsed, view, model);
+    pictureFadeController->render(true,delta, elapsed, view, model);
+}
+
+
+float PictureAnimator::getDurationSeconds() const{
+    return durationSeconds;
 }

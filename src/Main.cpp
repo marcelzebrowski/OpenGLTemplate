@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <thread>
+#include <memory>
 
 #include "Shader.hpp"
 #include "Texture.hpp"
@@ -28,6 +29,7 @@
 #include "PictureFadeController.hpp"
 #include "AudioManager.hpp"
 #include "PictureAnimator.hpp"
+#include "PictureAnimatorManager.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -214,21 +216,47 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		Texture pictureTexture("texture/umbreon.png",0);
+		std::vector<Texture> textures;
+		
+		textures.emplace_back("texture/umbreon.png",0);
+		textures.emplace_back("texture/koali.png",0);
+		textures.emplace_back("texture/loeffel.png",0);
+		textures.emplace_back("texture/clawdeen.png",0);
+		textures.emplace_back("texture/tsu.png",0);
+		
+		std::vector<PictureFadeController> fadeControllers;
+		std::vector<PictureAnimator> animators;
+
+		for(auto& texture : textures){
+			Picture picture(&pictureShader, &texture);
+
+			PictureFadeController pictureFadeController(&picture);
+			fadeControllers.emplace_back(pictureFadeController);
+		}
+
+		for(auto& controller : fadeControllers){
+			PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &controller);
+			pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
+			animators.emplace_back(pictureAnimator);
+		}
+
+		PictureAnimatorManager pictureAnimatorManager(animators,3.0f);
+
+
 		Texture pictureNerdvana("texture/Nerdvana2.png",0);
 		Texture textTexture("texture/ASCII.png",0);
 
-		Picture picture(&pictureShader, &pictureTexture);
+		//Picture picture(&pictureShader, textures[0].get());
 		Picture logo (&pictureWobbleShader, &pictureNerdvana);
 
-		PictureFadeController pictureFadeController(&picture);
+		//PictureFadeController pictureFadeController(&picture);
 		PictureFadeController logoFadeController(&logo);
 
-		PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
-		pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
-		pictureAnimator.start();
+		//PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
+		//pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
+		//pictureAnimator.start();
 
-		PictureAnimator logoAnimator(1536.0f,1024.0f,2.0f, &logoFadeController,AnimationType::Swing);
+		PictureAnimator logoAnimator(1536.0f,1024.0f,3.0f, &logoFadeController,AnimationType::Swing);
 		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
 		logoAnimator.start();
 
@@ -239,6 +267,7 @@ int main(void) {
 		Text text(&textShader,&textTexture);
 
 		float frak = 0.0f;
+		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 			timer.printStats();
@@ -259,8 +288,10 @@ int main(void) {
 			fraktal.render(frak);
 
 			// Picture
-			pictureAnimator.render(delta);
+			pictureAnimatorManager.update(delta);
+			pictureAnimatorManager.render(delta);
 
+			logoAnimator.update(delta);
 			logoAnimator.render(delta);
 
 
