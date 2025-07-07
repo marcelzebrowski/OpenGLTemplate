@@ -216,26 +216,30 @@ int main(void) {
 		CoordinateSystem coordinateSystem(&coordinateSystemShader);
 	
 
-		std::vector<Texture> textures;
+		std::vector<std::unique_ptr<Texture>> textures;
 		
-		textures.emplace_back("texture/umbreon.png",0);
-		textures.emplace_back("texture/koali.png",0);
-		textures.emplace_back("texture/loeffel.png",0);
-		textures.emplace_back("texture/clawdeen.png",0);
-		textures.emplace_back("texture/tsu.png",0);
-		
+		textures.emplace_back(std::make_unique<Texture>("texture/umbreon.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/koali.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/loeffel.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/clawdeen.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/tsu.png",0));
+
+	
 		std::vector<PictureFadeController> fadeControllers;
 		std::vector<PictureAnimator> animators;
+		std::vector<std::unique_ptr<Picture>> pictures;
 
 		for(auto& texture : textures){
-			Picture picture(&pictureShader, &texture);
+			Picture picture(&pictureShader, texture.get());
+			pictures.emplace_back(std::make_unique<Picture>(&pictureShader, texture.get()));
+		}
 
-			PictureFadeController pictureFadeController(&picture);
-			fadeControllers.emplace_back(pictureFadeController);
+		for(auto& picture : pictures){
+			fadeControllers.emplace_back(picture.get());
 		}
 
 		for(auto& controller : fadeControllers){
-			PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &controller);
+			PictureAnimator pictureAnimator(1024.0f,1536.0f,5.0f, &controller);
 			pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
 			animators.emplace_back(pictureAnimator);
 		}
