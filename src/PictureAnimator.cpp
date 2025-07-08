@@ -29,13 +29,11 @@ glm::vec2 PictureAnimator::swing(float t){
 void PictureAnimator::start(){
     elapsed = 0.0f;
     animationDirection = AnimationDirection::IN;
-    std::cout << "animationdirection set to IN" << std::endl;
 }
 
 void PictureAnimator::startExit(){
     elapsed = 0.0f;
     animationDirection = AnimationDirection::OUT;
-    std::cout << "animationdirection set to OUT" << std::endl;
 }
 
 void PictureAnimator::update(float delta){
@@ -50,7 +48,6 @@ void PictureAnimator::update(float delta){
                 x = glm::mix(-scaledWidth, 0.0f, easeOutBack(glm::clamp(t, 0.0f,1.0f)));   
             } 
             if(animationDirection == AnimationDirection::OUT){
-                std::cout << "animation direction out set x" << std::endl;
                 x = glm::mix(0.0f, scaledWidth, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
             }
             offset = glm::vec2(x,0.0f);
@@ -70,7 +67,12 @@ void PictureAnimator::render(float delta){
     model = glm::translate(model, glm::vec3(offset.x, offset.y, 0.0f));
     model = glm::scale(model, glm::vec3(scaledWidth, scaledHeight, 1.0f));
 
-    pictureFadeController->render(true,delta, elapsed, view, model);
+    if(animationDirection == AnimationDirection::IN){
+        pictureFadeController->render(true,delta, elapsed, view, model);
+    }else{
+        pictureFadeController->render(false,delta, elapsed, view, model);
+    }
+    
 }
 
 

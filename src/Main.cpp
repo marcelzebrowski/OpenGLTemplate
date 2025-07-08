@@ -30,6 +30,7 @@
 #include "AudioManager.hpp"
 #include "PictureAnimator.hpp"
 #include "PictureAnimatorManager.hpp"
+#include "ScrollingText.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -125,6 +126,19 @@ void processInput(GLFWwindow *window){
 }
 
 
+std::string flattenText(const char* rawText){
+	std::string result;
+
+	while(*rawText){
+		if(*rawText != '\n' && *rawText != '\r'){
+			result += *rawText;
+		}
+		rawText++;
+	}
+	return result;
+}
+
+
 
 
 int main(void) {
@@ -184,7 +198,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/02_Bliss_of_Fairlight-Nerds_iNC.mp3");
+	audioManager.PlaySong("sound/y2k-1_experience.mod");
 
 
 	glfwSwapInterval(1); 
@@ -192,6 +206,10 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
+		const char* rawText = 	"Das ist mein langer scrolle Text\n";
+								" und hier gehtes weiter\n";
+
+
 		MarcelsTimer timer;
 
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
@@ -223,6 +241,8 @@ int main(void) {
 		textures.emplace_back(std::make_unique<Texture>("texture/loeffel.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/clawdeen.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/tsu.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/frank.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/anguyx.png",0));
 
 	
 		std::vector<PictureFadeController> fadeControllers;
@@ -239,7 +259,7 @@ int main(void) {
 		}
 
 		for(auto& controller : fadeControllers){
-			PictureAnimator pictureAnimator(1024.0f,1536.0f,5.0f, &controller);
+			PictureAnimator pictureAnimator(1100.0f,1536.0f,10.0f, &controller);
 			pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
 			animators.emplace_back(pictureAnimator);
 		}
@@ -247,7 +267,7 @@ int main(void) {
 		PictureAnimatorManager pictureAnimatorManager(animators,3.0f);
 
 
-		Texture pictureNerdvana("texture/Nerdvana2.png",0);
+		Texture pictureNerdvana("texture/nerdvana4.png",0);
 		Texture textTexture("texture/ASCII.png",0);
 
 		//Picture picture(&pictureShader, textures[0].get());
@@ -260,7 +280,7 @@ int main(void) {
 		//pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
 		//pictureAnimator.start();
 
-		PictureAnimator logoAnimator(1536.0f,1024.0f,3.0f, &logoFadeController,AnimationType::Swing);
+		PictureAnimator logoAnimator(1024.0f,1024.0f,3.0f, &logoFadeController,AnimationType::Swing);
 		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
 		logoAnimator.start();
 
@@ -271,6 +291,14 @@ int main(void) {
 		Text text(&textShader,&textTexture);
 
 		float frak = 0.0f;
+
+		ScrollingText scrollingText(&text, flattenText(rawText), (float)maxWidth);
+		scrollingText.setStartDelay(5.0f);
+		scrollingText.setSpeed(120.0f);
+		scrollingText.setAmplitude(20.0f);
+		scrollingText.setFrequency(2.0f);
+		scrollingText.setBasePosition(glm::vec2(0.0f,100.0f));
+		scrollingText.setScale(1.0f);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -291,21 +319,23 @@ int main(void) {
 			frak += delta/2;
 			fraktal.render(frak);
 
-			// Picture
 			pictureAnimatorManager.update(delta);
 			pictureAnimatorManager.render(delta);
 
 			logoAnimator.update(delta);
 			logoAnimator.render(delta);
 
+			scrollingText.update(delta);
+			scrollingText.render();
+
 
 			// coordinate
 			model = glm::mat4(1.0f);
 			view = camera.getViewMatrix();
-			coordinateSystem.render(model,view);
+			//coordinateSystem.render(model,view);
 
 			// todo Text rendering
-			text.render("Nerdpol sucks!",glm::vec2(0.0f,0.0f),1.0f);
+			//text.render("Nerdpol sucks!",glm::vec2(0.0f,0.0f),1.0f);
 
 
 

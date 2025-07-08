@@ -11,7 +11,7 @@ void PictureAnimatorManager::update(float delta){
     
     timeAccumulator += delta;
 
-    PictureAnimator current = animators[currentIndex];
+    PictureAnimator& current = animators[currentIndex];
 
     switch(phase){
         case AnimationPhase::IN:{
@@ -54,7 +54,6 @@ void PictureAnimatorManager::update(float delta){
 }
 
 void PictureAnimatorManager::render(float delta){
-    std::cout << "Index " << currentIndex << std::endl;
-    PictureAnimator current = animators[currentIndex];
+    PictureAnimator& current = animators[currentIndex];
     current.render(delta);
 }

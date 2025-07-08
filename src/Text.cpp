@@ -80,6 +80,39 @@ void Text::render(const std::string& text, glm::vec2 startPos, float scale){
     glEnable(GL_DEPTH_TEST);
 }
 
+void Text::render(char c, glm::vec2 startPos, float scale){
+	
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    shader->attach();
+        const Glyph& glyph = getGlyph(c);
+        texture->attach(shader,"texture");
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(startPos,0.0f));
+        model = glm::scale(model, glm::vec3(scale));
+        glm::mat4 view = glm::mat4(1.0f);
+
+        GL(glBindVertexArray(VAO));
+
+
+        shader->setMat4("model", model);
+        shader->setMat4("view",view);
+
+        updateVBO(&glyph);
+        
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        
+        glBindVertexArray(0);
+        texture->detach();
+    shader->detach();
+    glDisable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
+}
+
 void Text::updateVBO(const Glyph* glyph){
 
     float uPx = (float) glyph->x;
@@ -243,4 +276,8 @@ void Text::initGlyphs(){
     asciiTable[124] = {'|' , 1200, 1400, 150, 200, 124};
     asciiTable[125] = {'}' , 1350, 1400, 150, 200, 125};
     asciiTable[126] = {'~' , 1650, 1400, 150, 200, 126};
+}
+
+Glyph& Text::getGlyph(char c){
+    return asciiTable[(int)c];
 }
