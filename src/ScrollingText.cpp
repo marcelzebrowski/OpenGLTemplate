@@ -12,7 +12,7 @@ void ScrollingText::render(){
         return;
     }
 
-    float scrollTime = elapsedTime / startDelay;
+    float scrollTime = elapsedTime - startDelay;
     float baseX = screenWidth - (scrollTime * speed);
 
     for(size_t i = 0; i < content.size(); ++i){
@@ -32,7 +32,7 @@ void ScrollingText::render(){
             if(pc < 32 || pc > 126){
                 continue;
             }
-            x += (textRenderer->getGlyph(pc).width / 1800.0f) * scale;
+            x -= (textRenderer->getGlyph(pc).width / 1800.0f) * scale;
         }
 
         if(x + glyphWidth < 0.0f || x > screenWidth){
@@ -40,12 +40,14 @@ void ScrollingText::render(){
         }
 
         float y = basePosition.y + sinf((x/screenWidth) * frequency * 2.0f * 3.14f) * amplitude;
+        
+        std::cout << "x " << x << " y " << y << std::endl;
         textRenderer->render(c, glm::vec2(x,y),scale);
     }
 }
 
 void ScrollingText::setSpeed(float pixelPerSeconds){
-    pixelPerSeconds = pixelPerSeconds;    
+    speed = pixelPerSeconds;    
 }
 
 void ScrollingText::setAmplitude(float amplitudePixel){
@@ -65,5 +67,5 @@ void ScrollingText::setBasePosition(glm::vec2 pos){
 }
 
 void ScrollingText::setScale(float scale){
-    scale = scale;
+    this->scale = scale;
 }

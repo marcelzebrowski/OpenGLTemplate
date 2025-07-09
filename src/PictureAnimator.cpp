@@ -17,7 +17,7 @@ void PictureAnimator::setTargetSize(float screenWidth, float screenHeight){
 float PictureAnimator::easeOutBack(float t) {
     float c1 = 1.70158f;
     float c3 = c1 + 1.0f;
-    return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
+    return 1 + c3 * pow(t - 1, 3) + (double) c1 * pow(t - 1, 2);
 }
 
 glm::vec2 PictureAnimator::swing(float t){
@@ -62,6 +62,9 @@ void PictureAnimator::update(float delta){
 }
 
 void PictureAnimator::render(float delta){
+
+    // TODO: projection matrix übergeben und view und model in die Update Methode auslagern
+
     view = glm::mat4(1.0f);
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(offset.x, offset.y, 0.0f));

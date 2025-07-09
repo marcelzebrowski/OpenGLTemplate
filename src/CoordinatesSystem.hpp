@@ -10,6 +10,9 @@ class CoordinateSystem {
 private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;
+    glm::mat4 projection;
+    glm::mat4 model;
+    glm::mat4 view;
 
 public:
     CoordinateSystem(Shader* shader);
@@ -21,7 +24,8 @@ public:
     CoordinateSystem(const CoordinateSystem&) = delete;
     CoordinateSystem& operator=(const CoordinateSystem&) = delete;
 
-    void render(glm::mat4& model, glm::mat4& view);
+    void update(const glm::mat4& projection, const glm::mat4& model, const glm::mat4& view);
+    void render();
 
 };
 

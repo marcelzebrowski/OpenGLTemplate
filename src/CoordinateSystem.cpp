@@ -98,16 +98,19 @@ CoordinateSystem::~CoordinateSystem(){
 
 
 
-void CoordinateSystem::render(glm::mat4& model, glm::mat4& view){
+void CoordinateSystem::update(const glm::mat4& projection, const glm::mat4& model, const glm::mat4& view){
+    this->projection = projection;
+    this->view = view;
+    this->model = model;
+}
 
+void CoordinateSystem::render(){
     shader->attach();
         GL(glBindVertexArray(VAO));
+        shader->setMat4("projection",projection);
         shader->setMat4("model",model);
         shader->setMat4("view",view);
         glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
-
-
-    
 }

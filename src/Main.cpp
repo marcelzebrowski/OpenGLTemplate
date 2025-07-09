@@ -213,15 +213,10 @@ int main(void) {
 		MarcelsTimer timer;
 
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
-		viewportHandler.addShader(&fraktalShader);
 		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
-		viewportHandler.addShader(&coordinateSystemShader);
-		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl",true);
-		viewportHandler.addShader(&pictureShader);
-		Shader pictureWobbleShader("shader/picture/vertex.glsl","shader/picture/fragment_wobbel.glsl",true);
-		viewportHandler.addShader(&pictureWobbleShader);
-		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl",true);
-		viewportHandler.addShader(&textShader);
+		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
+		Shader pictureWobbleShader("shader/picture/vertex.glsl","shader/picture/fragment_wobbel.glsl");
+		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl");
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -317,29 +312,21 @@ int main(void) {
 			glm::mat4 view = camera.getViewMatrix();
 
 			frak += delta/2;
-			fraktal.render(frak);
+		//	fraktal.render(frak);
 
 			pictureAnimatorManager.update(delta);
-			pictureAnimatorManager.render(delta);
+		//	pictureAnimatorManager.render(delta);
 
 			logoAnimator.update(delta);
-			logoAnimator.render(delta);
+		//	logoAnimator.render(delta);
 
 			scrollingText.update(delta);
-			scrollingText.render();
+		//	scrollingText.render();
 
 
 			// coordinate
-			model = glm::mat4(1.0f);
-			view = camera.getViewMatrix();
-			//coordinateSystem.render(model,view);
-
-			// todo Text rendering
-			//text.render("Nerdpol sucks!",glm::vec2(0.0f,0.0f),1.0f);
-
-
-
-
+			coordinateSystem.update(viewportHandler.getProjection(), model, view);
+			coordinateSystem.render();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

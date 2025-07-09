@@ -14,7 +14,7 @@ class Shader
 private:
     unsigned int ID;
 public:
-    Shader(const char* vertexPath, const char* fragmentPath, bool orthogonal = false);
+    Shader(const char* vertexPath, const char* fragmentPath);
     ~Shader();
     void attach();
     void detach();
@@ -26,7 +26,7 @@ public:
     void setFloat3(const std::string& name, float value1, float value2, float value3) const;
     void setFloat3(const std::string& name, glm::vec3 vec) const;
 
-    void setMat4(const std::string& name, glm::mat4& matrix) const;
+    void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
     unsigned int getID() const{
         return ID;

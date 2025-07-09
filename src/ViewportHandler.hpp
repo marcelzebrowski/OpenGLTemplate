@@ -12,16 +12,15 @@ struct GLFWwindow;
 class ViewportHandler {
 private:
     glm::mat4 projection;
-    glm::mat4 orthoProjection;
-    std::vector<Shader*> shaders;
+    glm::mat4 orthogonalProjection;
     float fov;
 
 public:
     ViewportHandler();
     void framebufferSizeCallBack(int width, int height);
     void registerWithWindow(GLFWwindow* window);
-    glm::mat4 getProjection() const;
-    void addShader(Shader* shader);
+    const glm::mat4& getProjection() const;
+    const glm::mat4& getOrthogonalProjection() const;
     void setFov(float fov);
 
     static void framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height);
