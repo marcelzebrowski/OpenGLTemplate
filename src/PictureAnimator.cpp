@@ -49,7 +49,7 @@ void PictureAnimator::update(float delta, glm::mat4* projection){
                 x = glm::mix(-scaledWidth, 0.0f, easeOutBack(glm::clamp(t, 0.0f,1.0f)));   
             } 
             if(animationDirection == AnimationDirection::OUT){
-                x = glm::mix(0.0f, scaledWidth, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
+                x = glm::mix(0.0f, -scaledWidth, easeOutBack(glm::clamp(t, 0.0f,1.0f)));
             }
             offset = glm::vec2(x,0.0f);
             break;

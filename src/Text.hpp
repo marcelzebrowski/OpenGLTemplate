@@ -21,6 +21,10 @@ private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;
     Texture* texture;
+    glm::mat4* projection;
+    glm::vec2* startPos;
+    char currentLetter;
+    float scale;
 
     void initGlyphs();
     void setupMesh();
@@ -29,9 +33,10 @@ public:
 
     Text(Shader* shader, Texture* texture);
     ~Text();
-    void render(const std::string& text, glm::vec2 startPos, float scale);
-    void render(char c, glm::vec2 startPos, float scale);
+    void render();
     void updateVBO(const Glyph* glypgh);
+
+    void update(char c, glm::vec2* startPos, float scale, glm::mat4* projection);
 
     Glyph& getGlyph(char c);
 };

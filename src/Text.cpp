@@ -26,77 +26,33 @@ Text::~Text(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Text::render(const std::string& text, glm::vec2 startPos, float scale){
-	
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    shader->attach();
-        texture->attach(shader,"texture");
 
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = glm::mat4(1.0f);
+void Text::update(char c, glm::vec2* startPos, float scale, glm::mat4* projection){
+    this->currentLetter = c;
+    this->scale = scale;
+    this->startPos = startPos;
+    this->projection = projection;
 
-        GL(glBindVertexArray(VAO));
-
-
-        float xCursor = startPos.x;
-
-        for(char c: text){
-            int letterCount = 12;
-            int ascii = (int)c;
-
-            if(ascii < 32 || ascii > 126){
-                continue;
-            }
-
-            const Glyph& character = asciiTable[ascii];
- 
-            int index = ascii - 32;
-
-            int column = index % letterCount; // 12 = count
-            int row = index / letterCount;
-        
-            model = glm::translate(model,glm::vec3(xCursor, 0.0f, 0.0f));
-            model = glm::scale(model, glm::vec3(scale));
-
-            shader->setMat4("model", model);
-            shader->setMat4("view",view);
-
-            updateVBO(&character);
-            
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-            
-            xCursor = character.width / 3000.0f;
-        }
-
-
-        glBindVertexArray(0);
-        texture->detach();
-    shader->detach();
-    glDisable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
 }
 
-void Text::render(char c, glm::vec2 startPos, float scale){
+void Text::render(){
 
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     shader->attach();
-        const Glyph& glyph = getGlyph(c);
+        const Glyph& glyph = getGlyph(currentLetter);
         texture->attach(shader,"texture");
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(startPos,0.0f));
+        glm::vec3 start = glm::vec3(*startPos, 0.0f); 
+        model = glm::translate(model, glm::vec3(*startPos,0.0f));
         model = glm::scale(model, glm::vec3(scale));
         glm::mat4 view = glm::mat4(1.0f);
 
         GL(glBindVertexArray(VAO));
 
-
+        shader->setMat4("projection",*projection);
         shader->setMat4("model", model);
         shader->setMat4("view",view);
 
@@ -230,7 +186,7 @@ void Text::initGlyphs(){
     asciiTable[81]  = {'Q' ,  150,  800, 150, 200,  81};
     asciiTable[82]  = {'R' ,  300,  800, 100, 200,  82};
     asciiTable[83]  = {'S' ,  450,  800, 150, 200,  83};
-    asciiTable[84]  = {'T' ,  600,  800, 190, 200,  84};
+    asciiTable[84]  = {'T' ,  600,  800, 150, 200,  84};
     asciiTable[85]  = {'U' ,  750,  800, 120, 200,  85};
     asciiTable[86]  = {'V' ,  900,  800, 150, 200,  86};
     asciiTable[87]  = {'W' , 1050,  800, 150, 200,  87};

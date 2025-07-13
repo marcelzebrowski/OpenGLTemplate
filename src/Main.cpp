@@ -206,8 +206,16 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		const char* rawText = 	"Das ist mein langer scrolle Text\n";
-								" und hier gehtes weiter\n";
+		const char* rawText = "Willkommen zu einer neuen Nerdvana Production im Sommer 2025, heute ist der 13.7.2025 und mir ist langweilig! Also Zeit zum trollen und "
+							  "einem super geilen Intro aus der Feder von Overflow. Danke dafuer! Ich darf jetzt den Text hier schreiben. Lange lange wurde es Still um die Dicke Fleischwurst aka. "
+							  "Lyoner, doch nun bin ich wieder da. Ich glaube ich fange mal mit ein paar Gruessen an. Azradamus, ... Crash, ..., Der Patze, DirtyLittleDice, Drizzt1981, EinfachNurA, "
+							  "Gerowinger, Kaiwalker, Koenig Donnerdarm von Discordia, Martin, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras, Triback und alle die gerade online sind Hodentod. "
+							  "Ich habe irgendwie das Gefuehl, dass auf dem Nerdvana mehr los ist, als auf unserem geliebten Nerdpol, von dem wir uns damals abgespalten haben - als eine illustre Runde "
+							  "von spezial Menschen meinte anderen ihre Spielweise auf zu druecken. Tja hat wohl nicht geklappt. Wusstet ihr eigentlich, dass auf dem Nerdvan noch nie jemand gebannt wurde? "
+							  "Nur der Umbreon wurde damals hinausgeworfen, als er meine rumzu drollen und \" gedroll wird net, wer drollt, der fliegt! \" um es mit Drachenlords Worten mal zu sagen. "  
+							  "Lorem ipsum ... mir faellt so langsam nichts mehr ein."
+							  "";	
+		std::string flatText(rawText);
 
 
 		MarcelsTimer timer;
@@ -255,12 +263,12 @@ int main(void) {
 		}
 
 		for(auto& controller : fadeControllers){
-			PictureAnimator pictureAnimator(1100.0f,1536.0f,10.0f, &controller);
+			PictureAnimator pictureAnimator(1100.0f,1536.0f,5.0f, &controller);
 			pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
 			animators.emplace_back(pictureAnimator);
 		}
 
-		PictureAnimatorManager pictureAnimatorManager(animators,3.0f);
+		PictureAnimatorManager pictureAnimatorManager(animators,30.0f);
 
 		Texture pictureNerdvana("texture/nerdvana4.png",0);
 		Texture textTexture("texture/ASCII.png",0);
@@ -269,7 +277,7 @@ int main(void) {
 
 		PictureFadeController logoFadeController(&logo);
 
-		PictureAnimator logoAnimator(1024.0f,1024.0f,3.0f, &logoFadeController,AnimationType::Swing);
+		PictureAnimator logoAnimator(1024.0f,1024.0f,30.0f, &logoFadeController,AnimationType::Swing);
 		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
 		logoAnimator.start();
 
@@ -281,13 +289,13 @@ int main(void) {
 
 		float frak = 0.0f;
 
-		ScrollingText scrollingText(&text, flattenText(rawText), (float)maxWidth);
+		ScrollingText scrollingText(&text, flatText, (float)maxWidth, (float) maxHeight);
 		scrollingText.setStartDelay(5.0f);
-		scrollingText.setSpeed(120.0f);
-		scrollingText.setAmplitude(20.0f);
-		scrollingText.setFrequency(2.0f);
-		scrollingText.setBasePosition(glm::vec2(0.0f,100.0f));
-		scrollingText.setScale(1.0f);
+		scrollingText.setSpeed(320.0f);
+		scrollingText.setAmplitude(5.0f);
+		scrollingText.setFrequency(5.0f);
+		scrollingText.setBasePosition(glm::vec2(0.0f,0.0f));
+		scrollingText.setScale(2500.0f);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -315,8 +323,13 @@ int main(void) {
 			logoAnimator.update(delta, viewportHandler.getOrthogonalProjection());
 			logoAnimator.render();
 
-			scrollingText.update(delta);
-		//	scrollingText.render();
+			scrollingText.update(delta, viewportHandler.getOrthogonalProjection());
+			scrollingText.render();
+
+
+			//glm::vec2 start = glm::vec2(maxWidth/2.0f,maxHeight/2.0f);
+			//text.update('H',&start, 1000.0f, viewportHandler.getOrthogonalProjection());
+			//text.render();
 
 
 			// coordinate

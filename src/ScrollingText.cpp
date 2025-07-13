@@ -1,10 +1,12 @@
 #include "ScrollingText.hpp"
 #include <cmath>
 
-ScrollingText::ScrollingText(Text* textRenderer, const std::string& content, float screenWidth): textRenderer(textRenderer), content(content), screenWidth(screenWidth){}
+ScrollingText::ScrollingText(Text* textRenderer, const std::string& content, float screenWidth, float screenHeight): textRenderer(textRenderer), content(content), screenWidth(screenWidth), screenHeight(screenHeight){}
 
-void ScrollingText::update(float delta){
+void ScrollingText::update(float delta, glm::mat4* projection){
     elapsedTime += delta;
+    this->projection = projection;
+
 }
 
 void ScrollingText::render(){
@@ -14,6 +16,7 @@ void ScrollingText::render(){
 
     float scrollTime = elapsedTime - startDelay;
     float baseX = screenWidth - (scrollTime * speed);
+    float x = baseX;
 
     for(size_t i = 0; i < content.size(); ++i){
         char c = content[i];
@@ -24,25 +27,22 @@ void ScrollingText::render(){
 
         const Glyph& glyph = textRenderer->getGlyph(c);
 
-        float glyphWidth = (glyph.width / 1800.0f) * scale;
-        float x = baseX;
+        float glyphWidth = (float)glyph.width;
 
-        for(size_t j = 0; j < i; ++j){
-            char pc = content[j];
-            if(pc < 32 || pc > 126){
-                continue;
-            }
-            x -= (textRenderer->getGlyph(pc).width / 1800.0f) * scale;
-        }
 
         if(x + glyphWidth < 0.0f || x > screenWidth){
+            x += glyphWidth;
             continue;
         }
 
-        float y = basePosition.y + sinf((x/screenWidth) * frequency * 2.0f * 3.14f) * amplitude;
-        
-        std::cout << "x " << x << " y " << y << std::endl;
-        textRenderer->render(c, glm::vec2(x,y),scale);
+        float y = basePosition.y + cos((x/screenHeight) * frequency * 2.0f * 3.14f) * amplitude; // - 17 ?? im ersten Durchlauf
+    
+        glm::vec2 startPos = glm::vec2(x,y); // x ist bei 1023 ??
+
+        textRenderer->update(c,&startPos,scale, projection);
+        textRenderer->render();
+
+        x += glyphWidth;
     }
 }
 
