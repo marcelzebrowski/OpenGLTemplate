@@ -1,11 +1,14 @@
 #include "ScrollingText.hpp"
 #include <cmath>
+#include <numbers>
 
 ScrollingText::ScrollingText(Text* textRenderer, const std::string& content, float screenWidth, float screenHeight): textRenderer(textRenderer), content(content), screenWidth(screenWidth), screenHeight(screenHeight){}
 
 void ScrollingText::update(float delta, glm::mat4* projection){
     elapsedTime += delta;
     this->projection = projection;
+
+    setContent(content);
 
 }
 
@@ -14,7 +17,10 @@ void ScrollingText::render(){
         return;
     }
 
-    float scrollTime = elapsedTime - startDelay;
+    float scrollDuration = (screenWidth + totalTextWidth) / speed;
+
+    float scrollTime = fmod(elapsedTime-startDelay, scrollDuration);
+
     float baseX = screenWidth - (scrollTime * speed);
     float x = baseX;
 
@@ -35,9 +41,12 @@ void ScrollingText::render(){
             continue;
         }
 
-        float y = basePosition.y + cos((x/screenHeight) * frequency * 2.0f * 3.14f) * amplitude; // - 17 ?? im ersten Durchlauf
-    
-        glm::vec2 startPos = glm::vec2(x,y); // x ist bei 1023 ??
+        float waveX = cos((x/screenHeight) * frequency * 2.0f * std::numbers::pi_v<float>) * amplitude;
+        float waveY = sin(elapsedTime * 0.5f) * 300.0f;
+
+        float y = basePosition.y + waveX + waveY;
+
+        glm::vec2 startPos = glm::vec2(x,y);
 
         textRenderer->update(c,&startPos,scale, projection);
         textRenderer->render();
@@ -68,4 +77,16 @@ void ScrollingText::setBasePosition(glm::vec2 pos){
 
 void ScrollingText::setScale(float scale){
     this->scale = scale;
+}
+
+void ScrollingText::setContent(const std::string& content){
+    this->content = content;
+    totalTextWidth = 0.0f;
+
+    for(char c : content){
+        if(c < 32 || c > 126) continue;
+
+        totalTextWidth += textRenderer->getGlyph(c).width;
+    }
+
 }

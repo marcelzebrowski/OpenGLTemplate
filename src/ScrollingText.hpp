@@ -34,6 +34,10 @@ class ScrollingText {
 
         glm::vec2 basePosition = glm::vec2(0.0f,0.0f);
         glm::mat4* projection;
+
+        float totalTextWidth;
+
+        void setContent(const std::string& content);
 };
 
 

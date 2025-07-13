@@ -213,7 +213,7 @@ int main(void) {
 							  "Ich habe irgendwie das Gefuehl, dass auf dem Nerdvana mehr los ist, als auf unserem geliebten Nerdpol, von dem wir uns damals abgespalten haben - als eine illustre Runde "
 							  "von spezial Menschen meinte anderen ihre Spielweise auf zu druecken. Tja hat wohl nicht geklappt. Wusstet ihr eigentlich, dass auf dem Nerdvan noch nie jemand gebannt wurde? "
 							  "Nur der Umbreon wurde damals hinausgeworfen, als er meine rumzu drollen und \" gedroll wird net, wer drollt, der fliegt! \" um es mit Drachenlords Worten mal zu sagen. "  
-							  "Lorem ipsum ... mir faellt so langsam nichts mehr ein."
+							  "Lorem ipsum ... mir faellt so langsam nichts mehr ein. Der Text wird sich nun wiederholen ....           "
 							  "";	
 		std::string flatText(rawText);
 
@@ -247,6 +247,7 @@ int main(void) {
 		textures.emplace_back(std::make_unique<Texture>("texture/frank.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/anguyx.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/police.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/elfe.png",0));
 
 	
 		std::vector<PictureFadeController> fadeControllers;
@@ -277,7 +278,7 @@ int main(void) {
 
 		PictureFadeController logoFadeController(&logo);
 
-		PictureAnimator logoAnimator(1024.0f,1024.0f,30.0f, &logoFadeController,AnimationType::Swing);
+		PictureAnimator logoAnimator(1024.0f,1024.0f,10.0f, &logoFadeController,AnimationType::Swing);
 		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
 		logoAnimator.start();
 
@@ -292,9 +293,9 @@ int main(void) {
 		ScrollingText scrollingText(&text, flatText, (float)maxWidth, (float) maxHeight);
 		scrollingText.setStartDelay(5.0f);
 		scrollingText.setSpeed(320.0f);
-		scrollingText.setAmplitude(5.0f);
-		scrollingText.setFrequency(5.0f);
-		scrollingText.setBasePosition(glm::vec2(0.0f,0.0f));
+		scrollingText.setAmplitude(120.0f);
+		scrollingText.setFrequency(1.5f);
+		scrollingText.setBasePosition(glm::vec2(0.0f,300.0f));
 		scrollingText.setScale(2500.0f);
 		
 		while(!glfwWindowShouldClose(window)){
