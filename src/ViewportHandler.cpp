@@ -24,12 +24,12 @@ void ViewportHandler::framebufferSizeCallbackStatic(GLFWwindow* window, int widt
     }
 }
 
-const glm::mat4& ViewportHandler::getProjection() const{
-    return projection;
+glm::mat4* ViewportHandler::getProjection(){
+    return &projection;
 }
 
-const glm::mat4& ViewportHandler::getOrthogonalProjection() const{
-    return orthogonalProjection;
+glm::mat4* ViewportHandler::getOrthogonalProjection(){
+    return &orthogonalProjection;
 }
 
 void ViewportHandler::setFov(float fov){

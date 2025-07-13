@@ -36,7 +36,8 @@ void PictureAnimator::startExit(){
     animationDirection = AnimationDirection::OUT;
 }
 
-void PictureAnimator::update(float delta){
+void PictureAnimator::update(float delta, glm::mat4* projection){
+    this->projection = projection;
     elapsed += delta;
 
     float t = elapsed / durationSeconds;
@@ -59,11 +60,6 @@ void PictureAnimator::update(float delta){
             break;
         }
     }
-}
-
-void PictureAnimator::render(float delta){
-
-    // TODO: projection matrix übergeben und view und model in die Update Methode auslagern
 
     view = glm::mat4(1.0f);
     model = glm::mat4(1.0f);
@@ -71,11 +67,14 @@ void PictureAnimator::render(float delta){
     model = glm::scale(model, glm::vec3(scaledWidth, scaledHeight, 1.0f));
 
     if(animationDirection == AnimationDirection::IN){
-        pictureFadeController->render(true,delta, elapsed, view, model);
+        pictureFadeController->update(true,delta, elapsed, projection, &view, &model);
     }else{
-        pictureFadeController->render(false,delta, elapsed, view, model);
+        pictureFadeController->update(false,delta, elapsed, projection, &view, &model);
     }
-    
+}
+
+void PictureAnimator::render(){
+    pictureFadeController->render();
 }
 
 

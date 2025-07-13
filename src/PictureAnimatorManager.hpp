@@ -7,8 +7,8 @@
 class PictureAnimatorManager {
 public:
     PictureAnimatorManager(std::vector<PictureAnimator> animators, float displayTimePerImage);
-    void update(float delta);
-    void render(float delta);
+    void update(float delta, glm::mat4* projection);
+    void render();
 
 private:
     std::vector<PictureAnimator> animators;

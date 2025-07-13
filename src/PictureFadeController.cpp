@@ -8,9 +8,11 @@ PictureFadeController::PictureFadeController(Picture* picture):picture(picture){
 PictureFadeController::~PictureFadeController(){
 }
 
-
-void PictureFadeController::render(bool fadeIn, float delta, float elapsed, glm::mat4 view, glm::mat4 model){
-
+void PictureFadeController::update(bool fadeIn, float delta, float elapsed, glm::mat4* projection, glm::mat4* view, glm::mat4* model){
+    this->elapsed = elapsed; // todo brauchen wir das?
+    this->projection = projection;
+    this->view = view;
+    this->model = model;
 
     if(fadeIn){    
         if(alpha > 1.0f){
@@ -24,7 +26,11 @@ void PictureFadeController::render(bool fadeIn, float delta, float elapsed, glm:
         }else {
             alpha -= fadeSpeed * delta;
         }
-        
     }
-    picture->render(alpha, elapsed, view, model);
+
+    picture->update(alpha, elapsed, projection, view, model);
+}
+
+void PictureFadeController::render(){
+    picture->render();
 }

@@ -42,14 +42,14 @@ Fraktal::~Fraktal(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Fraktal::render(float render){
+void Fraktal::update(float delta){
+    zoom = 1.0f * delta;
+    centerX += sin(delta) * 0.0002f;
+    centerY += cos(delta) * 0.0002f;
+}
 
-
-    zoom = 1.0f * render;
-    centerX += sin(render) * 0.0002f;
-    centerY += cos(render) * 0.0002f;
-
-
+void Fraktal::render(){
+    
     glDisable(GL_DEPTH_TEST);
     shader->attach();
 

@@ -21,8 +21,8 @@ public:
 
     void start();
     void startExit();
-    void render(float delta);
-    void update(float delta);
+    void render();
+    void update(float delta, glm::mat4* projection);
 
     void setTargetSize(float screenWidth, float screenHeight);
 
@@ -45,6 +45,7 @@ private:
 
     glm::mat4 model;
     glm::mat4 view;
+    glm::mat4* projection;
 
     glm::vec2 offset;
 

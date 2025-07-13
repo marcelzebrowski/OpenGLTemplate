@@ -238,6 +238,7 @@ int main(void) {
 		textures.emplace_back(std::make_unique<Texture>("texture/tsu.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/frank.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/anguyx.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/police.png",0));
 
 	
 		std::vector<PictureFadeController> fadeControllers;
@@ -261,19 +262,12 @@ int main(void) {
 
 		PictureAnimatorManager pictureAnimatorManager(animators,3.0f);
 
-
 		Texture pictureNerdvana("texture/nerdvana4.png",0);
 		Texture textTexture("texture/ASCII.png",0);
 
-		//Picture picture(&pictureShader, textures[0].get());
 		Picture logo (&pictureWobbleShader, &pictureNerdvana);
 
-		//PictureFadeController pictureFadeController(&picture);
 		PictureFadeController logoFadeController(&logo);
-
-		//PictureAnimator pictureAnimator(1024.0f,1536.0f,2.0f, &pictureFadeController);
-		//pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
-		//pictureAnimator.start();
 
 		PictureAnimator logoAnimator(1024.0f,1024.0f,3.0f, &logoFadeController,AnimationType::Swing);
 		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
@@ -311,21 +305,22 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-			frak += delta/2;
-		//	fraktal.render(frak);
+			frak += delta;
+			fraktal.update(frak);
+			fraktal.render();
 
-			pictureAnimatorManager.update(delta);
-		//	pictureAnimatorManager.render(delta);
+			pictureAnimatorManager.update(delta, viewportHandler.getOrthogonalProjection());
+			pictureAnimatorManager.render();
 
-			logoAnimator.update(delta);
-		//	logoAnimator.render(delta);
+			logoAnimator.update(delta, viewportHandler.getOrthogonalProjection());
+			logoAnimator.render();
 
 			scrollingText.update(delta);
 		//	scrollingText.render();
 
 
 			// coordinate
-			coordinateSystem.update(viewportHandler.getProjection(), model, view);
+			coordinateSystem.update(viewportHandler.getProjection(), &model, &view);
 			coordinateSystem.render();
 
 			glfwSwapBuffers(window);

@@ -7,7 +7,7 @@ PictureAnimatorManager::PictureAnimatorManager(std::vector<PictureAnimator> anim
         this->phase = AnimationPhase::IN;
 }
 
-void PictureAnimatorManager::update(float delta){
+void PictureAnimatorManager::update(float delta, glm::mat4* projection){
     
     timeAccumulator += delta;
 
@@ -15,7 +15,7 @@ void PictureAnimatorManager::update(float delta){
 
     switch(phase){
         case AnimationPhase::IN:{
-            current.update(delta);
+            current.update(delta,projection);
 
             if(timeAccumulator >= current.getDurationSeconds()){
                 phase = AnimationPhase::HOLD;
@@ -26,7 +26,7 @@ void PictureAnimatorManager::update(float delta){
         }
     
         case AnimationPhase::HOLD:{
-            current.update(delta);
+            current.update(delta, projection);
 
             if(timeAccumulator >= displayTime){
                 phase = AnimationPhase::OUT;
@@ -38,7 +38,7 @@ void PictureAnimatorManager::update(float delta){
         }
 
         case AnimationPhase::OUT:{
-            current.update(delta);
+            current.update(delta, projection);
          
 
             if(timeAccumulator >= current.getDurationSeconds()){
@@ -51,9 +51,11 @@ void PictureAnimatorManager::update(float delta){
             break;
         }
     }
+
+
 }
 
-void PictureAnimatorManager::render(float delta){
+void PictureAnimatorManager::render(){
     PictureAnimator& current = animators[currentIndex];
-    current.render(delta);
+    current.render();
 }

@@ -13,11 +13,13 @@ private:
     float centerY;
     int height;
     int width;
+    float delta;
 
 public:
     Fraktal(Shader* shader, int height, int width);
     ~Fraktal();
-    void render(float delta);
+    void update(float delta);
+    void render();
 };
 
 #endif

@@ -25,30 +25,45 @@ Picture::~Picture(){
     glDeleteBuffers(1,&EBO);
 }
 
-void Picture::render(float alpha, float elapsed, glm::mat4 view, glm::mat4 model){
-	
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    shader->attach();
-        texture->attach(shader,"texture");
-        shader->setFloat("alpha",alpha);
-        shader->setMat4("view",view);
-        shader->setMat4("model",model);
+void Picture::update(float alpha, float elapsed, glm::mat4* projection, glm::mat4* view, glm::mat4* model){
+    this->alpha = alpha;
+    this->elapsed = elapsed;
+    this->projection = projection;
+    this->view = view;
+    this->model = model;
+}
 
-        if(elapsed > 0){
-            shader->setFloat("time",elapsed);
-        }
+void Picture::render(){
 
-        GL(glBindVertexArray(VAO));
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        glBindVertexArray(0);
+    // todo prüfen ob die ptr gesetzt sind
 
-        texture->detach();
-    shader->detach();
-    glDisable(GL_BLEND);
-    glEnable(GL_DEPTH_TEST);
+    if(view && model && projection){
+
+        glDisable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        shader->attach();
+
+            texture->attach(shader,"texture");
+            shader->setFloat("alpha",alpha);
+            shader->setMat4("view",*view);
+            shader->setMat4("model",*model);
+            shader->setMat4("projection",*projection);
+
+            if(elapsed > 0){
+                shader->setFloat("time",elapsed);
+            }
+
+            GL(glBindVertexArray(VAO));
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            glBindVertexArray(0);
+
+            texture->detach();
+        shader->detach();
+        glDisable(GL_BLEND);
+        glEnable(GL_DEPTH_TEST);
+    }
 }
 
 void Picture::setupMesh(){

@@ -19,8 +19,8 @@ public:
     ViewportHandler();
     void framebufferSizeCallBack(int width, int height);
     void registerWithWindow(GLFWwindow* window);
-    const glm::mat4& getProjection() const;
-    const glm::mat4& getOrthogonalProjection() const;
+    glm::mat4* getProjection();
+    glm::mat4* getOrthogonalProjection();
     void setFov(float fov);
 
     static void framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height);
