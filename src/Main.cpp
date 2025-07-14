@@ -198,7 +198,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/y2k-1_experience.mod");
+	audioManager.PlaySong("sound/good-mood-warm-and-soft-music-track-304513.mp3");
 
 
 	glfwSwapInterval(1); 
@@ -206,16 +206,22 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		const char* rawText = "Willkommen zu einer neuen Nerdvana Production im Sommer 2025, heute ist der 13.7.2025 und mir ist langweilig! Also Zeit zum trollen und "
-							  "einem super geilen Intro aus der Feder von Overflow. Danke dafuer! Ich darf jetzt den Text hier schreiben. Lange lange wurde es Still um die Dicke Fleischwurst aka. "
-							  "Lyoner, doch nun bin ich wieder da. Ich glaube ich fange mal mit ein paar Gruessen an. Azradamus, ... Crash, ..., Der Patze, DirtyLittleDice, Drizzt1981, EinfachNurA, "
-							  "Gerowinger, Kaiwalker, Koenig Donnerdarm von Discordia, Martin, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras, Triback und alle die gerade online sind Hodentod. "
-							  "Ich habe irgendwie das Gefuehl, dass auf dem Nerdvana mehr los ist, als auf unserem geliebten Nerdpol, von dem wir uns damals abgespalten haben - als eine illustre Runde "
-							  "von spezial Menschen meinte anderen ihre Spielweise auf zu druecken. Tja hat wohl nicht geklappt. Wusstet ihr eigentlich, dass auf dem Nerdvan noch nie jemand gebannt wurde? "
-							  "Nur der Umbreon wurde damals hinausgeworfen, als er meine rumzu drollen und \" gedroll wird net, wer drollt, der fliegt! \" um es mit Drachenlords Worten mal zu sagen. "  
-							  "Lorem ipsum ... mir faellt so langsam nichts mehr ein. Der Text wird sich nun wiederholen ....           "
-							  "";	
-		std::string flatText(rawText);
+		const char* rawText = "Willkommen zu einer neuen Nerdvana Production vom 14. Juli 2025. Heute wollen wir ein paar Leuten huldigen, ohne die es das Nerdvana nie gegeben haette. "
+                      "Aber fangen wir erst einmal mit ein paar Gruessen an. Der erste geht an Oleg-Mazur fuer seine Musik, der du gerade lauschst. Die naechsten Gruesse gehen natuerlich "
+                      "an das einzig wahre Rollenspielforum auf Discord, dem 'Nerdvana' – EinfachNurA, Martin, Reg, Azradamus, Crash – The One and Only, DerPatze, DirtyLittleDice, Drizzt1981, "
+                      "Gerowinger, Hodentod, Kaiwalker, Koenig Donnerdarm von Discordia, Nawami, NuvOk, Orakel, Pukis, Razoreth, SirPadras und der Person, der wir alles zu verdanken haben – Trieback – "
+                      "auch bekannt als das Goldene Kamel. :-D Die damalige Nerdpol-Zeit war schon eine nette Sache – besonders das Trollen-Tutorial war grossartig. Das hat natuerlich einige "
+                      "auf die Palme gebracht. Auch die Totenanzeige fuer den Buttergott war nicht schlecht – entworfen und in Umlauf gebracht von der DickenFleischwurst. "
+                      "Viele tolle Wortgefechte wurden gefuehrt, und in Scharen liefen sie zu den Admins, um sich dort auszuheulen. Ich weiss auch nicht – ich konnte noch nie Menschen "
+                      "leiden, die einem vorschreiben wollten, wie gewisse Dinge abzulaufen haben – vor allem wenn wir ueber ein Gesellschaftsspiel reden. Nerdvana wurde uebrigens am 25. Mai 2018 von "
+                      "Avon gegruendet, nachdem das Nerdvana-Forum geschlossen wurde. Ich finde, wir sollten die 10 Jahre vollmachen. Irgendetwas sollten wir starten – und wenn es nur eine Rollenspielrunde ist. "
+                      "Aber warten wir es ab – bis dahin ist ja noch etwas Zeit. Wer sich fragen sollte wie ich das hier gemacht habe und was der Grund dafuer ist ... es handelt sich hier um ein Intro "
+					  "welches von Praiot programmiert wurde. Die Bilder sind wie man erahnen kann KI generiert, aber ganz nett anzusehen. Wer er noch genauer wissen will ... C++ und OpenGL. Der Text ist glaube "
+					  "ich schon ziemlich lang und bis hier hin guckt sich das eh niemand an ... und somit wird es nun so still wie im Nerdpol Forum, in dem man jede Diskussionskultur erstickt hat. "
+					  "Also ein Guter Moment alles zu wieder holen, sonst fange ich noch an zu trollen ... :-) Haut rein, der Text wiederholt sich jetzt. "
+					  ;
+std::string flatText(rawText);
+
 
 
 		MarcelsTimer timer;
