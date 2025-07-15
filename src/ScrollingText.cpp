@@ -21,8 +21,8 @@ void ScrollingText::render(){
 
     float scrollTime = fmod(elapsedTime-startDelay, scrollDuration);
 
-    float baseX = screenWidth - (scrollTime * speed);
-    float x = baseX;
+   float baseX = screenWidth - (scrollTime * speed); 
+   float x = baseX;
 
     for(size_t i = 0; i < content.size(); ++i){
         char c = content[i];
@@ -41,15 +41,16 @@ void ScrollingText::render(){
             continue;
         }
 
-        float waveX = cos((x/screenHeight) * frequency * 2.0f * std::numbers::pi_v<float>) * amplitude;
         float waveY = sin(elapsedTime * 0.5f) * 300.0f;
-
+        float waveX = cos((x/screenHeight) * frequency * 2.0f * std::numbers::pi_v<float>) * amplitude;
         float y = basePosition.y + waveX + waveY;
-
-        glm::vec2 startPos = glm::vec2(x,y);
+       
+        glm::vec2 startPos = glm::vec2(std::round(x),std::round(y));
 
         textRenderer->update(c,&startPos,scale, projection);
         textRenderer->render();
+
+
 
         x += glyphWidth;
     }

@@ -319,8 +319,7 @@ std::string flatText(rawText);
 		
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
-			timer.printStats();
-			
+	
 			processInput(window);
 
 			audioManager.Update(delta);

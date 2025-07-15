@@ -2,8 +2,6 @@
 #define MARCELSTIMER_H
 
 #include <iostream>
-#include <ctime>
-#include <ratio>
 #include <chrono>
 
 using namespace std::chrono;
@@ -17,11 +15,24 @@ public:
 
     // Berechnet die verstrichene Zeit seit dem letzten Frame in Sekunden
     double delta() {
-        auto currentFrame = high_resolution_clock::now();
+        auto currentFrame = Clock::now();
         std::chrono::duration<float> frameDelta = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        lastDelta = frameDelta.count(); // Delta-Zeit zwischenspeichern
-        accumulatedTime += lastDelta;  // Zeit für FPS-Zählung akkumulieren
+
+        float rawDelta = frameDelta.count();
+
+        if(firstFrame){
+            firstFrame = false;
+            lastDelta = targetFrameTime;
+            return lastDelta;
+        }
+
+        if(rawDelta > maxDelta) rawDelta = maxDelta;
+        if(rawDelta < minDelta) rawDelta = minDelta;
+
+        lastDelta = smooting * lastDelta + (1.0f - smooting) * rawDelta;
+       
+        accumulatedTime += lastDelta;
         frameCount++;
         return lastDelta;
     }
@@ -38,19 +49,25 @@ public:
 
     // Gibt FPS und Delta aus, ohne die Schleifenlogik zu stören
     void printStats() {
-        //std::cout << "Delta Time: " << lastDelta << "s, FPS: " << fps() << std::endl;
+        std::cout << "delta: " << lastDelta << " sec\n";
     }
 
 private:
-    high_resolution_clock::time_point lastFrame; // Zeit des letzten Frames
     double lastDelta = 0.0;                      // Letzte Delta-Zeit
     double accumulatedTime = 0.0;                // Akkumulierte Zeit
     int frameCount = 0;                          // Anzahl der Frames in der letzten Sekunde
     double currentFPS = 0.0;                     // Berechnete FPS für die aktuelle Sekunde
+    bool firstFrame = true;
+    using Clock = std::chrono::steady_clock;
+    Clock::time_point lastFrame;
 
+    const float minDelta = 1.0f / 240.0f;
+    const float maxDelta = 0.05f;
+    const float targetFrameTime = 1.0f / 60.0f;
+    const float smooting = 0.9f;
 
     void initialize() {
-        lastFrame = high_resolution_clock::now();
+        lastFrame = Clock::now();
     }
 };
 
