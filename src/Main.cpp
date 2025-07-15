@@ -154,7 +154,7 @@ int main(void) {
 	GLFWmonitor** monitors = glfwGetMonitors(&count);
 	GLFWmonitor* monitor;
 	if(count > 0){
-		monitor = monitors[1];
+		monitor = monitors[0];
 	} else {
 		monitor = glfwGetPrimaryMonitor();
 	}
@@ -342,23 +342,18 @@ std::string flatText(rawText);
 			logoAnimator.update(delta, viewportHandler.getOrthogonalProjection());
 			logoAnimator.render();
 
-			scrollingText.update(delta, viewportHandler.getOrthogonalProjection());
-			scrollingText.render();
-
-
-			//glm::vec2 start = glm::vec2(maxWidth/2.0f,maxHeight/2.0f);
-			//text.update('H',&start, 1000.0f, viewportHandler.getOrthogonalProjection());
-			//text.render();
-
 			// d20
 			d20Wireframe.update(delta, 1.0f, viewportHandler.getProjection(), &view, &model);
 			d20Wireframe.render();
 
+			scrollingText.update(delta, viewportHandler.getOrthogonalProjection());
+			scrollingText.render();
 
 			// coordinate
-			coordinateSystem.update(viewportHandler.getProjection(), &model, &view);
-			coordinateSystem.render();
+			//coordinateSystem.update(viewportHandler.getProjection(), &model, &view);
+			//coordinateSystem.render();
 
+		
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
