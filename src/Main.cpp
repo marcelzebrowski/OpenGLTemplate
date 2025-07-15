@@ -208,7 +208,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/good-mood-warm-and-soft-music-track-304513.mp3");
+	audioManager.PlaySong("sound/embrace-364091.mp3");
 
 
 	glfwSwapInterval(1); 
@@ -216,21 +216,38 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		const char* rawText = "Willkommen zu einer neuen Nerdvana Production vom 14. Juli 2025. Heute wollen wir ein paar Leuten huldigen, ohne die es das Nerdvana nie gegeben haette. "
-                      "Aber fangen wir erst einmal mit ein paar Gruessen an. Der erste geht an Oleg-Mazur fuer seine Musik, der du gerade lauschst. Die naechsten Gruesse gehen natuerlich "
-                      "an das einzig wahre Rollenspielforum auf Discord, dem 'Nerdvana' – EinfachNurA, Martin, Reg, Azradamus, Crash – The One and Only, DerPatze, DirtyLittleDice, Drizzt1981, "
-                      "Gerowinger, Hodentod, Kaiwalker, Koenig Donnerdarm von Discordia, Nawami, NuvOk, Orakel, Pukis, Razoreth, SirPadras und der Person, der wir alles zu verdanken haben – Trieback – "
-                      "auch bekannt als das Goldene Kamel. :-D Die damalige Nerdpol-Zeit war schon eine nette Sache – besonders das Trollen-Tutorial war grossartig. Das hat natuerlich einige "
-                      "auf die Palme gebracht. Auch die Totenanzeige fuer den Buttergott war nicht schlecht – entworfen und in Umlauf gebracht von der DickenFleischwurst. "
-                      "Viele tolle Wortgefechte wurden gefuehrt, und in Scharen liefen sie zu den Admins, um sich dort auszuheulen. Ich weiss auch nicht – ich konnte noch nie Menschen "
-                      "leiden, die einem vorschreiben wollten, wie gewisse Dinge abzulaufen haben – vor allem wenn wir ueber ein Gesellschaftsspiel reden. Nerdvana wurde uebrigens am 25. Mai 2018 von "
-                      "Avon gegruendet, nachdem das Nerdvana-Forum geschlossen wurde. Ich finde, wir sollten die 10 Jahre vollmachen. Irgendetwas sollten wir starten – und wenn es nur eine Rollenspielrunde ist. "
-                      "Aber warten wir es ab – bis dahin ist ja noch etwas Zeit. Wer sich fragen sollte wie ich das hier gemacht habe und was der Grund dafuer ist ... es handelt sich hier um ein Intro "
-					  "welches von Praiot programmiert wurde. Die Bilder sind wie man erahnen kann KI generiert, aber ganz nett anzusehen. Wer er noch genauer wissen will ... C++ und OpenGL. Der Text ist glaube "
-					  "ich schon ziemlich lang und bis hier hin guckt sich das eh niemand an ... und somit wird es nun so still wie im Nerdpol Forum, in dem man jede Diskussionskultur erstickt hat. "
-					  "Also ein Guter Moment alles zu wieder holen, sonst fange ich noch an zu trollen ... :-) Haut rein, der Text wiederholt sich jetzt. "
-					  ;
-std::string flatText(rawText);
+		const char* rawText = 
+								"He he,... heute komme ich mit was ganz Besonderem daher. "
+								"Ausschlaggebender Punkt war, als letztens Azradamus etwas aus dem Nerdpol-Chat postete "
+								"und dort nur Bullshit-Postings zu sehen waren. Die NP-Community ist tot, doch unsere lebt noch – "
+								"und das hier ist der Beweis. "
+								"Somit soll dieses kleine Werk fuer uns alle sein, die das Nerdvana zu dem gemacht haben, was es heute ist: "
+								"Ein Platz, wo man Leute findet, um neue Rollenspielrunden zu starten oder auch Schach ;-) "
+								"– oder einfach nur, um zu labern (auch Bullshit :-D). "
+								"Wenn man mal zurueckblickt: Der Nerdvana-Discord wurde am 25. Mai 2018 von Avon gegruendet. "
+								"Davor lief Nerdvana schon ein paar Jahre als Forum, welches dann leider aufgrund der DSGVO eingestellt werden musste. "
+								"Zumindest konnte so die kleine Community weiterhin bestehen. "
+								"Alles in allem existiert der ganze Kram schon ueber 10 Jahre. "
+								"Tolle Dinge sind in der Zeit passiert: Nerdvana-Sauf-Cons, die noch von SirPadras ausgerichtet wurden, "
+								"das FUK!-System erblickte die Welt – damals noch unter einer Lizenz, die vollkommen kostenlos war – und vieles mehr. "
+								"Nun noch ein paar Greetings, so wie es sich in einem Intro gehoert. "
+								"Ich gehe einfach die Liste aus dem Discord durch – die gerade online sind, kommen als erstes: "
+								"EinfachNurA, Martin, Praiot (ich) ... hm, das war's schon. "
+								"Dann gruesse ich noch die Wuerfelbots D1-C3, Midjourney Bot und Wuefelbot – "
+								"ich glaube, ich werde die mal entfernen, die benutzt eh keiner. "
+								"So, und dann noch alle, die offline sind: Azradamus, Crash – the one and only, "
+								"DerPatze, DirtyLittleDice, Drizzt1981, Gerowinger, Hodentod, Kaiwalker, "
+								"Koenig Donnerdarm von Discordia, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras und Triback "
+								"(Goldenes Camel). "
+								"Einen moechte ich an dieser Stelle auch noch erwaehnen: "
+								"Leider ist er nie auf dem Nerdvana-Server gewesen, aber er war damals beim Nerdpol mit dabei – "
+								"und somit soll auch er hier gegruesst werden: Matze ... RIP, du wirst nicht vergessen. "
+								"Deine Arcane-Codex-Runde war so toll – und immer etwas Majo dabei! "
+								"... so, es ist nun der 15.7.2025 und schon etwas spaet, 22:00 Uhr – "
+								"und der dicke alte Onkel wird nun muede und muss ins Bett. "
+								"Der Text wiederholt sich nun. Coding by Overflow and Music by Evgeny_Bardyuzha.";
+								std::string flatText(rawText);
+
 
 
 
@@ -265,6 +282,8 @@ std::string flatText(rawText);
 		textures.emplace_back(std::make_unique<Texture>("texture/anguyx.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/police.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/elfe.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/indianer.png",0));
+		textures.emplace_back(std::make_unique<Texture>("texture/matze.png",0));
 
 	
 		std::vector<PictureFadeController> fadeControllers;
