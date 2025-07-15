@@ -31,14 +31,15 @@
 #include "PictureAnimator.hpp"
 #include "PictureAnimatorManager.hpp"
 #include "ScrollingText.hpp"
+#include "D20Wireframe.hpp"
 
 #define M_PI 3.14159265358979323846
 
 
 float delta;
 float elapsed;
-int maxWidth = 1024;
-int maxHeight = 768;
+int maxWidth = 1920;
+int maxHeight = 1080;
 float lastX = (float)maxWidth / 2;
 float lastY = (float)maxHeight / 2;
 const float sensivity = 0.1f;
@@ -147,9 +148,19 @@ int main(void) {
 	glfwInit();
 
 	// fullscreen
-	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+	//GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
+
+	int count;
+	GLFWmonitor** monitors = glfwGetMonitors(&count);
+	GLFWmonitor* monitor;
+	if(count > 0){
+		monitor = monitors[1];
+	} else {
+		monitor = glfwGetPrimaryMonitor();
+	}
+	 
 	
-	const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 	maxWidth = mode->width;
 	maxHeight = mode->height;
 
@@ -161,17 +172,16 @@ int main(void) {
    		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	#endif
 
+
 	// create window
 	GLFWwindow* window;
 
 	#ifndef NDEBUG
 		// Debug-Modus: Windowed
-		maxWidth = 1024;
-		maxHeight = 768;
 		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
-		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", primaryMonitor, NULL);
+		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", monitor, NULL);
 	#endif
 
 	
@@ -231,6 +241,7 @@ std::string flatText(rawText);
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
 		Shader pictureWobbleShader("shader/picture/vertex.glsl","shader/picture/fragment_wobbel.glsl");
 		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl");
+		Shader d20Shader("shader/d20Wireframe/vertex.glsl", "shader/d20Wireframe/fragment.glsl");
 
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -291,6 +302,8 @@ std::string flatText(rawText);
 
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
 
+		D20Wireframe d20Wireframe(&d20Shader);
+
 
 		Text text(&textShader,&textTexture);
 
@@ -299,8 +312,8 @@ std::string flatText(rawText);
 		ScrollingText scrollingText(&text, flatText, (float)maxWidth, (float) maxHeight);
 		scrollingText.setStartDelay(5.0f);
 		scrollingText.setSpeed(320.0f);
-		scrollingText.setAmplitude(120.0f);
-		scrollingText.setFrequency(1.5f);
+		scrollingText.setAmplitude(100.0f);
+		scrollingText.setFrequency(0.5f);
 		scrollingText.setBasePosition(glm::vec2(0.0f,300.0f));
 		scrollingText.setScale(2500.0f);
 		
@@ -337,6 +350,10 @@ std::string flatText(rawText);
 			//glm::vec2 start = glm::vec2(maxWidth/2.0f,maxHeight/2.0f);
 			//text.update('H',&start, 1000.0f, viewportHandler.getOrthogonalProjection());
 			//text.render();
+
+			// d20
+			d20Wireframe.update(delta, 1.0f, viewportHandler.getProjection(), &view, &model);
+			d20Wireframe.render();
 
 
 			// coordinate
