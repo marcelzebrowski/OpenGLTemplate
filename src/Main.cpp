@@ -32,6 +32,7 @@
 #include "PictureAnimatorManager.hpp"
 #include "ScrollingText.hpp"
 #include "D20Wireframe.hpp"
+#include "D20WireframeAnimator.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -164,6 +165,8 @@ int main(void) {
 	maxWidth = mode->width;
 	maxHeight = mode->height;
 
+	float aspectRatio;
+
 	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -178,12 +181,15 @@ int main(void) {
 
 	#ifndef NDEBUG
 		// Debug-Modus: Windowed
+		maxWidth = 1024;
+		maxHeight = 768;
 		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
 		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", monitor, NULL);
 	#endif
 
+	aspectRatio = static_cast<float>(maxWidth/maxHeight);
 	
 	if (window == NULL){
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -217,20 +223,17 @@ int main(void) {
 
 	{
 		const char* rawText = 
-								"He he,... heute komme ich mit was ganz Besonderem daher. "
+								"Jeah,... heute komme ich mit was ganz Besonderem daher. "
 								"Ausschlaggebender Punkt war, als letztens Azradamus etwas aus dem Nerdpol-Chat postete "
 								"und dort nur Bullshit-Postings zu sehen waren. Die NP-Community ist tot, doch unsere lebt noch – "
 								"und das hier ist der Beweis. "
-								"Somit soll dieses kleine Werk fuer uns alle sein, die das Nerdvana zu dem gemacht haben, was es heute ist: "
-								"Ein Platz, wo man Leute findet, um neue Rollenspielrunden zu starten oder auch Schach ;-) "
-								"– oder einfach nur, um zu labern (auch Bullshit :-D). "
 								"Wenn man mal zurueckblickt: Der Nerdvana-Discord wurde am 25. Mai 2018 von Avon gegruendet. "
 								"Davor lief Nerdvana schon ein paar Jahre als Forum, welches dann leider aufgrund der DSGVO eingestellt werden musste. "
 								"Zumindest konnte so die kleine Community weiterhin bestehen. "
 								"Alles in allem existiert der ganze Kram schon ueber 10 Jahre. "
 								"Tolle Dinge sind in der Zeit passiert: Nerdvana-Sauf-Cons, die noch von SirPadras ausgerichtet wurden, "
 								"das FUK!-System erblickte die Welt – damals noch unter einer Lizenz, die vollkommen kostenlos war – und vieles mehr. "
-								"Nun noch ein paar Greetings, so wie es sich in einem Intro gehoert. "
+								"So wie es sich in einem Intro gehoert. Noch ein paar Gruesse ... "
 								"Ich gehe einfach die Liste aus dem Discord durch – die gerade online sind, kommen als erstes: "
 								"EinfachNurA, Martin, Praiot (ich) ... hm, das war's schon. "
 								"Dann gruesse ich noch die Wuerfelbots D1-C3, Midjourney Bot und Wuefelbot – "
@@ -239,11 +242,7 @@ int main(void) {
 								"DerPatze, DirtyLittleDice, Drizzt1981, Gerowinger, Hodentod, Kaiwalker, "
 								"Koenig Donnerdarm von Discordia, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras und Triback "
 								"(Goldenes Camel). "
-								"Einen moechte ich an dieser Stelle auch noch erwaehnen: "
-								"Leider ist er nie auf dem Nerdvana-Server gewesen, aber er war damals beim Nerdpol mit dabei – "
-								"und somit soll auch er hier gegruesst werden: Matze ... RIP, du wirst nicht vergessen. "
-								"Deine Arcane-Codex-Runde war so toll – und immer etwas Majo dabei! "
-								"... so, es ist nun der 15.7.2025 und schon etwas spaet, 22:00 Uhr – "
+								"... so, es ist nun der 16.7.2025 und schon etwas spaet, 22:00 Uhr – "
 								"und der dicke alte Onkel wird nun muede und muss ins Bett. "
 								"Der Text wiederholt sich nun. Coding by Overflow and Music by Evgeny_Bardyuzha.";
 								std::string flatText(rawText);
@@ -283,9 +282,7 @@ int main(void) {
 		textures.emplace_back(std::make_unique<Texture>("texture/police.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/elfe.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/indianer.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/matze.png",0));
 
-	
 		std::vector<PictureFadeController> fadeControllers;
 		std::vector<PictureAnimator> animators;
 		std::vector<std::unique_ptr<Picture>> pictures;
@@ -322,6 +319,7 @@ int main(void) {
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
 
 		D20Wireframe d20Wireframe(&d20Shader);
+		D20WireframeAnimator d20WireframeAnimator(&d20Wireframe, aspectRatio);
 
 
 		Text text(&textShader,&textTexture);
@@ -362,8 +360,8 @@ int main(void) {
 			logoAnimator.render();
 
 			// d20
-			d20Wireframe.update(delta, 1.0f, viewportHandler.getProjection(), &view, &model);
-			d20Wireframe.render();
+			d20WireframeAnimator.update(delta, viewportHandler.getProjection());
+			d20WireframeAnimator.render();
 
 			scrollingText.update(delta, viewportHandler.getOrthogonalProjection());
 			scrollingText.render();
