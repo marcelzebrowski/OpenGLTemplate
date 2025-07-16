@@ -181,12 +181,12 @@ int main(void) {
 
 	#ifndef NDEBUG
 		// Debug-Modus: Windowed
-		maxWidth = 1024;
-		maxHeight = 768;
-		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", NULL, NULL);
+		maxWidth = 1920;
+		maxHeight = 1080;
+		window = glfwCreateWindow(maxWidth, maxHeight, "Nerdvana 2025", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
-		window = glfwCreateWindow(maxWidth, maxHeight, "LearnOpenGL", monitor, NULL);
+		window = glfwCreateWindow(maxWidth, maxHeight, "Nerdvana 2025", monitor, NULL);
 	#endif
 
 	aspectRatio = static_cast<float>(maxWidth/maxHeight);
@@ -223,28 +223,21 @@ int main(void) {
 
 	{
 		const char* rawText = 
-								"Jeah,... heute komme ich mit was ganz Besonderem daher. "
-								"Ausschlaggebender Punkt war, als letztens Azradamus etwas aus dem Nerdpol-Chat postete "
-								"und dort nur Bullshit-Postings zu sehen waren. Die NP-Community ist tot, doch unsere lebt noch – "
-								"und das hier ist der Beweis. "
-								"Wenn man mal zurueckblickt: Der Nerdvana-Discord wurde am 25. Mai 2018 von Avon gegruendet. "
-								"Davor lief Nerdvana schon ein paar Jahre als Forum, welches dann leider aufgrund der DSGVO eingestellt werden musste. "
-								"Zumindest konnte so die kleine Community weiterhin bestehen. "
-								"Alles in allem existiert der ganze Kram schon ueber 10 Jahre. "
-								"Tolle Dinge sind in der Zeit passiert: Nerdvana-Sauf-Cons, die noch von SirPadras ausgerichtet wurden, "
-								"das FUK!-System erblickte die Welt – damals noch unter einer Lizenz, die vollkommen kostenlos war – und vieles mehr. "
-								"So wie es sich in einem Intro gehoert. Noch ein paar Gruesse ... "
+								"Jeah,... heute komme ich mit was ganz Besonderem daher. Zur Zeit habe ich Urlaub und etwas Zeit diese so zu verplempern. "
+								"So wie es sich in einem Intro gehoert erst einmal ein paar Gruesse ... "
 								"Ich gehe einfach die Liste aus dem Discord durch – die gerade online sind, kommen als erstes: "
-								"EinfachNurA, Martin, Praiot (ich) ... hm, das war's schon. "
+								"EinfachNurA und Praiot (ich) ... hm, das war's schon. "
 								"Dann gruesse ich noch die Wuerfelbots D1-C3, Midjourney Bot und Wuefelbot – "
 								"ich glaube, ich werde die mal entfernen, die benutzt eh keiner. "
 								"So, und dann noch alle, die offline sind: Azradamus, Crash – the one and only, "
 								"DerPatze, DirtyLittleDice, Drizzt1981, Gerowinger, Hodentod, Kaiwalker, "
-								"Koenig Donnerdarm von Discordia, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras und Triback "
+								"Koenig Donnerdarm von Discordia, Martin, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras und Triback "
 								"(Goldenes Camel). "
-								"... so, es ist nun der 16.7.2025 und schon etwas spaet, 22:00 Uhr – "
-								"und der dicke alte Onkel wird nun muede und muss ins Bett. "
-								"Der Text wiederholt sich nun. Coding by Overflow and Music by Evgeny_Bardyuzha.";
+								"... so, es ist nun der 16.7.2025 und schon etwas spaet, 18:52 Uhr – "
+								"und der dicke alte Onkel muesste eigentlich ins Fittnessstudio gehen, um Fett abzubauen. Aber stattdessen bastelt er an einem Intro rum. :-D "
+								"Naechstes Jahr mal auf einer Demoparty auftauchen, wird zwar keine Schnitte haben, aber Intro geht immer ;-). Bis dahin will ich aber noch eine Art "
+								"Scenen Graph implementieren, damit man nicht immer das selbe sehen muss. Aber bis Ostern 2026 ist noch etwas Zeit. So jetzt aber, bis hier liest eh keiner, macht es gut. "
+								"Der Text wiederholt sich nun.";
 								std::string flatText(rawText);
 
 
@@ -333,10 +326,11 @@ int main(void) {
 		scrollingText.setFrequency(0.5f);
 		scrollingText.setBasePosition(glm::vec2(0.0f,300.0f));
 		scrollingText.setScale(2500.0f);
-		
+	
+		//std::this_thread::sleep_for(std::chrono::seconds(10));
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
-	
+
 			processInput(window);
 
 			audioManager.Update(delta);
@@ -373,7 +367,8 @@ int main(void) {
 		
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			//std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			
 		}
 
 	}
