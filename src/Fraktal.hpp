@@ -4,7 +4,8 @@
 #include <glm/glm.hpp>
 #include "Shader.hpp"
 #include "GLErrorCheck.hpp"
-class Fraktal{
+#include "Effect.hpp"
+class Fraktal : public Effect{
 private:
     unsigned int VAO, VBO, EBO;
     Shader* shader;

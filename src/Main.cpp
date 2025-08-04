@@ -214,7 +214,7 @@ int main(void) {
 	glfwSetScrollCallback(window, scroll_back);    
 
 	// play sound
-	audioManager.PlaySong("sound/embrace-364091.mp3");
+	audioManager.PlaySong("sound/m4rc0-they-live.mp3");
 
 
 	glfwSwapInterval(1); 
@@ -222,22 +222,7 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		const char* rawText = 
-								"Jeah,... heute komme ich mit was ganz Besonderem daher. Zur Zeit habe ich Urlaub und etwas Zeit diese so zu verplempern. "
-								"So wie es sich in einem Intro gehoert erst einmal ein paar Gruesse ... "
-								"Ich gehe einfach die Liste aus dem Discord durch – die gerade online sind, kommen als erstes: "
-								"EinfachNurA und Praiot (ich) ... hm, das war's schon. "
-								"Dann gruesse ich noch die Wuerfelbots D1-C3, Midjourney Bot und Wuefelbot – "
-								"ich glaube, ich werde die mal entfernen, die benutzt eh keiner. "
-								"So, und dann noch alle, die offline sind: Azradamus, Crash – the one and only, "
-								"DerPatze, DirtyLittleDice, Drizzt1981, Gerowinger, Hodentod, Kaiwalker, "
-								"Koenig Donnerdarm von Discordia, Martin, Nawami, NuvOk, Orakel, Pukis, Razoreth, Reg, SirPadras und Triback "
-								"(Goldenes Camel). "
-								"... so, es ist nun der 16.7.2025 und schon etwas spaet, 18:52 Uhr – "
-								"und der dicke alte Onkel muesste eigentlich ins Fittnessstudio gehen, um Fett abzubauen. Aber stattdessen bastelt er an einem Intro rum. :-D "
-								"Naechstes Jahr mal auf einer Demoparty auftauchen, wird zwar keine Schnitte haben, aber Intro geht immer ;-). Bis dahin will ich aber noch eine Art "
-								"Scenen Graph implementieren, damit man nicht immer das selbe sehen muss. Aber bis Ostern 2026 ist noch etwas Zeit. So jetzt aber, bis hier liest eh keiner, macht es gut. "
-								"Der Text wiederholt sich nun.";
+		const char* rawText = "Hallo Ihr da, wir coden ein Intro fuer 2026!";
 								std::string flatText(rawText);
 
 
@@ -265,15 +250,6 @@ int main(void) {
 
 		std::vector<std::unique_ptr<Texture>> textures;
 		
-		textures.emplace_back(std::make_unique<Texture>("texture/umbreon.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/koali.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/loeffel.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/clawdeen.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/tsu.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/frank.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/anguyx.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/police.png",0));
-		textures.emplace_back(std::make_unique<Texture>("texture/elfe.png",0));
 		textures.emplace_back(std::make_unique<Texture>("texture/indianer.png",0));
 
 		std::vector<PictureFadeController> fadeControllers;
@@ -351,7 +327,7 @@ int main(void) {
 			pictureAnimatorManager.render();
 
 			logoAnimator.update(delta, viewportHandler.getOrthogonalProjection());
-			logoAnimator.render();
+			//logoAnimator.render();
 
 			// d20
 			d20WireframeAnimator.update(delta, viewportHandler.getProjection());
