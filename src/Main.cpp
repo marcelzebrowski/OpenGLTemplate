@@ -33,6 +33,8 @@
 #include "ScrollingText.hpp"
 #include "D20Wireframe.hpp"
 #include "D20WireframeAnimator.hpp"
+#include "Scene.hpp"
+#include "FraktalEffect.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -293,7 +295,7 @@ int main(void) {
 
 		Text text(&textShader,&textTexture);
 
-		float frak = 0.0f;
+	
 
 		ScrollingText scrollingText(&text, flatText, (float)maxWidth, (float) maxHeight);
 		scrollingText.setStartDelay(5.0f);
@@ -303,7 +305,11 @@ int main(void) {
 		scrollingText.setBasePosition(glm::vec2(0.0f,300.0f));
 		scrollingText.setScale(2500.0f);
 	
-		//std::this_thread::sleep_for(std::chrono::seconds(10));
+
+		// Fraktal Scene
+		Scene fraktalScene(10.0f);
+		fraktalScene.addEffect(std::make_unique<FraktalEffect>(&fraktal,0.0f, 5.0f));
+
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
 
@@ -319,32 +325,15 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-			frak += delta;
-			fraktal.update(frak);
-			fraktal.render();
 
-			pictureAnimatorManager.update(delta, viewportHandler.getOrthogonalProjection());
-			pictureAnimatorManager.render();
+			fraktalScene.update(delta);
+			fraktalScene.render();
 
-			logoAnimator.update(delta, viewportHandler.getOrthogonalProjection());
-			//logoAnimator.render();
+	
+			
 
-			// d20
-			d20WireframeAnimator.update(delta, viewportHandler.getProjection());
-			d20WireframeAnimator.render();
-
-			scrollingText.update(delta, viewportHandler.getOrthogonalProjection());
-			scrollingText.render();
-
-			// coordinate
-			//coordinateSystem.update(viewportHandler.getProjection(), &model, &view);
-			//coordinateSystem.render();
-
-		
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-			//std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			
 		}
 
 	}
