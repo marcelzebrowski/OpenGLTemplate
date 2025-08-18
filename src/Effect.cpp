@@ -1,6 +1,6 @@
 #include "Effect.hpp"
 
-Effect::Effect(float start, float duration):startTime(start), duration(duration){
+Effect::Effect(float startTime, float duration):startTime(startTime), duration(duration){
 
 }
 
@@ -40,4 +40,12 @@ void Effect::render(){
 
 bool Effect::isFinished() const{
     return finished;
+}
+
+float Effect::getAlpha() const{
+    return alpha;
+}
+
+void Effect::setAlpha(float a){
+    alpha = a;
 }

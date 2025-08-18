@@ -35,6 +35,7 @@
 #include "D20WireframeAnimator.hpp"
 #include "Scene.hpp"
 #include "FraktalEffect.hpp"
+#include "FadeEffect.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -185,10 +186,10 @@ int main(void) {
 		// Debug-Modus: Windowed
 		maxWidth = 1920;
 		maxHeight = 1080;
-		window = glfwCreateWindow(maxWidth, maxHeight, "Nerdvana 2025", NULL, NULL);
+		window = glfwCreateWindow(maxWidth, maxHeight, "Final First 2026", NULL, NULL);
 	#else
 		// Release-Modus: Fullscreen
-		window = glfwCreateWindow(maxWidth, maxHeight, "Nerdvana 2025", monitor, NULL);
+		window = glfwCreateWindow(maxWidth, maxHeight, "Final First 2026", monitor, NULL);
 	#endif
 
 	aspectRatio = static_cast<float>(maxWidth/maxHeight);
@@ -224,21 +225,11 @@ int main(void) {
 	glEnable(GL_DEPTH_TEST);
 
 	{
-		const char* rawText = "Hallo Ihr da, wir coden ein Intro fuer 2026!";
-								std::string flatText(rawText);
-
-
-
-
 		MarcelsTimer timer;
 
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
-		Shader coordinateSystemShader("shader/axes/axes_vertex.glsl","shader/axes/axes_fragment.glsl");
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
-		Shader pictureWobbleShader("shader/picture/vertex.glsl","shader/picture/fragment_wobbel.glsl");
-		Shader textShader("shader/text/vertex.glsl","shader/text/fragment.glsl");
-		Shader d20Shader("shader/d20Wireframe/vertex.glsl", "shader/d20Wireframe/fragment.glsl");
-
+		
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
 
@@ -247,68 +238,14 @@ int main(void) {
 		viewportHandler.framebufferSizeCallBack(width,height);
 
 	
-		CoordinateSystem coordinateSystem(&coordinateSystemShader);
-	
-
-		std::vector<std::unique_ptr<Texture>> textures;
-		
-		textures.emplace_back(std::make_unique<Texture>("texture/indianer.png",0));
-
-		std::vector<PictureFadeController> fadeControllers;
-		std::vector<PictureAnimator> animators;
-		std::vector<std::unique_ptr<Picture>> pictures;
-
-		for(auto& texture : textures){
-			Picture picture(&pictureShader, texture.get());
-			pictures.emplace_back(std::make_unique<Picture>(&pictureShader, texture.get()));
-		}
-
-		for(auto& picture : pictures){
-			fadeControllers.emplace_back(picture.get());
-		}
-
-		for(auto& controller : fadeControllers){
-			PictureAnimator pictureAnimator(1100.0f,1536.0f,5.0f, &controller);
-			pictureAnimator.setTargetSize((float)maxWidth, (float)maxHeight);
-			animators.emplace_back(pictureAnimator);
-		}
-
-		PictureAnimatorManager pictureAnimatorManager(animators,30.0f);
-
-		Texture pictureNerdvana("texture/nerdvana4.png",0);
-		Texture textTexture("texture/ASCII.png",0);
-
-		Picture logo (&pictureWobbleShader, &pictureNerdvana);
-
-		PictureFadeController logoFadeController(&logo);
-
-		PictureAnimator logoAnimator(1024.0f,1024.0f,10.0f, &logoFadeController,AnimationType::Swing);
-		logoAnimator.setTargetSize(maxWidth/2.0f, maxHeight/2.0f);
-		logoAnimator.start();
-
-
+		// Fraktal Scene
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
 
-		D20Wireframe d20Wireframe(&d20Shader);
-		D20WireframeAnimator d20WireframeAnimator(&d20Wireframe, aspectRatio);
-
-
-		Text text(&textShader,&textTexture);
-
-	
-
-		ScrollingText scrollingText(&text, flatText, (float)maxWidth, (float) maxHeight);
-		scrollingText.setStartDelay(5.0f);
-		scrollingText.setSpeed(320.0f);
-		scrollingText.setAmplitude(100.0f);
-		scrollingText.setFrequency(0.5f);
-		scrollingText.setBasePosition(glm::vec2(0.0f,300.0f));
-		scrollingText.setScale(2500.0f);
-	
-
-		// Fraktal Scene
-		Scene fraktalScene(10.0f);
-		fraktalScene.addEffect(std::make_unique<FraktalEffect>(&fraktal,0.0f, 5.0f));
+		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 60.0f);
+		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,5.0f, true);
+		
+		Scene fraktalScene01;
+		fraktalScene01.addEffect(std::move(fadeEffect));
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -325,12 +262,8 @@ int main(void) {
 			glm::mat4 model = glm::mat4(1.0f);
 			glm::mat4 view = camera.getViewMatrix();
 
-
-			fraktalScene.update(delta);
-			fraktalScene.render();
-
-	
-			
+			fraktalScene01.update(delta);
+			fraktalScene01.render();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

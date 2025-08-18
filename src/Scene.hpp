@@ -7,13 +7,9 @@
 class Scene {
 protected:
     std::vector<std::unique_ptr<Effect>> effects;
-    float duration;
-    float sceneTime = 0.0f;
-
-    
-
+    float sceneTime;
 public:
-    Scene(float duration);
+    Scene();
     void addEffect(std::unique_ptr<Effect> effect);
     void update(float deltaTime);
     void render();

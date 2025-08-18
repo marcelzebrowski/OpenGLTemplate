@@ -7,15 +7,19 @@ protected:
     float elapsed = 0.0f;
     bool started = false;
     bool finished = false;
+    float alpha = 1.0f;
 protected:
     virtual void onUpdate(float deltaTime, float localTime) = 0;
     virtual void onRender() = 0;
 public:
-    Effect(float start, float duration);
+    Effect(float startTime, float duration);
     virtual ~Effect() = default;
     virtual void update(float sceneTime, float deltaTime);
     virtual void render();
 
     virtual bool isFinished() const;
+
+    void setAlpha(float a);
+    float getAlpha() const;
 };
 #endif

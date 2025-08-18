@@ -5,6 +5,7 @@ uniform vec2 uResolution;
 uniform float uTime;
 uniform vec2 uCenter;
 uniform float uZoom;
+uniform float uAlpha;
 
 // Fraktal-Iteration für Julia-Menge
 int juliaIterations(vec2 z, vec2 c, int maxIterations) {
@@ -51,5 +52,5 @@ void main() {
     // Mischung mit Pulsieren
     vec3 finalColor = mix(bgColor, glowColor, glow * pulse);
 
-    FragColor = vec4(finalColor, 1.0);
+    FragColor = vec4(finalColor, uAlpha);
 }

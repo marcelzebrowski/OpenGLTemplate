@@ -20,7 +20,7 @@ public:
     Fraktal(Shader* shader, int height, int width);
     ~Fraktal();
     void update(float delta);
-    void render();
+    void render(float alpha = 1.0f);
 };
 
 #endif

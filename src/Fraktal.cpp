@@ -48,20 +48,24 @@ void Fraktal::update(float delta){
     centerY += cos(delta) * 0.0002f;
 }
 
-void Fraktal::render(){
+void Fraktal::render(float alpha){
     
     glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     shader->attach();
 
         shader->setFloat2("uResolution",(float)width, (float)height);
         shader->setFloat2("uCenter",centerX,centerY);
         shader->setFloat("uZoom", zoom);
         shader->setFloat("uTime",zoom);
+        shader->setFloat("uAlpha",alpha);
 
         glBindVertexArray(VAO);
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
         glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
     shader->detach();
+    glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }

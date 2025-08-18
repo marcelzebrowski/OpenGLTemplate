@@ -1,7 +1,7 @@
 #include "Fraktal.hpp"
 #include "FraktalEffect.hpp"
 
-FraktalEffect::FraktalEffect(Fraktal* fraktal, float start, float duration):Effect(start,duration), fraktal(fraktal){
+FraktalEffect::FraktalEffect(Fraktal* fraktal, float startTime, float duration):Effect(startTime,duration), fraktal(fraktal){
     frakValue = 0.0f;
 }
 
@@ -11,5 +11,5 @@ void FraktalEffect::onUpdate(float deltaTime, float localTime){
 }
 
 void FraktalEffect::onRender(){
-    fraktal->render();
+    fraktal->render(alpha);
 }

@@ -1,7 +1,6 @@
 #include "Scene.hpp"
 
-Scene::Scene(float duration):duration(duration){
-
+Scene::Scene():sceneTime(0.0f){
 }
 
 void Scene::update(float deltaTime){
@@ -21,7 +20,13 @@ void Scene::render(){
 }
 
 bool Scene::isFinished() const {
-    return sceneTime >= duration;
+    for(const auto& effect : effects){
+        if(!effect->isFinished()){
+            return false;
+        }
+    }
+
+    return true; // all effects are done
 }
 
 
