@@ -226,7 +226,7 @@ int main(void) {
 
 	{
 		MarcelsTimer timer;
-
+		Texture textureOverflowLogo("texture/Overflow.png",0);
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
 		
@@ -241,7 +241,7 @@ int main(void) {
 		// Fraktal Scene
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
 
-		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 60.0f);
+		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 15.0f);
 		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,5.0f, true);
 		
 		Scene fraktalScene01;
@@ -267,6 +267,10 @@ int main(void) {
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+
+			if(fraktalScene01.isFinished()){
+				break;
+			}
 		}
 
 	}
