@@ -1,6 +1,8 @@
 #ifndef EFFECT_HPP
 #define EFFECT_HPP
-class Effect {
+#include <glm/glm.hpp>
+class 
+Effect {
 protected:
     float startTime = 0.0f;
     float duration = -1.0f; // infinitely
@@ -8,8 +10,9 @@ protected:
     bool started = false;
     bool finished = false;
     float alpha = 1.0f;
+    glm::mat4 projection, model, view;
 protected:
-    virtual void onUpdate(float deltaTime, float localTime) = 0;
+    virtual void onUpdate(float deltaTime, float localTime) = 0; // abstract
     virtual void onRender() = 0;
 public:
     Effect(float startTime, float duration);
@@ -21,5 +24,7 @@ public:
 
     void setAlpha(float a);
     float getAlpha() const;
+    virtual void setMatrices(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model);
+    
 };
 #endif

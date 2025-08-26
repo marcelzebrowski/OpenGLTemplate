@@ -36,6 +36,9 @@
 #include "Scene.hpp"
 #include "FraktalEffect.hpp"
 #include "FadeEffect.hpp"
+#include "LogoEffect.hpp"
+#include "PictureFadeController.hpp"
+#include "SceneManager.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -226,7 +229,8 @@ int main(void) {
 
 	{
 		MarcelsTimer timer;
-		Texture textureOverflowLogo("texture/Overflow.png",0);
+		SceneManager sceneManger;
+		
 		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
 		
@@ -237,15 +241,30 @@ int main(void) {
 		glfwGetFramebufferSize(window, &width,&height);
 		viewportHandler.framebufferSizeCallBack(width,height);
 
-	
+		// Projection and co
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = camera.getViewMatrix();
+		glm::mat4* projection = viewportHandler.getOrthogonalProjection();
+		glm::mat4* projectionOrthogonal = viewportHandler.getOrthogonalProjection();
+
 		// Fraktal Scene
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
-
-		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 15.0f);
-		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,5.0f, true);
+		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 30.0f);
+		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,10.0f, true);
 		
+		// Logo Overflow
+		Texture textureOverflowLogo("texture/Overflow.png",0);
+		Picture pictureOverflowLogo(&pictureShader, &textureOverflowLogo);
+		PictureFadeController fadePictureOverflow(&pictureOverflowLogo);
+		auto logoEffect = std::make_unique<LogoEffect>(&fadePictureOverflow,0.0f,10.0f);
+		logoEffect->setMatrices(*projectionOrthogonal,view, model);
+
 		Scene fraktalScene01;
-		fraktalScene01.addEffect(std::move(fadeEffect));
+		//fraktalScene01.addEffect(std::move(fadeEffect));
+		fraktalScene01.addEffect(std::move(logoEffect));
+
+
+		sceneManger.addScene(std::make_unique<Scene>(std::move(fraktalScene01)));
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -259,16 +278,15 @@ int main(void) {
 			glClearColor(0.1f,0.1f,0.1f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			
-			glm::mat4 model = glm::mat4(1.0f);
-			glm::mat4 view = camera.getViewMatrix();
+			
 
-			fraktalScene01.update(delta);
-			fraktalScene01.render();
+			sceneManger.update(delta);
+			sceneManger.render();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
-			if(fraktalScene01.isFinished()){
+			if(sceneManger.allFinished()){
 				break;
 			}
 		}

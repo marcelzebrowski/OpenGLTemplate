@@ -49,3 +49,9 @@ float Effect::getAlpha() const{
 void Effect::setAlpha(float a){
     alpha = a;
 }
+
+void Effect::setMatrices(const glm::mat4& projection, const glm::mat4& view, const glm::mat4& model){
+    this->projection = projection;
+    this->view = view;
+    this->model = model;
+}
