@@ -27,7 +27,7 @@
 #include "Text.hpp"
 #include "Picture.hpp"
 #include "PictureFadeController.hpp"
-#include "AudioManager.hpp"
+#include "utils/AudioManager.hpp"
 #include "PictureAnimator.hpp"
 #include "PictureAnimatorManager.hpp"
 #include "ScrollingText.hpp"

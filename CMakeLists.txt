@@ -1,16 +1,38 @@
 cmake_minimum_required(VERSION 3.12)
+project(FinalFirst VERSION 1.0 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED)
 
 
-project(TestProject VERSION 1.0)
 
-# Add source files
-file(GLOB_RECURSE IMGUI_SOURCES ${CMAKE_SOURCE_DIR}/include/imgui/*.cpp)
+#----------------
+# Source / Header Files
+#----------------
 
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp) 
 
 # Add header files
-file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h ${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp)  
+file(GLOB_RECURSE HEADER_FILES 
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.h 
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.hpp
+)  
+
+# Add c and cpp files
+file(GLOB_RECURSE SOURCE_FILES 
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c 
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+) 
+
+
+# ImGui Sources
+file(GLOB_RECURSE IMGUI_SOURCES 
+	${CMAKE_SOURCE_DIR}/include/imgui/*.cpp
+)
+
+# Gruppierung für VS
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Source Files" FILES ${SOURCE_FILES})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "Header Files" FILES ${HEADER_FILES})
+source_group(TREE ${CMAKE_SOURCE_DIR}/include PREFIX "External" FILES ${IMGUI_SOURCES})
+
 
 # Add lib files
 link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)
@@ -62,6 +84,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "
 
 # Setze das Arbeitsverzeichnis für Visual Studio (Release-Modus)
 set_target_properties(${PROJECT_NAME} PROPERTIES VS_RELEASE_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
+
 
 # Copy dlls
 if(WIN32)
