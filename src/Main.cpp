@@ -249,18 +249,21 @@ int main(void) {
 
 		// Fraktal Scene
 		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
-		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 30.0f);
+		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 50.0f);
 		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,10.0f, true);
 		
 		// Logo Overflow
 		Texture textureOverflowLogo("texture/Overflow.png",0);
 		Picture pictureOverflowLogo(&pictureShader, &textureOverflowLogo);
 		PictureFadeController fadePictureOverflow(&pictureOverflowLogo);
-		auto logoEffect = std::make_unique<LogoEffect>(&fadePictureOverflow,0.0f,10.0f);
+
+		PictureAnimator overflowAnimator(1273.0f,241.0f,3.0f, &fadePictureOverflow,AnimationType::Swing);
+		overflowAnimator.setTargetSize(width/3.0f,height/3.0f);
+		auto logoEffect = std::make_unique<LogoEffect>(&overflowAnimator,3.0f,10.0f);
 		logoEffect->setMatrices(*projectionOrthogonal,view, model);
 
 		Scene fraktalScene01;
-		//fraktalScene01.addEffect(std::move(fadeEffect));
+		fraktalScene01.addEffect(std::move(fadeEffect));
 		fraktalScene01.addEffect(std::move(logoEffect));
 
 

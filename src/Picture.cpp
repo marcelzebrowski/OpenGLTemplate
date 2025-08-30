@@ -50,6 +50,7 @@ void Picture::render(){
             shader->setMat4("model",*model);
             shader->setMat4("projection",*projection);
 
+        
             if(elapsed > 0){
                 shader->setFloat("time",elapsed);
             }

@@ -1,16 +1,16 @@
 #include "LogoEffect.hpp"
 
 
-LogoEffect::LogoEffect(PictureFadeController* pictureFadeController, 
+LogoEffect::LogoEffect(PictureAnimator* pictureAnimator, 
     float startTime, float duration)
-    : Effect(startTime, duration), pictureFadeController(pictureFadeController){
+    : Effect(startTime, duration), pictureAnimator(pictureAnimator){
 }
 
 
 void LogoEffect::onUpdate(float deltaTime, float localTime){
-    pictureFadeController->update(true, deltaTime, localTime, &projection, &view, &model);
+    pictureAnimator->update(deltaTime, &projection);
 }
 
 void LogoEffect::onRender(){
-    pictureFadeController->render();
+    pictureAnimator->render();
 }
