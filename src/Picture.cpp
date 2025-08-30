@@ -1,6 +1,6 @@
-#include "Picture.hpp"
 #include <iostream>
-#include "GLErrorCheck.hpp"
+#include "Picture.hpp"
+#include "utils/GLErrorCheck.hpp"
 
 static float vertices[] = {
     // x, y, u, v

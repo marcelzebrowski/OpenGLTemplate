@@ -13,21 +13,26 @@
 #include <thread>
 #include <memory>
 
+// utils includes
+#include "utils/MarcelsTimer.hpp"
+#include "utils/AudioManager.hpp"
+#include "utils/GLErrorCheck.hpp"
+
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "ViewportHandler.hpp"
-#include "GLErrorCheck.hpp"
+
 #include "CoordinatesSystem.hpp"
 #include "Cube.hpp"
 #include "Camera.hpp"
-#include "MarcelsTimer.hpp"
+
 #include "LightSource.hpp"
 #include "Fraktal.hpp"
 #include "Model.hpp"
 #include "Text.hpp"
 #include "Picture.hpp"
 #include "PictureFadeController.hpp"
-#include "utils/AudioManager.hpp"
+
 #include "PictureAnimator.hpp"
 #include "PictureAnimatorManager.hpp"
 #include "ScrollingText.hpp"

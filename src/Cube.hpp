@@ -3,10 +3,11 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <vector>
+
 #include "Shader.hpp"
 #include "Texture.hpp"
-#include "GLErrorCheck.hpp"
-#include <vector>
+#include "utils/GLErrorCheck.hpp"
 #include "Camera.hpp"
 #include "LightSource.hpp"
 

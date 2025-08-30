@@ -1,7 +1,7 @@
-#include "D20Wireframe.hpp"
-#include "GLErrorCheck.hpp"
 #include <set>
 #include <array>
+#include "D20Wireframe.hpp"
+#include "utils/GLErrorCheck.hpp"
 
 D20Wireframe::D20Wireframe(Shader* shader):shader(shader){
     generateGeometry();
