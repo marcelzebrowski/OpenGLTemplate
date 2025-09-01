@@ -5,10 +5,10 @@
 #include <glm/glm.hpp>
 #include <vector>
 
-#include "Shader.hpp"
-#include "Texture.hpp"
+#include "render/Shader.hpp"
+#include "render/Texture.hpp"
 #include "utils/GLErrorCheck.hpp"
-#include "Camera.hpp"
+#include "render/Camera.hpp"
 #include "LightSource.hpp"
 
 class Cube {

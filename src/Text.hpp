@@ -1,7 +1,7 @@
 #ifndef TEXT_HPP
 #define TEXT_HPP
-#include "Shader.hpp"
-#include "Texture.hpp"
+#include "render/Shader.hpp"
+#include "render/Texture.hpp"
 
 struct Glyph {
     char sign;

@@ -1,6 +1,5 @@
+#include "stb_image.h"
 #include "Model.hpp"
-#include "stb_image.hpp"
-
 
 void Model::render(glm::mat4& model, glm::mat4& view) {
 

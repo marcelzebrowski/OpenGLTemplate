@@ -9,8 +9,8 @@
 
 
 
-#include "Mesh.hpp"
-#include "Shader.hpp"
+#include "render/Mesh.hpp"
+#include "render/Shader.hpp"
 
 
 

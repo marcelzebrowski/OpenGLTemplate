@@ -3,7 +3,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include "Shader.hpp"
+#include "render/Shader.hpp"
 #include "utils/GLErrorCheck.hpp"
 
 class LightSource {
