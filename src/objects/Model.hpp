@@ -9,7 +9,7 @@
 
 
 
-#include "render/Mesh.hpp"
+#include "objects/Mesh.hpp"
 #include "render/Shader.hpp"
 
 

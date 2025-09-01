@@ -1,4 +1,4 @@
-#include "render/Mesh.hpp"
+#include "objects/Mesh.hpp"
 
 
 namespace MeshRenderer{

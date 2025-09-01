@@ -23,13 +23,13 @@
 #include "core/ViewportHandler.hpp"
 
 #include "CoordinatesSystem.hpp"
-#include "Cube.hpp"
-#include "render/Camera.hpp"
+#include "objects/Cube.hpp"
+#include "core/Camera.hpp"
 
-#include "LightSource.hpp"
+#include "objects/LightSource.hpp"
 #include "objects/Fraktal.hpp"
-#include "Model.hpp"
-#include "Text.hpp"
+#include "objects/Model.hpp"
+#include "objects/Text.hpp"
 #include "render/Picture.hpp"
 #include "render/PictureFadeController.hpp"
 

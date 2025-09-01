@@ -1,4 +1,4 @@
-#include "render/Camera.hpp"
+#include "core/Camera.hpp"
 
 Camera::Camera():position(0.0f,0.0f,3.0f), target(0.0f,0.0f,0.0f), up(0.0f,1.0f,0.0f){
 }

@@ -2,7 +2,7 @@
 #define SCROLLINGTEXT_HPP
 
 #include <string>
-#include "Text.hpp"
+#include "objects/Text.hpp"
 
 class ScrollingText {
     public:

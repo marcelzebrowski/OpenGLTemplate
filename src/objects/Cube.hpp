@@ -8,8 +8,8 @@
 #include "render/Shader.hpp"
 #include "render/Texture.hpp"
 #include "utils/GLErrorCheck.hpp"
-#include "render/Camera.hpp"
-#include "LightSource.hpp"
+#include "core/Camera.hpp"
+#include "objects/LightSource.hpp"
 
 class Cube {
 private:
