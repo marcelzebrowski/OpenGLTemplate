@@ -1,7 +1,7 @@
 
 #include <cmath>
 #include <numbers>
-#include "effects/ScrollingText.hpp"
+#include "render/ScrollingText.hpp"
 
 ScrollingText::ScrollingText(Text* textRenderer, const std::string& content, float screenWidth, float screenHeight): textRenderer(textRenderer), content(content), screenWidth(screenWidth), screenHeight(screenHeight){}
 

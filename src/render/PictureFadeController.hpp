@@ -1,6 +1,6 @@
 #ifndef PICTUREFADECONTROLLER_HPP
 #define PICTUREFADECONTROLLER_HPP
-#include "render/Picture.hpp"
+#include "objects/Picture.hpp"
 class PictureFadeController{
 private:
     Picture* picture;

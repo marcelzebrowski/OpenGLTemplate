@@ -1,4 +1,4 @@
-#include "AudioManager.hpp"
+#include "utils/AudioManager.hpp"
 
 AudioManager::AudioManager() :currentSong(0), fade(FADE_NONE) {
 	// Initialize system

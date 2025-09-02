@@ -18,32 +18,27 @@
 #include "utils/AudioManager.hpp"
 #include "utils/GLErrorCheck.hpp"
 
-#include "render/Shader.hpp"
-#include "render/Texture.hpp"
-#include "core/ViewportHandler.hpp"
 
-#include "CoordinatesSystem.hpp"
-#include "objects/Cube.hpp"
+#include "core/ViewportHandler.hpp"
+#include "core/Scene.hpp"
 #include "core/Camera.hpp"
+#include "core/FadeEffect.hpp"
+#include "core/SceneManager.hpp"
 
 #include "objects/LightSource.hpp"
 #include "objects/Fraktal.hpp"
 #include "objects/Model.hpp"
 #include "objects/Text.hpp"
-#include "render/Picture.hpp"
-#include "render/PictureFadeController.hpp"
+#include "objects/Picture.hpp"
 
 #include "render/PictureAnimator.hpp"
 #include "render/PictureAnimatorManager.hpp"
-#include "effects/ScrollingText.hpp"
-#include "objects/D20Wireframe.hpp"
-#include "render/D20WireframeAnimator.hpp"
-#include "core/Scene.hpp"
-#include "effects/FraktalEffect.hpp"
-#include "core/FadeEffect.hpp"
-#include "effects/LogoEffect.hpp"
+#include "render/Shader.hpp"
+#include "render/Texture.hpp"
 #include "render/PictureFadeController.hpp"
-#include "core/SceneManager.hpp"
+
+#include "effects/FraktalEffect.hpp"
+#include "effects/LogoEffect.hpp"
 
 #define M_PI 3.14159265358979323846
 

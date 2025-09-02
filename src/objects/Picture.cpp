@@ -1,5 +1,5 @@
 #include <iostream>
-#include "render/Picture.hpp"
+#include "objects/Picture.hpp"
 #include "utils/GLErrorCheck.hpp"
 
 static float vertices[] = {
