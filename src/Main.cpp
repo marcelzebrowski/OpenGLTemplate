@@ -13,6 +13,9 @@
 #include <thread>
 #include <memory>
 
+
+#include "core/SceneFactory.hpp"
+
 // utils includes
 #include "utils/MarcelsTimer.hpp"
 #include "utils/AudioManager.hpp"
@@ -22,7 +25,6 @@
 #include "core/ViewportHandler.hpp"
 #include "core/Scene.hpp"
 #include "core/Camera.hpp"
-#include "core/FadeEffect.hpp"
 #include "core/SceneManager.hpp"
 
 #include "objects/LightSource.hpp"
@@ -39,6 +41,7 @@
 
 #include "effects/FraktalEffect.hpp"
 #include "effects/LogoEffect.hpp"
+#include "effects/FadeEffect.hpp"
 
 #define M_PI 3.14159265358979323846
 
@@ -231,7 +234,6 @@ int main(void) {
 		MarcelsTimer timer;
 		SceneManager sceneManger;
 		
-		Shader fraktalShader("shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
 		
 		// initial window registration
@@ -248,12 +250,12 @@ int main(void) {
 		glm::mat4* projectionOrthogonal = viewportHandler.getOrthogonalProjection();
 
 		// Fraktal Scene
-		Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
-		auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 50.0f);
-		auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,10.0f, true);
+		//Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
+		//auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 50.0f);
+		//auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,10.0f, true);
 		
 		// Logo Overflow
-		Texture textureOverflowLogo("texture/Overflow.png",0);
+		/*Texture textureOverflowLogo("texture/Overflow.png",0);
 		Picture pictureOverflowLogo(&pictureShader, &textureOverflowLogo);
 		PictureFadeController fadePictureOverflow(&pictureOverflowLogo);
 
@@ -267,7 +269,10 @@ int main(void) {
 		fraktalScene01.addEffect(std::move(logoEffect));
 
 
-		sceneManger.addScene(std::make_unique<Scene>(std::move(fraktalScene01)));
+		sceneManger.addScene(std::make_unique<Scene>(std::move(fraktalScene01)));*/
+
+
+		sceneManger.addScene(SceneFactory::createFraktalScene(maxHeight, maxWidth));
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();

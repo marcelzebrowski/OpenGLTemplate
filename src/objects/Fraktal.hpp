@@ -1,5 +1,6 @@
 #ifndef FRAKTAL_H
 #define FRAKTAL_H
+#include <memory>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "render/Shader.hpp"
@@ -8,7 +9,7 @@
 class Fraktal {
 private:
     unsigned int VAO, VBO, EBO;
-    Shader* shader;
+    std::unique_ptr<Shader> shader;
     float zoom;
     float centerX;
     float centerY;
@@ -17,7 +18,7 @@ private:
     float delta;
 
 public:
-    Fraktal(Shader* shader, int height, int width);
+    Fraktal(std::unique_ptr<Shader> shader, int height, int width);
     ~Fraktal();
     void update(float delta);
     void render(float alpha = 1.0f);

@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include "core/FadeEffect.hpp"
+#include "effects/FadeEffect.hpp"
 
 FadeEffect::FadeEffect(std::unique_ptr<Effect> innerEffect, float start, float fadeTime, bool fadeIn)
     :   Effect(start, -1.0f), // no automatic end 

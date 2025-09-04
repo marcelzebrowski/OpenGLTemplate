@@ -11,8 +11,8 @@ static unsigned int indices[]{
     0,1,2,0,2,3
 };
 
-Fraktal::Fraktal(Shader* shader, int height, int width)
-    :shader(shader),zoom(1.0f),centerX(-0.743643887037151f), centerY(0.13182590420533f), height(height), width(width){
+Fraktal::Fraktal(std::unique_ptr<Shader> shader, int height, int width)
+    :shader(std::move(shader)),zoom(1.0f),centerX(-0.743643887037151f), centerY(0.13182590420533f), height(height), width(width){
     // create vertex and index buffer
     glGenVertexArrays(1,&VAO);
     glGenBuffers(1, &VBO);
