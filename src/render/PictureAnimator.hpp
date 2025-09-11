@@ -2,7 +2,7 @@
 
 #ifndef PICTUREANIMATOR_HPP
 #define PICTUREANIMATOR_HPP
-
+#include <memory>
 #include "render/PictureFadeController.hpp"
 
 enum class AnimationType {
@@ -17,7 +17,7 @@ enum class AnimationDirection {
 class PictureAnimator {
 public:
     PictureAnimator(float originalWidth, float originalHeight, float durationSeconds,
-        PictureFadeController* pictureFadeController, AnimationType animationType = AnimationType::EaseOutBack);
+        std::unique_ptr<PictureFadeController> pictureFadeController, AnimationType animationType = AnimationType::EaseOutBack);
 
     void start();
     void startExit();
@@ -49,7 +49,7 @@ private:
 
     glm::vec2 offset;
 
-    PictureFadeController* pictureFadeController;
+    std::unique_ptr<PictureFadeController> pictureFadeController;
 
     
 

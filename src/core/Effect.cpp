@@ -55,3 +55,7 @@ void Effect::setMatrices(const glm::mat4& projection, const glm::mat4& view, con
     this->view = view;
     this->model = model;
 }
+
+void Effect::setProjectionMatrix(const glm::mat4& projection){
+    this->projection = projection;
+}

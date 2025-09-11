@@ -1,8 +1,8 @@
 #include "render/PictureAnimator.hpp"
 
 PictureAnimator::PictureAnimator(float originalWidth, float originalHeight, 
-    float durationSeconds, PictureFadeController* pictureFadeController, AnimationType animationType):originalWidth(originalWidth), originalHeight(originalHeight), 
-    durationSeconds(durationSeconds), elapsed(0.0f), pictureFadeController(pictureFadeController), animationType(animationType), offset(glm::vec2(0.0f,0.0f)),animationDirection(AnimationDirection::IN){}
+    float durationSeconds, std::unique_ptr<PictureFadeController> pictureFadeController, AnimationType animationType):originalWidth(originalWidth), originalHeight(originalHeight), 
+    durationSeconds(durationSeconds), elapsed(0.0f), pictureFadeController(std::move(pictureFadeController)), animationType(animationType), offset(glm::vec2(0.0f,0.0f)),animationDirection(AnimationDirection::IN){}
 
 void PictureAnimator::setTargetSize(float screenWidth, float screenHeight){
     maxHeight = screenHeight;

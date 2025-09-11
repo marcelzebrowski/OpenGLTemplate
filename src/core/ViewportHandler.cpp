@@ -30,8 +30,12 @@ glm::mat4* ViewportHandler::getProjection(){
     return &projection;
 }
 
-glm::mat4* ViewportHandler::getOrthogonalProjection(){
+glm::mat4* ViewportHandler::getOrthogonalProjectionPtr(){
     return &orthogonalProjection;
+}
+
+glm::mat4& ViewportHandler::getOrthogonalProjectionAddress(){
+    return orthogonalProjection;
 }
 
 void ViewportHandler::setFov(float fov){

@@ -1,6 +1,6 @@
 #include "render/PictureFadeController.hpp"
 
-PictureFadeController::PictureFadeController(Picture* picture):picture(picture){
+PictureFadeController::PictureFadeController(std::unique_ptr<Picture> picture):picture(std::move(picture)){
     this->alpha = 0.0f;
     this->fadeSpeed = 0.2f;
 }
@@ -9,7 +9,7 @@ PictureFadeController::~PictureFadeController(){
 }
 
 void PictureFadeController::update(bool fadeIn, float delta, float elapsed, glm::mat4* projection, glm::mat4* view, glm::mat4* model){
-    this->elapsed = elapsed; // todo brauchen wir das?
+    this->elapsed = elapsed;
     this->projection = projection;
     this->view = view;
     this->model = model;

@@ -27,7 +27,6 @@ void SceneManager::render(){
     }
 
     auto& scene = scenes[currentSceneIndex];
-    // todo add matrix to scene
     scene->render();
 }
 

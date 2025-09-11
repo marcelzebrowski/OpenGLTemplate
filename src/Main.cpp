@@ -246,14 +246,10 @@ int main(void) {
 		// Projection and co
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = camera.getViewMatrix();
-		glm::mat4* projection = viewportHandler.getOrthogonalProjection();
-		glm::mat4* projectionOrthogonal = viewportHandler.getOrthogonalProjection();
+		//glm::mat4* projection = viewportHandler.getOrthogonalProjection();
+		glm::mat4& projectionOrthogonal = viewportHandler.getOrthogonalProjectionAddress();
 
-		// Fraktal Scene
-		//Fraktal fraktal(&fraktalShader, maxHeight, maxWidth);
-		//auto fraktalEffect = std::make_unique<FraktalEffect>(&fraktal,0.0f, 50.0f);
-		//auto fadeEffect = std::make_unique<FadeEffect>(std::move(fraktalEffect), 0.0f,10.0f, true);
-		
+	
 		// Logo Overflow
 		/*Texture textureOverflowLogo("texture/Overflow.png",0);
 		Picture pictureOverflowLogo(&pictureShader, &textureOverflowLogo);
@@ -265,14 +261,13 @@ int main(void) {
 		logoEffect->setMatrices(*projectionOrthogonal,view, model);
 
 		Scene fraktalScene01;
-		fraktalScene01.addEffect(std::move(fadeEffect));
 		fraktalScene01.addEffect(std::move(logoEffect));
 
 
 		sceneManger.addScene(std::make_unique<Scene>(std::move(fraktalScene01)));*/
 
 
-		sceneManger.addScene(SceneFactory::createFraktalScene(maxHeight, maxWidth));
+		sceneManger.addScene(SceneFactory::createFraktalScene(maxHeight, maxWidth, projectionOrthogonal));
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
@@ -286,8 +281,6 @@ int main(void) {
 			glClearColor(0.1f,0.1f,0.1f,1.0f);
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 			
-			
-
 			sceneManger.update(delta);
 			sceneManger.render();
 

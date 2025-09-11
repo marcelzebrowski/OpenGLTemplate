@@ -20,7 +20,8 @@ public:
     void framebufferSizeCallBack(int width, int height);
     void registerWithWindow(GLFWwindow* window);
     glm::mat4* getProjection();
-    glm::mat4* getOrthogonalProjection();
+    glm::mat4* getOrthogonalProjectionPtr();
+    glm::mat4& getOrthogonalProjectionAddress();
     void setFov(float fov);
 
     static void framebufferSizeCallbackStatic(GLFWwindow* window, int width, int height);

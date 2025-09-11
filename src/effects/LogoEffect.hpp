@@ -1,16 +1,17 @@
 #ifndef LOGOEFFECT_HPP
 #define LOGOEFFECT_HPP
-#include "render/PictureAnimator.hpp"
+#include <memory>
+#include "render/PictureAnimatorManager.hpp"
 #include "core/Effect.hpp"
 
 class LogoEffect : public Effect {
 private:
-    PictureAnimator* pictureAnimator;
+    std::unique_ptr<PictureAnimatorManager> pictureAnimatorManager;
 public:
-    LogoEffect(PictureAnimator* pictureAnimator, float startTime, float duration);
+    LogoEffect(std::unique_ptr<PictureAnimatorManager> pictureAnimatorManager, float startTime, float duration);
 
 protected:
-    void onUpdate(float deltaTime, float localTime) override;
+    void onUpdate(float deltaTime, float elapsed) override;
     void onRender() override;
 
 };
