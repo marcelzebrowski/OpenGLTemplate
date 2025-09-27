@@ -1,6 +1,6 @@
 #include "render/Shader.hpp"
 
-Shader::Shader(const char* vertexPath, const char* fragmentPath){
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath){
     // -- create vertex shader
 	const char* vertexShaderSource = loadShaderFromFile(vertexPath);
 

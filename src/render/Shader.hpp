@@ -14,7 +14,7 @@ class Shader
 private:
     unsigned int ID;
 public:
-    Shader(const char* vertexPath, const char* fragmentPath);
+    Shader(const std::string& vertexPath, const std::string& fragmentPath);
     ~Shader();
     void attach();
     void detach();

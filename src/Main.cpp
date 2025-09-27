@@ -1,50 +1,16 @@
 #include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <random>
-#include <vector>
-#include <cmath>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <thread>
-#include <memory>
 
-
-#include "core/SceneFactory.hpp"
-
-// utils includes
 #include "utils/MarcelsTimer.hpp"
 #include "utils/AudioManager.hpp"
-#include "utils/GLErrorCheck.hpp"
-
-
+#include "utils/RessourceManager.hpp"
+#include "core/SceneFactory.hpp"
 #include "core/ViewportHandler.hpp"
-#include "core/Scene.hpp"
 #include "core/Camera.hpp"
 #include "core/SceneManager.hpp"
-
-#include "objects/LightSource.hpp"
-#include "objects/Fraktal.hpp"
-#include "objects/Model.hpp"
-#include "objects/Text.hpp"
-#include "objects/Picture.hpp"
-
-#include "render/PictureAnimator.hpp"
-#include "render/PictureAnimatorManager.hpp"
-#include "render/Shader.hpp"
-#include "render/Texture.hpp"
-#include "render/PictureFadeController.hpp"
-
-#include "effects/FraktalEffect.hpp"
-#include "effects/LogoEffect.hpp"
-#include "effects/FadeEffect.hpp"
-
-#define M_PI 3.14159265358979323846
-
 
 float delta;
 float elapsed;
@@ -52,105 +18,22 @@ int maxWidth = 1920;
 int maxHeight = 1080;
 float lastX = (float)maxWidth / 2;
 float lastY = (float)maxHeight / 2;
-const float sensivity = 0.1f;
-float yaw = -90.0f;
-float pitch = 0.0f;
-float fov = 45.0f;
-bool firstMouseMove = true;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f),glm::vec3(0.0f, 0.0f, -1.0f),glm::vec3(0.0f, 1.0f, 0.0f));
 ViewportHandler viewportHandler;
-
 AudioManager audioManager;
-
-
-
-void mouse_call_back(GLFWwindow* window, double xpos, double ypos){
-
-	if(firstMouseMove){
-		lastX = (float)xpos;
-		lastY = (float)ypos;
-		firstMouseMove = false;
-	}
-
-	float xOffset = (float)xpos - lastX;
-	float yOffset = (float)ypos - lastY;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xOffset *= sensivity;
-	yOffset *= sensivity;
-
-	yaw += xOffset;
-	pitch += yOffset;
-
-	if(pitch > 89.0f){
-		pitch = 89.0f;
-	}
-	if(pitch < -89.0f){
-		pitch = -89.0f;
-	}
-
-	camera.rotate(yaw,pitch);
-}
-
-void scroll_back(GLFWwindow *window, double xoffset, double yoffset){
-
-	fov -= (float) yoffset;
-
-	if(fov < 1.0f){
-		fov = 1.0f;
-	}
-	if(fov > 45.0f){
-		fov = 45.0f;
-	}
-
-	viewportHandler.setFov(fov);
-	viewportHandler.framebufferSizeCallBack(maxWidth,maxHeight); // update perspective and shaders
-}
 
 void processInput(GLFWwindow *window){
 	const float camSpeed = 2.5f * delta;
-
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
         glfwSetWindowShouldClose(window, true);
 	}
-
-	if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS){
-		camera.setPosition(camera.getPosition() + (camSpeed * camera.getTarget()));
-	}
-
-	if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS){
-     	camera.setPosition(camera.getPosition() - (camSpeed * camera.getTarget()));
-	}
-
-	if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
-		camera.setPosition(camera.getPosition() - glm::normalize(glm::cross(camera.getTarget(),camera.getUp())) * camSpeed);
-	}
-
-	if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS){
-     	camera.setPosition(camera.getPosition() + glm::normalize(glm::cross(camera.getTarget(),camera.getUp())) * camSpeed);
-	}
-
-	
 }
 
 
-std::string flattenText(const char* rawText){
-	std::string result;
-
-	while(*rawText){
-		if(*rawText != '\n' && *rawText != '\r'){
-			result += *rawText;
-		}
-		rawText++;
-	}
-	return result;
+void initRessource(){
+	RessourceManager::loadShader(ShaderID::Fraktal, "shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
 }
-
-
-
 
 int main(void) {
 
@@ -219,12 +102,8 @@ int main(void) {
 	#ifdef NDEBUG
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	#endif
-	glfwSetCursorPosCallback(window,mouse_call_back);
-	glfwSetScrollCallback(window, scroll_back);    
 
-	// play sound
 	audioManager.PlaySong("sound/m4rc0-they-live.mp3");
-
 
 	glfwSwapInterval(1); 
 
@@ -233,8 +112,8 @@ int main(void) {
 	{
 		MarcelsTimer timer;
 		SceneManager sceneManger;
-		
-		Shader pictureShader("shader/picture/vertex.glsl","shader/picture/fragment.glsl");
+
+		initRessource();
 		
 		// initial window registration
 		viewportHandler.registerWithWindow(window);
@@ -248,24 +127,6 @@ int main(void) {
 		glm::mat4 view = camera.getViewMatrix();
 		//glm::mat4* projection = viewportHandler.getOrthogonalProjection();
 		glm::mat4& projectionOrthogonal = viewportHandler.getOrthogonalProjectionAddress();
-
-	
-		// Logo Overflow
-		/*Texture textureOverflowLogo("texture/Overflow.png",0);
-		Picture pictureOverflowLogo(&pictureShader, &textureOverflowLogo);
-		PictureFadeController fadePictureOverflow(&pictureOverflowLogo);
-
-		PictureAnimator overflowAnimator(1273.0f,241.0f,3.0f, &fadePictureOverflow,AnimationType::Swing);
-		overflowAnimator.setTargetSize(width/3.0f,height/3.0f);
-		auto logoEffect = std::make_unique<LogoEffect>(&overflowAnimator,3.0f,10.0f);
-		logoEffect->setMatrices(*projectionOrthogonal,view, model);
-
-		Scene fraktalScene01;
-		fraktalScene01.addEffect(std::move(logoEffect));
-
-
-		sceneManger.addScene(std::make_unique<Scene>(std::move(fraktalScene01)));*/
-
 
 		sceneManger.addScene(SceneFactory::createFraktalScene(maxHeight, maxWidth, projectionOrthogonal));
 
@@ -291,12 +152,10 @@ int main(void) {
 				break;
 			}
 		}
-
 	}
 	
 	glfwTerminate();
 
 	audioManager.StopSongs();
-
 	return 0;
 }

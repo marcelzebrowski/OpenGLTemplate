@@ -11,8 +11,8 @@ static unsigned int indices[]{
     0,1,2,0,2,3
 };
 
-Fraktal::Fraktal(std::unique_ptr<Shader> shader, int height, int width)
-    :shader(std::move(shader)),zoom(1.0f),centerX(-0.743643887037151f), centerY(0.13182590420533f), height(height), width(width){
+Fraktal::Fraktal(Shader& shader, int height, int width)
+    :shader(shader),zoom(1.0f),centerX(-0.743643887037151f), centerY(0.13182590420533f), height(height), width(width){
     // create vertex and index buffer
     glGenVertexArrays(1,&VAO);
     glGenBuffers(1, &VBO);
@@ -53,19 +53,19 @@ void Fraktal::render(float alpha){
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    shader->attach();
+    shader.attach();
 
-        shader->setFloat2("uResolution",(float)width, (float)height);
-        shader->setFloat2("uCenter",centerX,centerY);
-        shader->setFloat("uZoom", zoom);
-        shader->setFloat("uTime",zoom);
-        shader->setFloat("uAlpha",alpha);
+        shader.setFloat2("uResolution",(float)width, (float)height);
+        shader.setFloat2("uCenter",centerX,centerY);
+        shader.setFloat("uZoom", zoom);
+        shader.setFloat("uTime",zoom);
+        shader.setFloat("uAlpha",alpha);
 
         glBindVertexArray(VAO);
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
         glDrawElements(GL_TRIANGLES,6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-    shader->detach();
+    shader.detach();
     glDisable(GL_BLEND);
     glEnable(GL_DEPTH_TEST);
 }
