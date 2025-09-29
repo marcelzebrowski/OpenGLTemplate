@@ -16,6 +16,10 @@ private:
 public:
     Shader(const std::string& vertexPath, const std::string& fragmentPath);
     ~Shader();
+
+    Shader(const Shader&) = delete;
+    Shader(Shader&&) noexcept = default; 
+
     void attach();
     void detach();
 
@@ -35,6 +39,9 @@ public:
     bool isOrthogonal() const {
         return orthogonalProjection;
     }
+
+    Shader& operator=(const Shader&) = delete;
+    Shader& operator=(Shader&&) noexcept = default;
 
 
 private:
