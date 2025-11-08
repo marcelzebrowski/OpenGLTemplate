@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
 
 #include "utils/MarcelsTimer.hpp"
 #include "utils/AudioManager.hpp"
@@ -33,9 +34,23 @@ void processInput(GLFWwindow *window){
 
 void initRessource(){
 	RessourceManager::loadShader(ShaderID::Fraktal, "shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
+	RessourceManager::loadShader(ShaderID::Picture, "shader/picture/vertex.glsl","shader/picture/fragment.glsl");
+	RessourceManager::loadTexture(TexutureID::OverflowLogo, "texture/Overflow.png", 0);
+}
+
+void logTest(){
+	spdlog::set_level(spdlog::level::debug);              // im Debug-Build alles sehen
+    spdlog::set_pattern("[%H:%M:%S.%e] [%^%l%$] %v");     // Zeit, Level farbig, Message
+
+    spdlog::info("Final First startet");
+    spdlog::debug("Lade Shader: {}", "shaders/picture.fs");
+    spdlog::warn("FPS unter 30");
+    spdlog::error("Konnte Texture nicht laden: {}", "nerdvana_logo.png");
 }
 
 int main(void) {
+
+	logTest();
 
 	// initialize and configure
 	glfwInit();

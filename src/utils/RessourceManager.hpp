@@ -24,6 +24,11 @@ public:
         return *shaders[id];
     }
 
+    static Texture& loadTexture(TexutureID id, const std::string& fsPath, unsigned int unit = 0){
+        textures[id] = std::make_unique<Texture>(fsPath.c_str(), unit);
+        return *textures[id];
+    }
+
 
     static Shader& getShader(ShaderID id){
         return *shaders[id];

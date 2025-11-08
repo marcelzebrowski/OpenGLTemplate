@@ -79,6 +79,8 @@ target_include_directories( ${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/include/stb"
 )
 
+# spdlog
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include")
 
 # Define the link libraries
 target_link_libraries(${PROJECT_NAME} ${LIBS})
@@ -102,4 +104,10 @@ if(WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 		"${PROJECT_SOURCE_DIR}/ressource"
 		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+
+endif()
+
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
+    target_compile_options(glad           PRIVATE /utf-8)
 endif()

@@ -15,7 +15,7 @@ static unsigned int indices[]= {
     0,2,3  // second triangle
 };
 
-Picture::Picture(Shader* shader, Texture* texture):shader(shader),texture(texture){
+Picture::Picture(Shader& shader, Texture& texture):shader(shader),texture(texture){
     setupMesh();
 }
 
@@ -42,17 +42,17 @@ void Picture::render(){
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        shader->attach();
+        shader.attach();
 
-            texture->attach(shader,"texture");
-            shader->setFloat("alpha",alpha);
-            shader->setMat4("view",*view);
-            shader->setMat4("model",*model);
-            shader->setMat4("projection",*projection);
+            texture.attach(shader,"texture");
+            shader.setFloat("alpha",alpha);
+            shader.setMat4("view",*view);
+            shader.setMat4("model",*model);
+            shader.setMat4("projection",*projection);
 
         
             if(elapsed > 0){
-                shader->setFloat("time",elapsed);
+                shader.setFloat("time",elapsed);
             }
 
             GL(glBindVertexArray(VAO));
@@ -60,8 +60,8 @@ void Picture::render(){
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
             glBindVertexArray(0);
 
-            texture->detach();
-        shader->detach();
+            texture.detach();
+        shader.detach();
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
     }
