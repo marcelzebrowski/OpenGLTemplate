@@ -10,7 +10,8 @@
 
 enum class ShaderID {
     Fraktal,
-    Picture
+    Picture,
+    Empty
 };
 
 enum class TexutureID {

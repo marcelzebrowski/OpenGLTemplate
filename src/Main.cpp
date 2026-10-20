@@ -33,24 +33,17 @@ void processInput(GLFWwindow *window){
 
 
 void initRessource(){
-	RessourceManager::loadShader(ShaderID::Fraktal, "shader/fraktal/fraktal_vs.glsl","shader/fraktal/fraktal_fs.glsl");
-	RessourceManager::loadShader(ShaderID::Picture, "shader/picture/vertex.glsl","shader/picture/fragment.glsl");
-	RessourceManager::loadTexture(TexutureID::OverflowLogo, "texture/Overflow.png", 0);
+	// hier mit dem RessourceManger Shader und Texturen laden
 }
 
-void logTest(){
+void initLogger(){
 	spdlog::set_level(spdlog::level::debug);              // im Debug-Build alles sehen
     spdlog::set_pattern("[%H:%M:%S.%e] [%^%l%$] %v");     // Zeit, Level farbig, Message
-
-    spdlog::info("Final First startet");
-    spdlog::debug("Lade Shader: {}", "shaders/picture.fs");
-    spdlog::warn("FPS unter 30");
-    spdlog::error("Konnte Texture nicht laden: {}", "nerdvana_logo.png");
 }
 
 int main(void) {
 
-	logTest();
+	initLogger();
 
 	// initialize and configure
 	glfwInit();
@@ -99,17 +92,18 @@ int main(void) {
 	aspectRatio = static_cast<float>(maxWidth/maxHeight);
 	
 	if (window == NULL){
-		std::cout << "Failed to create GLFW window" << std::endl;
+		spdlog::error("Failed to create GLFW window");
 		glfwTerminate();
 		return -1;
 	}else {
-		std::cout << "width: " << maxWidth << " height: " << maxHeight << std::endl;
+		spdlog::info("width: {} height: {}", maxWidth, maxHeight);		
 	}
+	
 	glfwMakeContextCurrent(window);
 
 	// load all opengl function pointers
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-		std::cout << "Failed to initialize GLAD" << std::endl;
+		spdlog::error("Failed to initialize GLAD");
 		return -1;
 	}
 
@@ -143,7 +137,7 @@ int main(void) {
 		//glm::mat4* projection = viewportHandler.getOrthogonalProjection();
 		glm::mat4& projectionOrthogonal = viewportHandler.getOrthogonalProjectionAddress();
 
-		sceneManger.addScene(SceneFactory::createEmptyScene(maxHeight, maxWidth, projectionOrthogonal));
+		sceneManger.addScene(SceneFactory::createEmptyScene());
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
