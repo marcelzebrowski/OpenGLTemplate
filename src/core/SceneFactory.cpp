@@ -3,6 +3,9 @@
 #include "core/Scene.hpp"
 #include "core/SceneFactory.hpp"
 
+
+#include "utils/RessourceManager.hpp"
+
 #include "objects/Empty.hpp"
 #include "effects/EmptyEffect.hpp"
 
@@ -15,6 +18,9 @@ std::unique_ptr<Scene> SceneFactory::createEmptyScene(){
 
 
 std::unique_ptr<Effect> SceneFactory::createEmptyEffect(){
+
+    // todo add timeline
+
     float startTime = 1.0f;
     float durationTime = 10.0f;
     auto empty = std::make_unique<Empty>();
