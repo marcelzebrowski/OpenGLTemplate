@@ -8,6 +8,8 @@
 
 class SceneFactory{
 public:
+
+    static std::unique_ptr<Scene> createEmptyScene(int height, int width, glm::mat4& projectionOrthogonal);
     static std::unique_ptr<Scene> createFraktalScene(int height, int width, glm::mat4& projectionOrthogonal);
 private:
     static std::unique_ptr<Effect> createFraktalSceneFadeEffect(int height, int width);

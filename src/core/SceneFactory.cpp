@@ -13,6 +13,13 @@
 
 #include "utils/RessourceManager.hpp"
 
+
+// Empty Scene
+std::unique_ptr<Scene> SceneFactory::createEmptyScene(int height, int width, glm::mat4& projectionOrthogonal){
+    auto scene = std::make_unique<Scene>();
+    return scene;
+}
+
 // Fraktal Scene
 
 std::unique_ptr<Scene> SceneFactory::createFraktalScene(int height, int width,glm::mat4& projectionOrthogonal){

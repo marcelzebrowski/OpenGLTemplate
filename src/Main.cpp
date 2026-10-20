@@ -143,7 +143,7 @@ int main(void) {
 		//glm::mat4* projection = viewportHandler.getOrthogonalProjection();
 		glm::mat4& projectionOrthogonal = viewportHandler.getOrthogonalProjectionAddress();
 
-		sceneManger.addScene(SceneFactory::createFraktalScene(maxHeight, maxWidth, projectionOrthogonal));
+		sceneManger.addScene(SceneFactory::createEmptyScene(maxHeight, maxWidth, projectionOrthogonal));
 
 		while(!glfwWindowShouldClose(window)){
 			delta = (float)timer.delta();
